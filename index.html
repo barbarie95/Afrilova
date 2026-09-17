@@ -1,1 +1,684 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <title>Trouvez l'amour qui vous correspond ❤️</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #F3FBF7;
+      color: #17352B;
+      padding-bottom: 80px;
+    }
+
+    /* =========================
+       HEADER
+    ========================= */
+
+    header {
+      background: linear-gradient(
+        145deg,
+        #0B8F6A,
+        #3DBB91,
+        #E0F7EE
+      );
+
+      color: white;
+      padding: 20px 16px 30px;
+      border-radius: 0 0 28px 28px;
+    }
+
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 28px;
+    }
+
+    .logo {
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    .points {
+      background: rgba(255, 255, 255, 0.22);
+      padding: 8px 13px;
+      border-radius: 20px;
+      font-size: 14px;
+    }
+
+    header h1 {
+      font-size: 27px;
+      line-height: 1.25;
+      margin-bottom: 10px;
+    }
+
+    header p {
+      font-size: 15px;
+      line-height: 1.5;
+      max-width: 450px;
+    }
+
+    /* =========================
+       CONTENU
+    ========================= */
+
+    main {
+      width: 100%;
+      max-width: 650px;
+      margin: auto;
+      padding: 18px 15px;
+    }
+
+    /* =========================
+       RECHERCHE
+    ========================= */
+
+    .search-card {
+      background: white;
+      padding: 18px;
+      border-radius: 20px;
+      box-shadow: 0 5px 18px rgba(0, 0, 0, 0.06);
+      margin-bottom: 25px;
+    }
+
+    .search-card h2 {
+      font-size: 18px;
+      margin-bottom: 14px;
+    }
+
+    .field {
+      margin-bottom: 12px;
+    }
+
+    .field label {
+      display: block;
+      font-size: 13px;
+      margin-bottom: 6px;
+      color: #526960;
+    }
+
+    select {
+      width: 100%;
+      padding: 13px;
+      border: 1px solid #CDE7DC;
+      border-radius: 12px;
+      background: white;
+      color: #17352B;
+      font-size: 14px;
+      outline: none;
+    }
+
+    select:focus {
+      border-color: #0B8F6A;
+    }
+
+    .search-button {
+      width: 100%;
+      border: none;
+      background: #0B8F6A;
+      color: white;
+      padding: 13px;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 3px;
+    }
+
+    .search-button:active {
+      transform: scale(0.98);
+    }
+
+    /* =========================
+       PROFILS
+    ========================= */
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+
+    .section-title h2 {
+      font-size: 21px;
+    }
+
+    .profiles-container {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .profile-card {
+      background: white;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 5px 18px rgba(0, 0, 0, 0.06);
+    }
+
+    .profile-photo {
+      width: 100%;
+      height: 270px;
+      object-fit: cover;
+      display: block;
+      background: #E0F7EE;
+    }
+
+    .profile-content {
+      padding: 16px;
+    }
+
+    .profile-name {
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 6px;
+    }
+
+    .profile-location {
+      color: #087557;
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+
+    .profile-description {
+      color: #536960;
+      font-size: 14px;
+      line-height: 1.5;
+      margin-bottom: 12px;
+    }
+
+    .looking-for {
+      display: inline-block;
+      background: #E0F7EE;
+      color: #087557;
+      padding: 7px 10px;
+      border-radius: 15px;
+      font-size: 13px;
+      margin-bottom: 14px;
+    }
+
+    .profile-button {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      border-radius: 12px;
+      background: #0B8F6A;
+      color: white;
+      text-align: center;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    /* =========================
+       MESSAGE VIDE
+    ========================= */
+
+    .empty-message {
+      background: white;
+      padding: 25px 18px;
+      text-align: center;
+      border-radius: 20px;
+      box-shadow: 0 5px 18px rgba(0, 0, 0, 0.05);
+    }
+
+    .empty-icon {
+      font-size: 40px;
+      margin-bottom: 10px;
+    }
+
+    .empty-message h3 {
+      font-size: 17px;
+      margin-bottom: 8px;
+    }
+
+    .empty-message p {
+      color: #65766F;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    /* =========================
+       NAVIGATION
+    ========================= */
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 70px;
+      background: white;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      box-shadow: 0 -3px 15px rgba(0, 0, 0, 0.08);
+      z-index: 1000;
+    }
+
+    .nav-link {
+      text-decoration: none;
+      color: #71827B;
+      text-align: center;
+      font-size: 12px;
+    }
+
+    .nav-link span {
+      display: block;
+      font-size: 21px;
+      margin-bottom: 3px;
+    }
+
+    .nav-link.active {
+      color: #0B8F6A;
+      font-weight: bold;
+    }
+
+    /* =========================
+       MOBILE
+    ========================= */
+
+    @media (max-width: 500px) {
+
+      header h1 {
+        font-size: 24px;
+      }
+
+      header p {
+        font-size: 14px;
+      }
+
+      .profile-photo {
+        height: 240px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- =========================
+       HEADER
+  ========================= -->
+
+  <header>
+
+    <div class="top-bar">
+
+      <div class="logo">
+        💚 Rencontres
+      </div>
+
+      <div class="points">
+        ⭐ <span id="points">3</span> points
+      </div>
+
+    </div>
+
+    <h1>
+      Trouvez l’amour qui vous correspond ❤️
+    </h1>
+
+    <p>
+      Une personne, une rencontre, peut-être une belle histoire à écrire.
+    </p>
+
+  </header>
+
+
+  <main>
+
+    <!-- =========================
+         RECHERCHE
+    ========================= -->
+
+    <section class="search-card">
+
+      <h2>
+        🔎 Trouver quelqu’un
+      </h2>
+
+      <div class="field">
+
+        <label for="country">
+          Pays
+        </label>
+
+        <select id="country">
+
+          <option value="">
+            🌍 Tous les pays
+          </option>
+
+        </select>
+
+      </div>
+
+
+      <div class="field">
+
+        <label for="city">
+          Ville
+        </label>
+
+        <select id="city" disabled>
+
+          <option value="">
+            🏙️ Toutes les villes
+          </option>
+
+        </select>
+
+      </div>
+
+
+      <button
+        type="button"
+        class="search-button"
+        id="searchButton"
+      >
+        🔎 Rechercher
+      </button>
+
+    </section>
+
+
+    <!-- =========================
+         PROFILS
+    ========================= -->
+
+    <div class="section-title">
+
+      <h2>
+        ❤️ Profils
+      </h2>
+
+    </div>
+
+
+    <section
+      class="profiles-container"
+      id="profiles"
+    >
+
+      <div class="empty-message">
+
+        <div class="empty-icon">
+          💚
+        </div>
+
+        <h3>
+          Les profils arrivent bientôt
+        </h3>
+
+        <p>
+          Les profils approuvés seront affichés ici.
+        </p>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- =========================
+       NAVIGATION
+  ========================= -->
+
+  <nav class="bottom-nav">
+
+    <a
+      href="index.html"
+      class="nav-link active"
+    >
+      <span>🏠</span>
+      Accueil
+    </a>
+
+
+    <a
+      href="explorer.html"
+      class="nav-link"
+    >
+      <span>🔎</span>
+      Explorer
+    </a>
+
+
+    <a
+      href="messagerie.html"
+      class="nav-link"
+    >
+      <span>💬</span>
+      Messagerie
+    </a>
+
+
+    <a
+      href="profil.html"
+      class="nav-link"
+    >
+      <span>👤</span>
+      Profil
+    </a>
+
+  </nav>
+
+
+  <!-- =========================
+       APPWRITE
+  ========================= -->
+
+  <script>
+
+    /*
+     * ==============================================
+     * APPWRITE
+     * ==============================================
+     *
+     * La connexion Appwrite sera ajoutée lorsque
+     * nous aurons créé notre projet Appwrite.
+     *
+     * Nous ne mettons volontairement aucune clé
+     * ou identifiant ici pour le moment.
+     */
+
+
+    /*
+     * ==============================================
+     * DONNÉES TEMPORAIRES
+     * ==============================================
+     */
+
+    let pays = [];
+    let villes = [];
+    let profils = [];
+
+
+    /*
+     * ==============================================
+     * CHARGER LES PAYS
+     * ==============================================
+     *
+     * Plus tard :
+     *
+     * Appwrite Database
+     *       ↓
+     * collection "pays"
+     *       ↓
+     * pays affichés ici
+     */
+
+    async function chargerPays() {
+
+      const countrySelect =
+        document.getElementById("country");
+
+      /*
+       * La connexion Appwrite sera ajoutée
+       * après la création du projet.
+       */
+
+      countrySelect.innerHTML = `
+        <option value="">
+          🌍 Tous les pays
+        </option>
+      `;
+    }
+
+
+    /*
+     * ==============================================
+     * CHARGER LES VILLES
+     * ==============================================
+     */
+
+    async function chargerVilles(paysId) {
+
+      const citySelect =
+        document.getElementById("city");
+
+      citySelect.innerHTML = `
+        <option value="">
+          🏙️ Toutes les villes
+        </option>
+      `;
+
+      citySelect.disabled = !paysId;
+
+      /*
+       * Les villes seront récupérées depuis
+       * Appwrite selon le pays sélectionné.
+       */
+    }
+
+
+    /*
+     * ==============================================
+     * CHARGER LES PROFILS
+     * ==============================================
+     */
+
+    async function chargerProfils() {
+
+      /*
+       * Plus tard, Appwrite récupérera uniquement
+       * les profils dont le statut est "approuve".
+       *
+       * Exemple :
+       *
+       * statut = approuve
+       */
+
+      afficherMessageVide();
+    }
+
+
+    /*
+     * ==============================================
+     * AFFICHER LE MESSAGE
+     * ==============================================
+     */
+
+    function afficherMessageVide() {
+
+      const profiles =
+        document.getElementById("profiles");
+
+      profiles.innerHTML = `
+        <div class="empty-message">
+
+          <div class="empty-icon">
+            💚
+          </div>
+
+          <h3>
+            Les profils arrivent bientôt
+          </h3>
+
+          <p>
+            Les profils approuvés seront affichés ici.
+          </p>
+
+        </div>
+      `;
+    }
+
+
+    /*
+     * ==============================================
+     * CHANGEMENT DE PAYS
+     * ==============================================
+     */
+
+    document
+      .getElementById("country")
+      .addEventListener("change", function () {
+
+        chargerVilles(this.value);
+
+      });
+
+
+    /*
+     * ==============================================
+     * RECHERCHE
+     * ==============================================
+     */
+
+    document
+      .getElementById("searchButton")
+      .addEventListener("click", function () {
+
+        const selectedCountry =
+          document.getElementById("country").value;
+
+        const selectedCity =
+          document.getElementById("city").value;
+
+        /*
+         * La recherche réelle sera connectée
+         * à Appwrite plus tard.
+         */
+
+        console.log(
+          "Recherche :",
+          selectedCountry,
+          selectedCity
+        );
+
+      });
+
+
+    /*
+     * ==============================================
+     * INITIALISATION
+     * ==============================================
+     */
+
+    async function initialiser() {
+
+      await chargerPays();
+
+      await chargerProfils();
+
+    }
+
+    initialiser();
+
+  </script>
+
+</body>
+        </html>
