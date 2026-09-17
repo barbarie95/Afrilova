@@ -1,0 +1,2018 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Mon profil - Rencontres</title>
+
+  <style>
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #F3FBF7;
+      color: #17352C;
+      padding-bottom: 85px;
+    }
+
+    button,
+    input,
+    textarea,
+    select {
+      font-family: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+
+    /* =========================
+       HEADER
+    ========================= */
+
+    header {
+      background: linear-gradient(
+        135deg,
+        #0B8F6A,
+        #3DBB91
+      );
+
+      color: white;
+
+      padding: 18px 16px;
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      box-shadow:
+        0 3px 10px rgba(0,0,0,0.08);
+    }
+
+    .logo {
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    .header-points {
+      background: rgba(255,255,255,0.18);
+      padding: 8px 12px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: bold;
+    }
+
+
+    /* =========================
+       CONTENEUR
+    ========================= */
+
+    .container {
+      width: 100%;
+      max-width: 700px;
+      margin: auto;
+      padding: 20px 14px 30px;
+    }
+
+    h1 {
+      color: #087557;
+      font-size: 25px;
+      margin-bottom: 7px;
+    }
+
+    .intro {
+      color: #668078;
+      font-size: 14px;
+      line-height: 1.5;
+      margin-bottom: 18px;
+    }
+
+
+    /* =========================
+       CARTE PROFIL
+    ========================= */
+
+    .profile-card {
+      background: white;
+      border-radius: 18px;
+      padding: 20px;
+      box-shadow:
+        0 3px 12px rgba(0,0,0,0.06);
+      margin-bottom: 16px;
+    }
+
+    .profile-top {
+      text-align: center;
+    }
+
+    .profile-photo {
+      width: 115px;
+      height: 115px;
+      border-radius: 50%;
+      object-fit: cover;
+      background: #E0F7EE;
+      border: 4px solid #E0F7EE;
+      margin-bottom: 12px;
+    }
+
+    .profile-name {
+      font-size: 21px;
+      color: #17352C;
+      margin-bottom: 5px;
+    }
+
+    .profile-location {
+      color: #668078;
+      font-size: 14px;
+    }
+
+    .profile-description {
+      margin-top: 15px;
+      background: #F3FBF7;
+      border-radius: 12px;
+      padding: 13px;
+      text-align: left;
+    }
+
+    .profile-description strong {
+      display: block;
+      color: #087557;
+      font-size: 13px;
+      margin-bottom: 6px;
+    }
+
+    .profile-description p {
+      color: #55736A;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+
+    /* =========================
+       RECHERCHE
+    ========================= */
+
+    .profile-info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 9px;
+      margin-top: 15px;
+    }
+
+    .info-box {
+      background: #F3FBF7;
+      border-radius: 11px;
+      padding: 11px;
+    }
+
+    .info-box span {
+      display: block;
+      color: #668078;
+      font-size: 11px;
+      margin-bottom: 4px;
+    }
+
+    .info-box strong {
+      color: #087557;
+      font-size: 13px;
+    }
+
+
+    /* =========================
+       BOUTON MODIFIER
+    ========================= */
+
+    .edit-button {
+      width: 100%;
+      border: none;
+      background: #E0F7EE;
+      color: #087557;
+      padding: 12px;
+      border-radius: 11px;
+      font-weight: bold;
+      margin-top: 15px;
+    }
+
+
+    /* =========================
+       SOLDE POINTS
+    ========================= */
+
+    .points-card {
+      background: linear-gradient(
+        135deg,
+        #0B8F6A,
+        #3DBB91
+      );
+
+      color: white;
+
+      border-radius: 18px;
+
+      padding: 20px;
+
+      margin-bottom: 16px;
+
+      box-shadow:
+        0 4px 12px rgba(11,143,106,0.18);
+    }
+
+    .points-title {
+      font-size: 14px;
+      opacity: 0.9;
+      margin-bottom: 7px;
+    }
+
+    .points-number {
+      font-size: 32px;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .points-description {
+      font-size: 12px;
+      opacity: 0.9;
+      line-height: 1.4;
+    }
+
+
+    /* =========================
+       ACHAT DE POINTS
+    ========================= */
+
+    .section-card {
+      background: white;
+      border-radius: 18px;
+      padding: 18px;
+      margin-bottom: 16px;
+      box-shadow:
+        0 3px 12px rgba(0,0,0,0.05);
+    }
+
+    .section-card h2 {
+      color: #087557;
+      font-size: 18px;
+      margin-bottom: 6px;
+    }
+
+    .section-description {
+      color: #668078;
+      font-size: 13px;
+      line-height: 1.5;
+      margin-bottom: 15px;
+    }
+
+    .packs {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .pack {
+      width: 100%;
+      border: 1px solid #dcefe7;
+      background: #F9FEFC;
+      border-radius: 13px;
+      padding: 14px;
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      text-align: left;
+    }
+
+    .pack:hover {
+      background: #E0F7EE;
+    }
+
+    .pack-info strong {
+      display: block;
+      color: #17352C;
+      font-size: 15px;
+      margin-bottom: 4px;
+    }
+
+    .pack-info small {
+      color: #668078;
+      font-size: 11px;
+    }
+
+    .pack-price {
+      background: #0B8F6A;
+      color: white;
+      padding: 9px 11px;
+      border-radius: 9px;
+      font-size: 12px;
+      font-weight: bold;
+      white-space: nowrap;
+    }
+
+
+    /* =========================
+       UTILISATION DES POINTS
+    ========================= */
+
+    .usage-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .usage-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      background: #F3FBF7;
+
+      border-radius: 11px;
+
+      padding: 11px;
+    }
+
+    .usage-icon {
+      width: 36px;
+      height: 36px;
+
+      border-radius: 10px;
+
+      background: #E0F7EE;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      font-size: 18px;
+
+      flex-shrink: 0;
+    }
+
+    .usage-text strong {
+      display: block;
+      color: #17352C;
+      font-size: 13px;
+      margin-bottom: 3px;
+    }
+
+    .usage-text small {
+      color: #668078;
+      font-size: 11px;
+    }
+
+
+    /* =========================
+       MODIFICATION PROFIL
+    ========================= */
+
+    .modal {
+      display: none;
+
+      position: fixed;
+
+      inset: 0;
+
+      background: rgba(0,0,0,0.45);
+
+      z-index: 100;
+
+      align-items: center;
+      justify-content: center;
+
+      padding: 15px;
+    }
+
+    .modal.show {
+      display: flex;
+    }
+
+    .modal-content {
+      width: 100%;
+      max-width: 520px;
+
+      max-height: 90vh;
+
+      overflow-y: auto;
+
+      background: white;
+
+      border-radius: 18px;
+
+      padding: 20px;
+
+      position: relative;
+    }
+
+    .close-button {
+      position: absolute;
+
+      right: 12px;
+      top: 10px;
+
+      width: 32px;
+      height: 32px;
+
+      border: none;
+
+      border-radius: 50%;
+
+      background: #E0F7EE;
+
+      color: #087557;
+
+      font-size: 21px;
+    }
+
+    .modal-content h2 {
+      color: #087557;
+      font-size: 19px;
+      margin-bottom: 15px;
+      padding-right: 35px;
+    }
+
+
+    /* FORMULAIRE */
+
+    .form-group {
+      margin-bottom: 13px;
+    }
+
+    .form-group label {
+      display: block;
+      color: #17352C;
+      font-size: 12px;
+      font-weight: bold;
+      margin-bottom: 6px;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+
+      border: 1px solid #cce5dc;
+
+      border-radius: 10px;
+
+      padding: 11px;
+
+      outline: none;
+
+      font-size: 13px;
+
+      background: white;
+
+      color: #17352C;
+    }
+
+    .form-group textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+      border-color: #0B8F6A;
+    }
+
+    .save-button {
+      width: 100%;
+
+      border: none;
+
+      background: #0B8F6A;
+
+      color: white;
+
+      padding: 12px;
+
+      border-radius: 10px;
+
+      font-weight: bold;
+
+      margin-top: 5px;
+    }
+
+
+    /* =========================
+       ACHAT / PAIEMENT
+    ========================= */
+
+    .payment-info {
+      background: #F3FBF7;
+
+      border-radius: 11px;
+
+      padding: 12px;
+
+      margin-bottom: 15px;
+    }
+
+    .payment-info p {
+      color: #55736A;
+
+      font-size: 12px;
+
+      line-height: 1.5;
+    }
+
+    .payment-methods {
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+    }
+
+    .payment-method {
+      border: 1px solid #dcefe7;
+
+      background: white;
+
+      border-radius: 11px;
+
+      padding: 12px;
+
+      display: flex;
+      align-items: center;
+
+      gap: 10px;
+    }
+
+    .payment-method input {
+      accent-color: #0B8F6A;
+    }
+
+    .payment-method label {
+      flex: 1;
+
+      color: #17352C;
+
+      font-size: 13px;
+
+      font-weight: bold;
+    }
+
+    .payment-method small {
+      display: block;
+
+      color: #668078;
+
+      font-size: 10px;
+
+      font-weight: normal;
+
+      margin-top: 3px;
+    }
+
+    .continue-payment {
+      width: 100%;
+
+      border: none;
+
+      background: #0B8F6A;
+
+      color: white;
+
+      padding: 12px;
+
+      border-radius: 10px;
+
+      font-weight: bold;
+
+      margin-top: 15px;
+    }
+
+
+    /* =========================
+       NAVIGATION BAS
+    ========================= */
+
+    .bottom-nav {
+      position: fixed;
+
+      left: 0;
+      right: 0;
+      bottom: 0;
+
+      height: 68px;
+
+      background: white;
+
+      border-top: 1px solid #dcefe7;
+
+      display: flex;
+
+      z-index: 40;
+
+      box-shadow:
+        0 -2px 10px rgba(0,0,0,0.06);
+    }
+
+    .bottom-nav a {
+      flex: 1;
+
+      text-decoration: none;
+
+      color: #668078;
+
+      display: flex;
+
+      flex-direction: column;
+
+      align-items: center;
+
+      justify-content: center;
+
+      gap: 3px;
+
+      font-size: 11px;
+
+      font-weight: bold;
+    }
+
+    .bottom-nav a span {
+      font-size: 20px;
+      line-height: 1;
+    }
+
+    .bottom-nav a.active {
+      color: #0B8F6A;
+    }
+
+
+    /* =========================
+       RESPONSIVE
+    ========================= */
+
+    @media (min-width: 700px) {
+
+      .bottom-nav {
+        max-width: 700px;
+
+        left: 50%;
+
+        transform: translateX(-50%);
+
+        border-radius: 16px 16px 0 0;
+      }
+
+    }
+
+  </style>
+</head>
+
+<body>
+
+
+  <!-- =========================
+       HEADER
+  ========================= -->
+
+  <header>
+
+    <div class="logo">
+      💚 Rencontres
+    </div>
+
+    <div class="header-points">
+      ⭐ <span id="headerPoints">3</span> points
+    </div>
+
+  </header>
+
+
+  <!-- =========================
+       CONTENU PRINCIPAL
+  ========================= -->
+
+  <main class="container">
+
+    <h1>👤 Mon profil</h1>
+
+    <p class="intro">
+      Gérez vos informations personnelles et votre solde de points.
+    </p>
+
+
+    <!-- =========================
+         PROFIL
+    ========================= -->
+
+    <section class="profile-card">
+
+      <div class="profile-top">
+
+        <img
+          id="profilePhoto"
+          class="profile-photo"
+          src="https://via.placeholder.com/200"
+          alt="Photo de profil"
+        >
+
+        <h2
+          id="profileName"
+          class="profile-name"
+        >
+          Mon profil
+        </h2>
+
+        <p
+          id="profileLocation"
+          class="profile-location"
+        >
+          Burkina Faso
+        </p>
+
+      </div>
+
+
+      <div class="profile-info-grid">
+
+        <div class="info-box">
+
+          <span>Âge</span>
+
+          <strong id="profileAge">
+            Non renseigné
+          </strong>
+
+        </div>
+
+
+        <div class="info-box">
+
+          <span>Pays</span>
+
+          <strong id="profileCountry">
+            Non renseigné
+          </strong>
+
+        </div>
+
+
+        <div class="info-box">
+
+          <span>Ville</span>
+
+          <strong id="profileCity">
+            Non renseignée
+          </strong>
+
+        </div>
+
+
+        <div class="info-box">
+
+          <span>Recherche</span>
+
+          <strong id="profileSearch">
+            Trouver l'amour
+          </strong>
+
+        </div>
+
+      </div>
+
+
+      <div class="profile-description">
+
+        <strong>À propos de moi</strong>
+
+        <p id="profileDescription">
+          Présentez-vous en quelques mots pour permettre
+          aux personnes qui consultent votre profil
+          de mieux vous connaître.
+        </p>
+
+      </div>
+
+
+      <button
+        type="button"
+        class="edit-button"
+        onclick="ouvrirModificationProfil()"
+      >
+        ✏️ Modifier mon profil
+      </button>
+
+    </section>
+
+
+    <!-- =========================
+         SOLDE
+    ========================= -->
+
+    <section class="points-card">
+
+      <div class="points-title">
+        Mon solde
+      </div>
+
+      <div
+        class="points-number"
+        id="mainPoints"
+      >
+        3 points
+      </div>
+
+      <div class="points-description">
+        Les points permettent notamment d'envoyer
+        des demandes de discussion et d'utiliser
+        le « Coup de pouce conversation ».
+      </div>
+
+    </section>
+
+
+    <!-- =========================
+         ACHETER DES POINTS
+    ========================= -->
+
+    <section class="section-card">
+
+      <h2>⭐ Acheter des points</h2>
+
+      <p class="section-description">
+        Choisissez le nombre de points que vous souhaitez
+        acheter. Les points seront ajoutés à votre compte
+        après confirmation réelle du paiement.
+      </p>
+
+
+      <div class="packs">
+
+
+        <button
+          type="button"
+          class="pack"
+          onclick="ouvrirPaiement(5, 1000)"
+        >
+
+          <div class="pack-info">
+
+            <strong>
+              5 points
+            </strong>
+
+            <small>
+              Pour commencer à utiliser la plateforme
+            </small>
+
+          </div>
+
+          <div class="pack-price">
+            1 000 FCFA
+          </div>
+
+        </button>
+
+
+        <button
+          type="button"
+          class="pack"
+          onclick="ouvrirPaiement(10, 2000)"
+        >
+
+          <div class="pack-info">
+
+            <strong>
+              10 points
+            </strong>
+
+            <small>
+              Pour plusieurs demandes et aides
+            </small>
+
+          </div>
+
+          <div class="pack-price">
+            2 000 FCFA
+          </div>
+
+        </button>
+
+
+        <button
+          type="button"
+          class="pack"
+          onclick="ouvrirPaiement(20, 4000)"
+        >
+
+          <div class="pack-info">
+
+            <strong>
+              20 points
+            </strong>
+
+            <small>
+              Pour une utilisation plus régulière
+            </small>
+
+          </div>
+
+          <div class="pack-price">
+            4 000 FCFA
+          </div>
+
+        </button>
+
+
+      </div>
+
+    </section>
+
+
+    <!-- =========================
+         UTILISATION DES POINTS
+    ========================= -->
+
+    <section class="section-card">
+
+      <h2>💡 À quoi servent les points ?</h2>
+
+      <p class="section-description">
+        Les points sont utilisés uniquement lorsque
+        vous effectuez certaines actions sur la plateforme.
+      </p>
+
+
+      <div class="usage-list">
+
+
+        <div class="usage-item">
+
+          <div class="usage-icon">
+            💬
+          </div>
+
+          <div class="usage-text">
+
+            <strong>
+              Envoyer une demande de discussion
+            </strong>
+
+            <small>
+              1 point · 200 FCFA
+            </small>
+
+          </div>
+
+        </div>
+
+
+        <div class="usage-item">
+
+          <div class="usage-icon">
+            💡
+          </div>
+
+          <div class="usage-text">
+
+            <strong>
+              Coup de pouce conversation
+            </strong>
+
+            <small>
+              2 points · 400 FCFA par utilisation
+            </small>
+
+          </div>
+
+        </div>
+
+
+      </div>
+
+    </section>
+
+
+    <!-- =========================
+         INFORMATIONS
+    ========================= -->
+
+    <section class="section-card">
+
+      <h2>🔐 Sécurité</h2>
+
+      <p class="section-description">
+        Vos informations et votre solde seront protégés
+        par notre système de compte. Les opérations
+        importantes seront vérifiées côté serveur.
+      </p>
+
+    </section>
+
+  </main>
+
+
+  <!-- =========================
+       MODALE MODIFICATION PROFIL
+  ========================= -->
+
+  <div
+    class="modal"
+    id="editProfileModal"
+  >
+
+    <div class="modal-content">
+
+      <button
+        type="button"
+        class="close-button"
+        onclick="fermerModal('editProfileModal')"
+      >
+        ×
+      </button>
+
+
+      <h2>
+        ✏️ Modifier mon profil
+      </h2>
+
+
+      <form
+        id="profileForm"
+        onsubmit="enregistrerProfil(event)"
+      >
+
+
+        <div class="form-group">
+
+          <label for="editName">
+            Nom ou pseudonyme
+          </label>
+
+          <input
+            type="text"
+            id="editName"
+            placeholder="Votre nom ou pseudonyme"
+            maxlength="60"
+          >
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label for="editAge">
+            Âge
+          </label>
+
+          <input
+            type="number"
+            id="editAge"
+            min="18"
+            max="100"
+            placeholder="Votre âge"
+          >
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label for="editCountry">
+            Pays
+          </label>
+
+          <select id="editCountry">
+
+            <option value="">
+              Sélectionner un pays
+            </option>
+
+            <!--
+              Les pays africains seront chargés
+              depuis Appwrite lors de l'intégration.
+            -->
+
+          </select>
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label for="editCity">
+            Ville
+          </label>
+
+          <select id="editCity">
+
+            <option value="">
+              Sélectionner une ville
+            </option>
+
+            <!--
+              Les villes seront chargées
+              selon le pays sélectionné.
+            -->
+
+          </select>
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label for="editDescription">
+            À propos de moi
+          </label>
+
+          <textarea
+            id="editDescription"
+            maxlength="500"
+            placeholder="Présentez-vous en quelques mots..."
+          ></textarea>
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label for="editSearch">
+            Je recherche
+          </label>
+
+          <select id="editSearch">
+
+            <option value="relation-serieuse">
+              Une relation sérieuse
+            </option>
+
+            <option value="trouver-amour">
+              Trouver l'amour
+            </option>
+
+            <option value="ame-soeur">
+              Mon âme sœur
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <button
+          type="submit"
+          class="save-button"
+        >
+          💾 Enregistrer les modifications
+        </button>
+
+
+      </form>
+
+    </div>
+
+  </div>
+
+
+  <!-- =========================
+       MODALE PAIEMENT
+  ========================= -->
+
+  <div
+    class="modal"
+    id="paymentModal"
+  >
+
+    <div class="modal-content">
+
+      <button
+        type="button"
+        class="close-button"
+        onclick="fermerModal('paymentModal')"
+      >
+        ×
+      </button>
+
+
+      <h2>
+        💳 Acheter des points
+      </h2>
+
+
+      <div class="payment-info">
+
+        <p>
+          Vous avez sélectionné
+          <strong id="selectedPoints">
+            5 points
+          </strong>
+          pour
+          <strong id="selectedPrice">
+            1 000 FCFA
+          </strong>.
+        </p>
+
+      </div>
+
+
+      <p class="section-description">
+        Choisissez votre moyen de paiement.
+        Le solde sera crédité uniquement après
+    <!-- =========================
+       NAVIGATION BAS
+  ========================= -->
+
+  <nav class="bottom-nav">
+
+    <a href="index.html">
+      <span>🏠</span>
+      Accueil
+    </a>
+
+    <a href="explorer.html">
+      <span>🔎</span>
+      Explorer
+    </a>
+
+    <a href="messagerie.html">
+      <span>💬</span>
+      Messagerie
+    </a>
+
+    <a
+      href="profil.html"
+      class="active"
+    >
+      <span>👤</span>
+      Profil
+    </a>
+
+  </nav>
+
+
+  <!-- =========================
+       JAVASCRIPT
+  ========================= -->
+
+  <script>
+
+    /*
+    ==========================================
+    CONFIGURATION APPWRITE
+    ==========================================
+
+    Les identifiants seront ajoutés
+    lors de l'étape de connexion réelle
+    à Appwrite.
+
+    Ne pas mettre de clé secrète
+    directement dans ce fichier.
+    */
+
+    const APPWRITE_ENDPOINT = "";
+
+    const APPWRITE_PROJECT_ID = "";
+
+    const APPWRITE_DATABASE_ID = "";
+
+    /*
+    ==========================================
+    VARIABLES
+    ==========================================
+    */
+
+    let nombrePointsSelectionne = 0;
+
+    let prixSelectionne = 0;
+
+
+    /*
+    ==========================================
+    OUVRIR LA MODIFICATION DU PROFIL
+    ==========================================
+    */
+
+    function ouvrirModificationProfil() {
+
+      const modal =
+        document.getElementById(
+          "editProfileModal"
+        );
+
+      if (modal) {
+
+        modal.classList.add("show");
+
+      }
+
+    }
+
+
+    /*
+    ==========================================
+    OUVRIR LE PAIEMENT
+    ==========================================
+    */
+
+    function ouvrirPaiement(
+      nombrePoints,
+      prix
+    ) {
+
+      nombrePointsSelectionne =
+        nombrePoints;
+
+      prixSelectionne =
+        prix;
+
+
+      const selectedPoints =
+        document.getElementById(
+          "selectedPoints"
+        );
+
+      const selectedPrice =
+        document.getElementById(
+          "selectedPrice"
+        );
+
+
+      if (selectedPoints) {
+
+        selectedPoints.textContent =
+          nombrePoints + " points";
+
+      }
+
+
+      if (selectedPrice) {
+
+        selectedPrice.textContent =
+          formaterPrix(prix) + " FCFA";
+
+      }
+
+
+      const modal =
+        document.getElementById(
+          "paymentModal"
+        );
+
+
+      if (modal) {
+
+        modal.classList.add("show");
+
+      }
+
+    }
+
+
+    /*
+    ==========================================
+    FORMATAGE DU PRIX
+    ==========================================
+    */
+
+    function formaterPrix(prix) {
+
+      return Number(prix).toLocaleString(
+        "fr-FR"
+      );
+
+    }
+
+
+    /*
+    ==========================================
+    CONTINUER VERS LE PAIEMENT
+    ==========================================
+    */
+
+    function continuerPaiement() {
+
+      const methode =
+        document.querySelector(
+          'input[name="paymentMethod"]:checked'
+        );
+
+
+      if (!methode) {
+
+        alert(
+          "Veuillez sélectionner un moyen de paiement."
+        );
+
+        return;
+
+      }
+
+
+      /*
+      ========================================
+      IMPORTANT
+      ========================================
+
+      Cette partie est volontairement
+      préparée mais pas encore connectée
+      à un vrai système de paiement.
+
+      Plus tard :
+
+      1. créer une transaction ;
+      2. envoyer l'utilisateur vers
+         le moyen de paiement ;
+      3. attendre la confirmation réelle ;
+      4. recevoir le webhook ;
+      5. créditer les points côté serveur.
+
+      Le bouton ne doit jamais créditer
+      les points directement.
+      */
+
+
+      console.log(
+        "Paiement demandé :",
+        nombrePointsSelectionne,
+        "points",
+        prixSelectionne,
+        "FCFA",
+        "Méthode :",
+        methode.value
+      );
+
+
+      alert(
+        "Le système de paiement sera connecté lors de l'intégration du paiement."
+      );
+
+    }
+
+
+    /*
+    ==========================================
+    ENREGISTRER LE PROFIL
+    ==========================================
+    */
+
+    function enregistrerProfil(event) {
+
+      event.preventDefault();
+
+
+      const nom =
+        document
+          .getElementById("editName")
+          .value
+          .trim();
+
+
+      const age =
+        Number(
+          document
+            .getElementById("editAge")
+            .value
+        );
+
+
+      const pays =
+        document
+          .getElementById("editCountry")
+          .value;
+
+
+      const ville =
+        document
+          .getElementById("editCity")
+          .value;
+
+
+      const description =
+        document
+          .getElementById("editDescription")
+          .value
+          .trim();
+
+
+      const recherche =
+        document
+          .getElementById("editSearch")
+          .value;
+
+
+      /*
+      ========================================
+      VALIDATIONS
+      ========================================
+      */
+
+      if (!nom) {
+
+        alert(
+          "Veuillez renseigner votre nom ou pseudonyme."
+        );
+
+        return;
+
+      }
+
+
+      if (
+        !age ||
+        age < 18 ||
+        age > 100
+      ) {
+
+        alert(
+          "L'âge doit être compris entre 18 et 100 ans."
+        );
+
+        return;
+
+      }
+
+
+      if (!pays) {
+
+        alert(
+          "Veuillez sélectionner votre pays."
+        );
+
+        return;
+
+      }
+
+
+      if (!ville) {
+
+        alert(
+          "Veuillez sélectionner votre ville."
+        );
+
+        return;
+
+      }
+
+
+      if (!description) {
+
+        alert(
+          "Veuillez ajouter une courte description."
+        );
+
+        return;
+
+      }
+
+
+      /*
+      ========================================
+      DONNÉES DU PROFIL
+      ========================================
+      */
+
+      const profil = {
+
+        nom: nom,
+
+        age: age,
+
+        pays: pays,
+
+        ville: ville,
+
+        description: description,
+
+        recherche: recherche
+
+      };
+
+
+      /*
+      ========================================
+      POUR L'INTÉGRATION APPWRITE
+      ========================================
+
+      Plus tard, ces données seront envoyées
+      à Appwrite Database.
+
+      Le profil devra ensuite passer par :
+
+      Création
+          ↓
+      En attente
+          ↓
+      Validation administrateur
+          ↓
+      Profil public
+
+      Il ne sera donc pas automatiquement
+      publié simplement parce que l'utilisateur
+      clique sur "Enregistrer".
+      */
+
+
+      console.log(
+        "Profil à enregistrer :",
+        profil
+      );
+
+
+      /*
+      ========================================
+      MISE À JOUR DE L'APERÇU
+      ========================================
+      */
+
+      afficherProfilLocal(
+        profil
+      );
+
+
+      fermerModal(
+        "editProfileModal"
+      );
+
+
+      alert(
+        "Les informations du profil ont été enregistrées provisoirement. La validation administrateur sera activée avec Appwrite."
+      );
+
+    }
+
+
+    /*
+    ==========================================
+    AFFICHER LE PROFIL
+    ==========================================
+    */
+
+    function afficherProfilLocal(
+      profil
+    ) {
+
+      const profileName =
+        document.getElementById(
+          "profileName"
+        );
+
+
+      const profileAge =
+        document.getElementById(
+          "profileAge"
+        );
+
+
+      const profileCountry =
+        document.getElementById(
+          "profileCountry"
+        );
+
+
+      const profileCity =
+        document.getElementById(
+          "profileCity"
+        );
+
+
+      const profileSearch =
+        document.getElementById(
+          "profileSearch"
+        );
+
+
+      const profileDescription =
+        document.getElementById(
+          "profileDescription"
+        );
+
+
+      const profileLocation =
+        document.getElementById(
+          "profileLocation"
+        );
+
+
+      if (profileName) {
+
+        profileName.textContent =
+          profil.nom;
+
+      }
+
+
+      if (profileAge) {
+
+        profileAge.textContent =
+          profil.age + " ans";
+
+      }
+
+
+      if (profileCountry) {
+
+        profileCountry.textContent =
+          profil.pays;
+
+      }
+
+
+      if (profileCity) {
+
+        profileCity.textContent =
+          profil.ville;
+
+      }
+
+
+      if (profileSearch) {
+
+        if (
+          profil.recherche ===
+          "relation-serieuse"
+        ) {
+
+          profileSearch.textContent =
+            "Relation sérieuse";
+
+        }
+
+        else if (
+          profil.recherche ===
+          "ame-soeur"
+        ) {
+
+          profileSearch.textContent =
+            "Mon âme sœur";
+
+        }
+
+        else {
+
+          profileSearch.textContent =
+            "Trouver l'amour";
+
+        }
+
+      }
+
+
+      if (profileDescription) {
+
+        profileDescription.textContent =
+          profil.description;
+
+      }
+
+
+      if (profileLocation) {
+
+        profileLocation.textContent =
+          profil.ville +
+          ", " +
+          profil.pays;
+
+      }
+
+    }
+
+
+    /*
+    ==========================================
+    FERMER UNE MODALE
+    ==========================================
+    */
+
+    function fermerModal(id) {
+
+      const modal =
+        document.getElementById(id);
+
+
+      if (modal) {
+
+        modal.classList.remove(
+          "show"
+        );
+
+      }
+
+    }
+
+
+    /*
+    ==========================================
+    FERMER LES MODALES EN CLIQUANT
+    À L'EXTÉRIEUR
+    ==========================================
+    */
+
+    document.addEventListener(
+      "click",
+      function(event) {
+
+        if (
+          event.target.classList.contains(
+            "modal"
+          )
+        ) {
+
+          event.target.classList.remove(
+            "show"
+          );
+
+        }
+
+      }
+    );
+
+
+    /*
+    ==========================================
+    CHARGEMENT DU PROFIL
+    ==========================================
+    */
+
+    async function chargerProfil() {
+
+      /*
+      ========================================
+      APPWRITE
+      ========================================
+
+      Plus tard :
+
+      - identifier l'utilisateur connecté ;
+      - récupérer son profil ;
+      - récupérer son solde de points ;
+      - afficher ses informations ;
+      - vérifier son statut de validation.
+
+      Exemple de logique :
+
+      Appwrite Account
+            ↓
+      utilisateur connecté
+            ↓
+      profil utilisateur
+            ↓
+      solde de points
+            ↓
+      affichage
+      */
+
+
+      console.log(
+        "Chargement du profil..."
+      );
+
+
+      /*
+      Solde temporaire pour l'interface.
+      */
+
+      const points =
+        3;
+
+
+      afficherSolde(
+        points
+      );
+
+    }
+
+
+    /*
+    ==========================================
+    AFFICHER LE SOLDE
+    ==========================================
+    */
+
+    function afficherSolde(
+      points
+    ) {
+
+      const headerPoints =
+        document.getElementById(
+          "headerPoints"
+        );
+
+
+      const mainPoints =
+        document.getElementById(
+          "mainPoints"
+        );
+
+
+      if (headerPoints) {
+
+        headerPoints.textContent =
+          points;
+
+      }
+
+
+      if (mainPoints) {
+
+        mainPoints.textContent =
+          points +
+          (
+            points > 1
+              ? " points"
+              : " point"
+          );
+
+      }
+
+    }
+
+
+    /*
+    ==========================================
+    CHARGER LES PAYS
+    ==========================================
+    */
+
+    async function chargerPays() {
+
+      /*
+      Les pays ne sont volontairement
+      PAS écrits en dur ici.
+
+      Ils seront récupérés depuis
+      la collection "pays" dans Appwrite.
+
+      Seuls les pays africains devront
+      être présents dans cette collection.
+      */
+
+      console.log(
+        "Les pays seront chargés depuis Appwrite."
+      );
+
+    }
+
+
+    /*
+    ==========================================
+    CHARGER LES VILLES
+    ==========================================
+    */
+
+    async function chargerVilles(
+      paysId
+    ) {
+
+      /*
+      Les villes seront récupérées
+      depuis la collection "villes"
+      selon le pays sélectionné.
+
+      Exemple :
+
+      pays sélectionné
+          ↓
+      paysId
+          ↓
+      Appwrite
+          ↓
+      villes du pays
+      */
+
+      console.log(
+        "Chargement des villes pour :",
+        paysId
+      );
+
+    }
+
+
+    /*
+    ==========================================
+    INITIALISATION
+    ==========================================
+    */
+
+    document.addEventListener(
+      "DOMContentLoaded",
+      function() {
+
+        console.log(
+          "Profil initialisé."
+        );
+
+
+        chargerProfil();
+
+
+        chargerPays();
+
+      }
+    );
+
+
+  </script>
+
+</body>
+    </html>
