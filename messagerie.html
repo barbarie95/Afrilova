@@ -1,0 +1,1945 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Messagerie - Rencontres</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #F3FBF7;
+      color: #17352C;
+      padding-bottom: 80px;
+    }
+
+    button {
+      font-family: inherit;
+      cursor: pointer;
+    }
+
+    /* HEADER */
+    header {
+      background: linear-gradient(135deg, #0B8F6A, #3DBB91);
+      color: white;
+      padding: 18px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+    }
+
+    .logo {
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    .points {
+      background: rgba(255,255,255,0.18);
+      padding: 8px 12px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    /* PAGE */
+    .container {
+      width: 100%;
+      max-width: 700px;
+      margin: auto;
+      padding: 18px 14px 30px;
+    }
+
+    h1 {
+      font-size: 24px;
+      margin-bottom: 8px;
+      color: #087557;
+    }
+
+    .intro {
+      color: #55736A;
+      font-size: 14px;
+      line-height: 1.5;
+      margin-bottom: 18px;
+    }
+
+    /* ONGLETS */
+    .tabs {
+      display: flex;
+      background: white;
+      border-radius: 14px;
+      padding: 5px;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+
+    .tab {
+      flex: 1;
+      border: none;
+      background: transparent;
+      padding: 12px 8px;
+      border-radius: 10px;
+      color: #55736A;
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+    .tab.active {
+      background: #E0F7EE;
+      color: #087557;
+    }
+
+    /* CARTES */
+    .card {
+      background: white;
+      border-radius: 16px;
+      padding: 15px;
+      margin-bottom: 12px;
+      box-shadow: 0 2px 9px rgba(0,0,0,0.06);
+    }
+
+    .request-card,
+    .conversation-card {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .avatar {
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      object-fit: cover;
+      background: #E0F7EE;
+      flex-shrink: 0;
+    }
+
+    .person-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .person-info h3 {
+      font-size: 16px;
+      margin-bottom: 4px;
+      color: #17352C;
+    }
+
+    .person-info p {
+      font-size: 13px;
+      color: #668078;
+      line-height: 1.4;
+    }
+
+    .actions {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-top: 9px;
+    }
+
+    .primary-button,
+    .accept-button {
+      border: none;
+      background: #0B8F6A;
+      color: white;
+      padding: 9px 12px;
+      border-radius: 9px;
+      font-weight: bold;
+      font-size: 12px;
+    }
+
+    .secondary-button,
+    .refuse-button {
+      border: none;
+      background: #E0F7EE;
+      color: #087557;
+      padding: 9px 12px;
+      border-radius: 9px;
+      font-weight: bold;
+      font-size: 12px;
+    }
+
+    .danger-button {
+      border: none;
+      background: #ffe8e8;
+      color: #b42318;
+      padding: 9px 12px;
+      border-radius: 9px;
+      font-weight: bold;
+      font-size: 12px;
+    }
+
+    /* ZONE VIDE */
+    .empty {
+      background: white;
+      border-radius: 16px;
+      padding: 35px 20px;
+      text-align: center;
+      color: #668078;
+      box-shadow: 0 2px 9px rgba(0,0,0,0.05);
+    }
+
+    .empty-icon {
+      font-size: 40px;
+      margin-bottom: 10px;
+    }
+
+    .empty h3 {
+      color: #087557;
+      margin-bottom: 7px;
+    }
+
+    .empty p {
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    /* CHAT */
+    #chatArea {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: #F3FBF7;
+      z-index: 50;
+      flex-direction: column;
+    }
+
+    .chat-header {
+      background: linear-gradient(135deg, #0B8F6A, #3DBB91);
+      color: white;
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .chat-back {
+      border: none;
+      background: transparent;
+      color: white;
+      font-size: 25px;
+      padding: 3px 7px;
+    }
+
+    .chat-person {
+      flex: 1;
+    }
+
+    .chat-person strong {
+      display: block;
+      font-size: 16px;
+    }
+
+    .chat-person small {
+      opacity: 0.9;
+      font-size: 12px;
+    }
+
+    .chat-header-actions {
+      display: flex;
+      gap: 4px;
+    }
+
+    .icon-button {
+      border: none;
+      background: rgba(255,255,255,0.16);
+      color: white;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      font-size: 16px;
+    }
+
+    .messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 15px;
+    }
+
+    .message {
+      max-width: 78%;
+      padding: 10px 12px;
+      border-radius: 15px;
+      margin-bottom: 9px;
+      font-size: 14px;
+      line-height: 1.4;
+    }
+
+    .message.received {
+      background: white;
+      margin-right: auto;
+      border-bottom-left-radius: 4px;
+    }
+
+    .message.sent {
+      background: #0B8F6A;
+      color: white;
+      margin-left: auto;
+      border-bottom-right-radius: 4px;
+    }
+
+    .message-time {
+      display: block;
+      font-size: 10px;
+      opacity: 0.65;
+      margin-top: 4px;
+    }
+
+    /* OUTILS DE CHAT */
+    .chat-tools {
+      background: white;
+      padding: 8px 10px;
+      border-top: 1px solid #dcefe7;
+      display: flex;
+      gap: 7px;
+      overflow-x: auto;
+    }
+
+    .tool-button {
+      white-space: nowrap;
+      border: none;
+      background: #E0F7EE;
+      color: #087557;
+      padding: 8px 11px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    /* PHOTOS */
+    .photo-zone {
+      background: white;
+      padding: 8px 10px;
+      border-top: 1px solid #dcefe7;
+    }
+
+    .photo-note {
+      font-size: 11px;
+      color: #668078;
+      margin-bottom: 6px;
+    }
+
+    .photo-preview {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 7px;
+    }
+
+    .photo-preview-item {
+      position: relative;
+      width: 65px;
+      height: 65px;
+    }
+
+    .photo-preview-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 9px;
+    }
+
+    .photo-preview-item button {
+      position: absolute;
+      top: -6px;
+      right: -6px;
+      width: 21px;
+      height: 21px;
+      border: none;
+      border-radius: 50%;
+      background: #b42318;
+      color: white;
+      font-weight: bold;
+    }
+
+    .photo-label {
+      display: inline-block;
+      background: #E0F7EE;
+      color: #087557;
+      padding: 8px 11px;
+      border-radius: 9px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    #photoInput {
+      display: none;
+    }
+
+    /* INPUT MESSAGE */
+    .message-form {
+      background: white;
+      padding: 9px 10px;
+      display: flex;
+      gap: 7px;
+      border-top: 1px solid #dcefe7;
+    }
+
+    .message-form input {
+      flex: 1;
+      min-width: 0;
+      border: 1px solid #cce5dc;
+      border-radius: 20px;
+      padding: 11px 14px;
+      outline: none;
+      font-size: 14px;
+    }
+
+    .message-form input:focus {
+      border-color: #0B8F6A;
+    }
+
+    .send-button {
+      width: 43px;
+      height: 43px;
+      border: none;
+      border-radius: 50%;
+      background: #0B8F6A;
+      color: white;
+      font-size: 18px;
+    }
+
+    /* MODALES */
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.45);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+      padding: 15px;
+    }
+
+    .modal.show {
+      display: flex;
+    }
+
+    .modal-content {
+      width: 100%;
+      max-width: 500px;
+      max-height: 90vh;
+      overflow-y: auto;
+      background: white;
+      border-radius: 18px;
+      padding: 20px;
+      position: relative;
+    }
+
+    .close-button {
+      position: absolute;
+      right: 12px;
+      top: 10px;
+      border: none;
+      background: #E0F7EE;
+      color: #087557;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      font-size: 21px;
+    }
+
+    .modal-content h2 {
+      color: #087557;
+      font-size: 19px;
+      margin-bottom: 8px;
+      padding-right: 35px;
+    }
+
+    .modal-description {
+      color: #668078;
+      font-size: 13px;
+      line-height: 1.5;
+      margin-bottom: 15px;
+    }
+
+    /* COUP DE POUCE */
+    .cost {
+      background: #E0F7EE;
+      color: #087557;
+      border-radius: 10px;
+      padding: 10px;
+      text-align: center;
+      font-size: 13px;
+      font-weight: bold;
+      margin-bottom: 14px;
+    }
+
+    .help-options {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .help-option {
+      width: 100%;
+      border: 1px solid #dcefe7;
+      background: #fafffd;
+      border-radius: 12px;
+      padding: 12px;
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      text-align: left;
+    }
+
+    .help-option:hover {
+      background: #E0F7EE;
+    }
+
+    .help-option > span {
+      font-size: 22px;
+      width: 30px;
+      text-align: center;
+    }
+
+    .help-option strong {
+      display: block;
+      color: #17352C;
+      font-size: 13px;
+      margin-bottom: 3px;
+    }
+
+    .help-option small {
+      color: #668078;
+      font-size: 11px;
+    }
+
+    #helpResults {
+      margin-top: 16px;
+    }
+
+    .results-title {
+      color: #087557;
+      font-size: 14px;
+      font-weight: bold;
+      margin-bottom: 9px;
+    }
+
+    .suggestion-card {
+      background: #F3FBF7;
+      border: 1px solid #dcefe7;
+      border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 9px;
+    }
+
+    .suggestion-card p {
+      font-size: 13px;
+      line-height: 1.5;
+      margin-bottom: 9px;
+    }
+
+    .suggestion-actions {
+      display: flex;
+      gap: 7px;
+      flex-wrap: wrap;
+    }
+
+    .suggestion-actions button {
+      border: none;
+      background: #0B8F6A;
+      color: white;
+      padding: 8px 10px;
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: bold;
+    }
+
+    .suggestion-actions button.secondary {
+      background: #E0F7EE;
+      color: #087557;
+    }
+
+    /* SIGNALER */
+    .report-options {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .report-options button {
+      width: 100%;
+      border: 1px solid #dcefe7;
+      background: white;
+      padding: 11px;
+      border-radius: 10px;
+      text-align: left;
+      color: #17352C;
+      font-size: 13px;
+    }
+
+    .report-options button:hover {
+      background: #E0F7EE;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 8px;
+      justify-content: flex-end;
+      margin-top: 15px;
+    }
+
+    .cancel-button {
+      border: none;
+      background: #E0F7EE;
+      color: #087557;
+      padding: 10px 15px;
+      border-radius: 9px;
+      font-weight: bold;
+    }
+
+    /* NAVIGATION BAS */
+    .bottom-nav {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 68px;
+      background: white;
+      border-top: 1px solid #dcefe7;
+      display: flex;
+      z-index: 40;
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.06);
+    }
+
+    .bottom-nav a {
+      flex: 1;
+      text-decoration: none;
+      color: #668078;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      font-size: 11px;
+      font-weight: bold;
+    }
+
+    .bottom-nav a span {
+      font-size: 20px;
+      line-height: 1;
+    }
+
+    .bottom-nav a.active {
+      color: #0B8F6A;
+    }
+
+    @media (min-width: 700px) {
+      .bottom-nav {
+        max-width: 700px;
+        left: 50%;
+        transform: translateX(-50%);
+        border-radius: 16px 16px 0 0;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <div class="logo">💚 Rencontres</div>
+    <div class="points">⭐ <span id="pointsBalance">3</span> points</div>
+  </header>
+
+  <main class="container">
+
+    <h1>💬 Messagerie</h1>
+
+    <p class="intro">
+      Gérez vos demandes et discutez avec les personnes avec qui vous avez accepté de faire connaissance.
+    </p>
+
+    <div class="tabs">
+      <button
+        type="button"
+        id="tabDemandes"
+        class="tab active"
+        onclick="afficherOnglet('demandes')"
+      >
+        📩 Demandes
+      </button>
+
+      <button
+        type="button"
+        id="tabConversations"
+        class="tab"
+        onclick="afficherOnglet('conversations')"
+      >
+        💬 Mes discussions
+      </button>
+    </div>
+
+    <!-- DEMANDES -->
+    <section id="demandesSection">
+
+      <div class="card request-card">
+
+        <img
+          class="avatar"
+          src="https://via.placeholder.com/100"
+          alt="Photo de profil"
+        >
+
+        <div class="person-info">
+          <h3>Profil exemple</h3>
+
+          <p>
+            25 ans · Ouagadougou, Burkina Faso
+          </p>
+
+          <div class="actions">
+            <button
+              type="button"
+              class="accept-button"
+              onclick="accepterDemande('demo')"
+            >
+              ✓ Accepter
+            </button>
+
+            <button
+              type="button"
+              class="refuse-button"
+              onclick="refuserDemande('demo')"
+            >
+              Refuser
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="empty" id="demandesEmpty" style="display:none;">
+        <div class="empty-icon">📩</div>
+        <h3>Aucune demande</h3>
+        <p>
+          Les nouvelles demandes de discussion apparaîtront ici.
+        </p>
+      </div>
+
+    </section>
+
+    <!-- DISCUSSIONS -->
+    <section id="conversationsSection" style="display:none;">
+
+      <div
+        class="card conversation-card"
+        onclick="ouvrirConversation('demo-conversation')"
+      >
+
+        <img
+          class="avatar"
+          src="https://via.placeholder.com/100"
+          alt="Photo de profil"
+        >
+
+        <div class="person-info">
+          <h3>Profil exemple</h3>
+
+          <p>
+            Cliquez pour ouvrir la conversation.
+          </p>
+        </div>
+
+        <span>›</span>
+
+      </div>
+
+      <div class="empty" id="conversationsEmpty" style="display:none;">
+        <div class="empty-icon">💬</div>
+        <h3>Aucune discussion</h3>
+        <p>
+          Lorsque vous acceptez une demande, votre discussion apparaîtra ici.
+        </p>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- ZONE DE CONVERSATION -->
+
+  <div id="chatArea">
+
+    <div class="chat-header">
+
+      <button
+        type="button"
+        class="chat-back"
+        onclick="fermerChat()"
+      >
+        ‹
+      </button>
+
+      <div class="chat-person">
+        <strong id="chatPersonName">Profil exemple</strong>
+        <small id="chatPersonInfo">25 ans · Ouagadougou</small>
+      </div>
+
+      <div class="chat-header-actions">
+
+        <button
+          type="button"
+          class="icon-button"
+          onclick="ouvrirSignalement()"
+          title="Signaler"
+        >
+          🚨
+        </button>
+
+        <button
+          type="button"
+          class="icon-button"
+          onclick="ouvrirBlocage()"
+          title="Bloquer"
+        >
+          🚫
+        </button>
+
+      </div>
+
+    </div>
+
+    <div class="messages" id="messagesArea">
+
+      <div class="message received">
+        Bonjour 😊
+        <span class="message-time">Aujourd'hui</span>
+      </div>
+
+      <div class="message sent">
+        Bonjour, ravi de faire ta connaissance !
+        <span class="message-time">Aujourd'hui</span>
+      </div>
+
+    </div>
+
+    <div class="chat-tools">
+
+      <button
+        type="button"
+        class="tool-button"
+        onclick="ouvrirCoupDePouce()"
+      >
+        💡 Coup de pouce conversation · 2 points
+      </button>
+
+    </div>
+
+    <div class="photo-zone">
+
+      <div class="photo-note">
+        📷 2 photos maximum par conversation
+      </div>
+
+      <div
+        class="photo-preview"
+        id="photoPreview"
+      ></div>
+
+      <label
+        for="photoInput"
+        class="photo-label"
+      >
+        📷 Ajouter une photo
+      </label>
+
+      <input
+        type="file"
+        id="photoInput"
+        accept="image/*"
+        multiple
+        onchange="selectionnerPhotos(event)"
+      >
+
+    </div>
+
+    <div class="message-form">
+
+      <input
+        type="text"
+        id="messageInput"
+        placeholder="Écrire un message..."
+        autocomplete="off"
+        onkeydown="if(event.key === 'Enter') envoyerMessage()"
+      >
+
+      <button
+        type="button"
+        class="send-button"
+        onclick="envoyerMessage()"
+      >
+        ➤
+      </button>
+
+    </div>
+
+  </div>
+
+  <!-- MODALE COUP DE POUCE -->
+
+  <div
+    class="modal"
+    id="helpModal"
+  >
+
+    <div class="modal-content">
+
+      <button
+        type="button"
+        class="close-button"
+        onclick="fermerCoupDePouce()"
+      >
+        ×
+      </button>
+
+      <h2>💡 Coup de pouce conversation</h2>
+
+      <p class="modal-description">
+        Choisissez ce dont vous avez besoin. Le coup de pouce coûte
+        <strong>2 points (400 FCFA)</strong>.
+      </p>
+
+      <div class="cost">
+        2 points • 400 FCFA
+      </div>
+
+      <div class="help-options">
+
+        <button
+          type="button"
+          class="help-option"
+          onclick="choisirAide('repondre')"
+        >
+          <span>💬</span>
+
+          <div>
+            <strong>Je ne sais pas quoi répondre</strong>
+            <small>Obtenir plusieurs réponses possibles</small>
+          </div>
+        </button>
+
+        <button
+          type="button"
+          class="help-option"
+          onclick="choisirAide('interet')"
+        >
+          <span>❤️</span>
+
+          <div>
+            <strong>Je veux montrer mon intérêt</strong>
+            <small>Exprimer naturellement ce que je ressens</small>
+          </div>
+        </button>
+
+        <button
+          type="button"
+          class="help-option"
+          onclick="choisirAide('relancer')"
+        >
+          <span>🗣️</span>
+
+          <div>
+            <strong>Je veux relancer la conversation</strong>
+            <small>Trouver une idée pour continuer à discuter</small>
+          </div>
+        </button>
+
+        <button
+          type="button"
+          class="help-option"
+          onclick="choisirAide('naturelle')"
+        >
+          <span>😊</span>
+
+          <div>
+            <strong>Je veux rendre la conversation plus naturelle</strong>
+            <small>Des idées de phrases, questions ou sujets</small>
+          </div>
+        </button>
+
+        <button
+          type="button"
+          class="help-option"
+          onclick="choisirAide('comprendre')"
+        >
+          <span>❓</span>
+
+          <div>
+            <strong>Je ne comprends pas son message</strong>
+            <small>Comprendre le message et trouver une réponse</small>
+          </div>
+        </button>
+
+      </div>
+
+      <div id="helpResults"></div>
+
+    </div>
+
+        </div>
+  <!-- MODALE : SIGNALER -->
+
+  <div
+    class="modal"
+    id="reportModal"
+  >
+
+    <div class="modal-content">
+
+      <button
+        type="button"
+        class="close-button"
+        onclick="fermerModal('reportModal')"
+      >
+        ×
+      </button>
+
+      <h2>🚨 Signaler ce profil</h2>
+
+      <p class="modal-description">
+        Pourquoi souhaitez-vous signaler cette personne ?
+      </p>
+
+      <div class="report-options">
+
+        <button
+          type="button"
+          onclick="signaler('faux_profil')"
+        >
+          Faux profil
+        </button>
+
+        <button
+          type="button"
+          onclick="signaler('harcelement')"
+        >
+          Harcèlement ou comportement déplacé
+        </button>
+
+        <button
+          type="button"
+          onclick="signaler('inapproprie')"
+        >
+          Contenu ou comportement inapproprié
+        </button>
+
+        <button
+          type="button"
+          onclick="signaler('suspect')"
+        >
+          Profil ou comportement suspect
+        </button>
+
+        <button
+          type="button"
+          onclick="signaler('autre')"
+        >
+          Autre raison
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- MODALE : BLOQUER -->
+
+  <div
+    class="modal"
+    id="blockModal"
+  >
+
+    <div class="modal-content">
+
+      <button
+        type="button"
+        class="close-button"
+        onclick="fermerModal('blockModal')"
+      >
+        ×
+      </button>
+
+      <h2>🚫 Bloquer cette personne ?</h2>
+
+      <p class="modal-description">
+        Cette personne ne pourra plus vous envoyer de demande
+        ni vous contacter.
+      </p>
+
+      <div class="modal-actions">
+
+        <button
+          type="button"
+          class="cancel-button"
+          onclick="fermerModal('blockModal')"
+        >
+          Annuler
+        </button>
+
+        <button
+          type="button"
+          class="danger-button"
+          onclick="confirmerBlocage()"
+        >
+          Bloquer
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- NAVIGATION BAS -->
+
+  <nav class="bottom-nav">
+
+    <a href="index.html">
+      <span>🏠</span>
+      Accueil
+    </a>
+
+    <a href="explorer.html">
+      <span>🔎</span>
+      Explorer
+    </a>
+
+    <a
+      href="messagerie.html"
+      class="active"
+    >
+      <span>💬</span>
+      Messagerie
+    </a>
+
+    <a href="profil.html">
+      <span>👤</span>
+      Profil
+    </a>
+
+  </nav>
+
+
+  <script>
+
+    /*
+    ==========================================
+    CONFIGURATION APPWRITE
+    ==========================================
+    */
+
+    const APPWRITE_ENDPOINT = "";
+    const APPWRITE_PROJECT_ID = "";
+    const APPWRITE_DATABASE_ID = "";
+
+    /*
+    ==========================================
+    VARIABLES
+    ==========================================
+    */
+
+    const MAX_PHOTOS_PAR_CONVERSATION = 2;
+
+    let conversationActuelle = null;
+    let aideSelectionnee = null;
+    let photosSelectionnees = [];
+
+
+    /*
+    ==========================================
+    NAVIGATION DES ONGLETS
+    ==========================================
+    */
+
+    function afficherOnglet(onglet) {
+
+      const demandes =
+        document.getElementById("demandesSection");
+
+      const conversations =
+        document.getElementById("conversationsSection");
+
+      const boutonDemandes =
+        document.getElementById("tabDemandes");
+
+      const boutonConversations =
+        document.getElementById("tabConversations");
+
+
+      if (onglet === "demandes") {
+
+        demandes.style.display = "block";
+        conversations.style.display = "none";
+
+        boutonDemandes.classList.add("active");
+        boutonConversations.classList.remove("active");
+
+      } else {
+
+        demandes.style.display = "none";
+        conversations.style.display = "block";
+
+        boutonDemandes.classList.remove("active");
+        boutonConversations.classList.add("active");
+
+      }
+
+    }
+
+
+    /*
+    ==========================================
+    OUVRIR UNE CONVERSATION
+    ==========================================
+    */
+
+    function ouvrirConversation(conversationId) {
+
+      conversationActuelle = conversationId;
+
+      const chat =
+        document.getElementById("chatArea");
+
+      if (chat) {
+        chat.style.display = "flex";
+      }
+
+      console.log(
+        "Conversation ouverte :",
+        conversationId
+      );
+
+      /*
+      Plus tard avec Appwrite :
+
+      - récupérer la conversation
+      - récupérer les messages
+      - afficher les messages
+      - vérifier les permissions
+      */
+
+    }
+
+
+    /*
+    ==========================================
+    FERMER LA CONVERSATION
+    ==========================================
+    */
+
+    function fermerChat() {
+
+      const chat =
+        document.getElementById("chatArea");
+
+      if (chat) {
+        chat.style.display = "none";
+      }
+
+      conversationActuelle = null;
+
+    }
+
+
+    /*
+    ==========================================
+    COUP DE POUCE CONVERSATION
+    ==========================================
+    */
+
+    function ouvrirCoupDePouce() {
+
+      if (!conversationActuelle) {
+
+        alert(
+          "Ouvrez d'abord une conversation."
+        );
+
+        return;
+
+      }
+
+      document
+        .getElementById("helpModal")
+        .classList.add("show");
+
+    }
+
+
+    function fermerCoupDePouce() {
+
+      document
+        .getElementById("helpModal")
+        .classList.remove("show");
+
+      aideSelectionnee = null;
+
+    }
+
+
+    function choisirAide(type) {
+
+      aideSelectionnee = type;
+
+      /*
+      Plus tard :
+
+      1. Vérifier le nombre de points.
+      2. Vérifier que l'utilisateur possède
+         au moins 2 points.
+      3. Débiter 2 points côté serveur.
+      4. Envoyer le contexte de la conversation.
+      5. Générer les suggestions.
+      6. Afficher les suggestions.
+
+      Le débit réel des points ne devra PAS
+      être effectué uniquement en JavaScript.
+      */
+
+      console.log(
+        "Aide sélectionnée :",
+        type
+      );
+
+      afficherSuggestionsDemo(type);
+
+    }
+
+
+    /*
+    ==========================================
+    SUGGESTIONS
+    ==========================================
+    */
+
+    function afficherSuggestionsDemo(type) {
+
+      const resultats =
+        document.getElementById("helpResults");
+
+      if (!resultats) return;
+
+
+      let titre = "";
+      let suggestions = [];
+
+
+      if (type === "repondre") {
+
+        titre =
+          "💬 Voici quelques réponses possibles";
+
+        suggestions = [
+
+          "« Ah oui ? Raconte-moi un peu plus 😊 »",
+
+          "« C'est intéressant, et toi tu en penses quoi ? »",
+
+          "« Je vois 😊 Et qu'est-ce que tu aimes le plus dans ça ? »"
+
+        ];
+
+      }
+
+
+      if (type === "interet") {
+
+        titre =
+          "❤️ Pour montrer ton intérêt";
+
+        suggestions = [
+
+          "« J'aime bien discuter avec toi 😊 »",
+
+          "« Je trouve notre conversation vraiment agréable. »",
+
+          "« Tu as l'air d'être une personne intéressante à découvrir. »"
+
+        ];
+
+      }
+
+
+      if (type === "relancer") {
+
+        titre =
+          "🗣️ Pour relancer la conversation";
+
+        suggestions = [
+
+          "« Et sinon, qu'est-ce que tu aimes faire pendant ton temps libre ? »",
+
+          "« J'aimerais mieux te connaître. Tu peux me parler un peu de toi ? »",
+
+          "« Si tu pouvais voyager demain, tu choisirais quelle destination ? »"
+
+        ];
+
+      }
+
+
+      if (type === "naturelle") {
+
+        titre =
+          "😊 Pour rendre la conversation plus naturelle";
+
+        suggestions = [
+
+          "« Au fait, comment s'est passée ta journée ? »",
+
+          "« J'ai une petite question : qu'est-ce qui te fait vraiment sourire ? »",
+
+          "« On parle de beaucoup de choses, mais je ne t'ai même pas demandé ce que tu apprécies le plus dans la vie. »"
+
+        ];
+
+      }
+
+
+      if (type === "comprendre") {
+
+        titre =
+          "❓ Comprendre son message";
+
+        suggestions = [
+
+          "Explique-moi le message reçu et je peux t'aider à comprendre ce qu'il veut dire.",
+
+          "Tu peux examiner le contexte de la conversation avant de répondre.",
+
+          "Choisis une réponse simple et naturelle si tu n'es pas certain de son intention."
+
+        ];
+
+      }
+
+
+      resultats.innerHTML = `
+
+        <div class="results-title">
+          ${titre}
+        </div>
+
+        ${suggestions.map((suggestion, index) => `
+
+          <div class="suggestion-card">
+
+            <p>
+              ${suggestion}
+            </p>
+
+            <div class="suggestion-actions">
+
+              <button
+                type="button"
+                onclick="modifierSuggestion(${index})"
+              >
+                ✏️ Modifier avant d'envoyer
+              </button>
+
+              <button
+                type="button"
+                class="secondary"
+                onclick="ignorerSuggestion(${index})"
+              >
+                Ignorer
+              </button>
+
+            </div>
+
+          </div>
+
+        `).join("")}
+
+      `;
+
+    }
+
+
+    /*
+    ==========================================
+    MODIFIER UNE SUGGESTION
+    ==========================================
+    */
+
+    function modifierSuggestion(index) {
+
+      alert(
+        "La modification avant envoi sera activée avec le système de conversation."
+      );
+
+      /*
+      Plus tard :
+
+      ouvrir un champ texte prérempli
+      avec la suggestion sélectionnée.
+      */
+
+    }
+
+
+    /*
+    ==========================================
+    IGNORER UNE SUGGESTION
+    ==========================================
+    */
+
+    function ignorerSuggestion(index) {
+
+      const cartes =
+        document.querySelectorAll(
+          ".suggestion-card"
+        );
+
+      if (cartes[index]) {
+        cartes[index].remove();
+      }
+
+    }
+
+
+    /*
+    ==========================================
+    ENVOYER UN MESSAGE
+    ==========================================
+    */
+
+    function envoyerMessage() {
+
+      const champ =
+        document.getElementById("messageInput");
+
+      if (!champ) return;
+
+      const message =
+        champ.value.trim();
+
+      if (!message) return;
+
+
+      /*
+      Plus tard :
+
+      enregistrer le message
+      dans Appwrite Database.
+      */
+
+      console.log(
+        "Message :",
+        message
+      );
+
+      champ.value = "";
+
+    }
+
+
+    /*
+    ==========================================
+    SÉLECTION DES PHOTOS
+    ==========================================
+    */
+
+    function selectionnerPhotos(event) {
+
+      const fichiers =
+        Array.from(event.target.files);
+
+      if (fichiers.length === 0) return;
+
+
+      if (
+        photosSelectionnees.length +
+        fichiers.length >
+        MAX_PHOTOS_PAR_CONVERSATION
+      ) {
+
+        alert(
+          "Vous pouvez envoyer maximum 2 photos par conversation."
+        );
+
+        event.target.value = "";
+
+        return;
+
+      }
+
+
+      fichiers.forEach((fichier) => {
+
+        if (
+          !fichier.type.startsWith("image/")
+        ) {
+          return;
+        }
+
+        photosSelectionnees.push(fichier);
+
+      });
+
+
+      afficherPrevisualisations();
+
+      event.target.value = "";
+
+    }
+
+
+    /*
+    ==========================================
+    PRÉVISUALISATION DES PHOTOS
+    ==========================================
+    */
+
+    function afficherPrevisualisations() {
+
+      const container =
+        document.getElementById(
+          "photoPreview"
+        );
+
+      if (!container) return;
+
+
+      container.innerHTML = "";
+
+
+      photosSelectionnees.forEach(
+        (photo, index) => {
+
+          const wrapper =
+            document.createElement("div");
+
+          wrapper.className =
+            "photo-preview-item";
+
+
+          const image =
+            document.createElement("img");
+
+          image.src =
+            URL.createObjectURL(photo);
+
+          image.alt =
+            "Photo sélectionnée";
+
+
+          const bouton =
+            document.createElement("button");
+
+          bouton.type = "button";
+
+          bouton.innerHTML = "×";
+
+
+          bouton.onclick = function () {
+
+            supprimerPhoto(index);
+
+          };
+
+
+          wrapper.appendChild(image);
+
+          wrapper.appendChild(bouton);
+
+          container.appendChild(wrapper);
+
+        }
+      );
+
+    }
+
+
+    /*
+    ==========================================
+    SUPPRIMER UNE PHOTO
+    ==========================================
+    */
+
+    function supprimerPhoto(index) {
+
+      photosSelectionnees.splice(
+        index,
+        1
+      );
+
+      afficherPrevisualisations();
+
+    }
+
+
+    /*
+    ==========================================
+    ENVOYER LES PHOTOS
+    ==========================================
+    */
+
+    function envoyerPhotos() {
+
+      if (!conversationActuelle) {
+
+        alert(
+          "Ouvrez d'abord une conversation."
+        );
+
+        return;
+
+      }
+
+
+      if (
+        photosSelectionnees.length === 0
+      ) {
+
+        alert(
+          "Sélectionnez au moins une photo."
+        );
+
+        return;
+
+      }
+
+
+      /*
+      Plus tard :
+
+      - envoyer les fichiers dans
+        Appwrite Storage
+      - enregistrer les références
+        dans Appwrite Database
+      - appliquer la limite de 2 photos
+        côté serveur
+      */
+
+      console.log(
+        "Photos à envoyer :",
+        photosSelectionnees.length
+      );
+
+    }
+
+
+    /*
+    ==========================================
+    SIGNALER
+    ==========================================
+    */
+
+    function ouvrirSignalement() {
+
+      document
+        .getElementById("reportModal")
+        .classList.add("show");
+
+    }
+
+
+    function signaler(raison) {
+
+      /*
+      Plus tard :
+
+      enregistrer le signalement
+      dans Appwrite.
+      */
+
+      console.log(
+        "Signalement :",
+        raison
+      );
+
+
+      fermerModal(
+        "reportModal"
+      );
+
+
+      alert(
+        "Votre signalement a été enregistré. Merci de nous aider à protéger la communauté."
+      );
+
+    }
+
+
+    /*
+    ==========================================
+    BLOQUER
+    ==========================================
+    */
+
+    function ouvrirBlocage() {
+
+      document
+        .getElementById("blockModal")
+        .classList.add("show");
+
+    }
+
+
+    function confirmerBlocage() {
+
+      /*
+      Plus tard :
+
+      créer le blocage dans Appwrite.
+      */
+
+      console.log(
+        "Blocage de la conversation :",
+        conversationActuelle
+      );
+
+
+      fermerModal(
+        "blockModal"
+      );
+
+
+      alert(
+        "Cette personne sera bloquée."
+      );
+
+    }
+
+
+    /*
+    ==========================================
+    FERMER UNE MODALE
+    ==========================================
+    */
+
+    function fermerModal(id) {
+
+      const modal =
+        document.getElementById(id);
+
+      if (modal) {
+
+        modal.classList.remove("show");
+
+      }
+
+    }
+
+
+    /*
+    ==========================================
+    FERMER EN CLIQUANT À L'EXTÉRIEUR
+    ==========================================
+    */
+
+    document.addEventListener(
+      "click",
+      function(event) {
+
+        if (
+          event.target.classList.contains(
+            "modal"
+          )
+        ) {
+
+          event.target.classList.remove(
+            "show"
+          );
+
+        }
+
+      }
+    );
+
+
+    /*
+    ==========================================
+    ACCEPTER UNE DEMANDE
+    ==========================================
+    */
+
+    function accepterDemande(id) {
+
+      /*
+      Plus tard :
+
+      enregistrer l'acceptation
+      dans Appwrite.
+      */
+
+      console.log(
+        "Demande acceptée :",
+        id
+      );
+
+
+      alert(
+        "Demande acceptée. La discussion est maintenant disponible."
+      );
+
+    }
+
+
+    /*
+    ==========================================
+    REFUSER UNE DEMANDE
+    ==========================================
+    */
+
+    function refuserDemande(id) {
+
+      /*
+      Plus tard :
+
+      enregistrer le refus
+      dans Appwrite.
+      */
+
+      console.log(
+        "Demande refusée :",
+        id
+      );
+
+
+      alert(
+        "La demande a été refusée."
+      );
+
+    }
+
+
+    /*
+    ==========================================
+    INITIALISATION
+    ==========================================
+    */
+
+    document.addEventListener(
+      "DOMContentLoaded",
+      function() {
+
+        console.log(
+          "Messagerie initialisée."
+        );
+
+        /*
+        Plus tard :
+
+        initialiser Appwrite ici.
+        */
+
+      }
+    );
+
+  </script>
+
+</body>
+  </html>
