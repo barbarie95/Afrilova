@@ -1,330 +1,322 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Afrilove - Trouvez l'amour</title>
 
-  <title>Trouvez l'amour qui vous correspond ❤️</title>
+<style>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
 
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+body{
+  font-family:Arial,sans-serif;
+  background:#F3FBF7;
+  color:#17352C;
+  padding-bottom:75px;
+}
 
-    body {
-      font-family: Arial, sans-serif;
-      background: #F3FBF7;
-      color: #17352B;
-      padding-bottom: 80px;
-    }
+header{
+  background:linear-gradient(135deg,#0B8F6A,#3DBB91);
+  color:white;
+  padding:17px 15px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  box-shadow:0 3px 10px rgba(0,0,0,.08);
+}
 
-    /* =========================
-       HEADER
-    ========================= */
+.logo{
+  font-size:21px;
+  font-weight:bold;
+}
 
-    header {
-      background: linear-gradient(
-        145deg,
-        #0B8F6A,
-        #3DBB91,
-        #E0F7EE
-      );
+.points{
+  background:rgba(255,255,255,.18);
+  padding:7px 11px;
+  border-radius:20px;
+  font-size:12px;
+  font-weight:bold;
+}
 
-      color: white;
-      padding: 20px 16px 30px;
-      border-radius: 0 0 28px 28px;
-    }
+.container{
+  max-width:700px;
+  margin:auto;
+  padding:22px 14px;
+}
 
-    .top-bar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 28px;
-    }
+.hero{
+  text-align:center;
+  padding:12px 5px 25px;
+}
 
-    .logo {
-      font-size: 20px;
-      font-weight: bold;
-    }
+.hero h1{
+  color:#087557;
+  font-size:27px;
+  line-height:1.2;
+  margin-bottom:10px;
+}
 
-    .points {
-      background: rgba(255, 255, 255, 0.22);
-      padding: 8px 13px;
-      border-radius: 20px;
-      font-size: 14px;
-    }
+.hero p{
+  color:#668078;
+  font-size:14px;
+  line-height:1.5;
+}
 
-    header h1 {
-      font-size: 27px;
-      line-height: 1.25;
-      margin-bottom: 10px;
-    }
+.hero-button{
+  display:inline-block;
+  margin-top:17px;
+  padding:12px 22px;
+  background:#0B8F6A;
+  color:white;
+  text-decoration:none;
+  border-radius:12px;
+  font-weight:bold;
+  font-size:14px;
+}
 
-    header p {
-      font-size: 15px;
-      line-height: 1.5;
-      max-width: 450px;
-    }
+.section-title{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin:5px 0 12px;
+}
 
-    /* =========================
-       CONTENU
-    ========================= */
+.section-title h2{
+  color:#087557;
+  font-size:19px;
+}
 
-    main {
-      width: 100%;
-      max-width: 650px;
-      margin: auto;
-      padding: 18px 15px;
-    }
+.section-title a{
+  color:#0B8F6A;
+  text-decoration:none;
+  font-size:12px;
+  font-weight:bold;
+}
 
-    /* =========================
-       RECHERCHE
-    ========================= */
+.profiles{
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+}
 
-    .search-card {
-      background: white;
-      padding: 18px;
-      border-radius: 20px;
-      box-shadow: 0 5px 18px rgba(0, 0, 0, 0.06);
-      margin-bottom: 25px;
-    }
+.profile-card{
+  background:white;
+  border-radius:18px;
+  overflow:hidden;
+  box-shadow:0 3px 12px rgba(0,0,0,.06);
+}
 
-    .search-card h2 {
-      font-size: 18px;
-      margin-bottom: 14px;
-    }
+.profile-card img{
+  width:100%;
+  height:260px;
+  object-fit:cover;
+  background:#E0F7EE;
+}
 
-    .field {
-      margin-bottom: 12px;
-    }
+.profile-content{
+  padding:15px;
+}
 
-    .field label {
-      display: block;
-      font-size: 13px;
-      margin-bottom: 6px;
-      color: #526960;
-    }
+.profile-name{
+  color:#17352C;
+  font-size:19px;
+  margin-bottom:4px;
+}
 
-    select {
-      width: 100%;
-      padding: 13px;
-      border: 1px solid #CDE7DC;
-      border-radius: 12px;
-      background: white;
-      color: #17352B;
-      font-size: 14px;
-      outline: none;
-    }
+.profile-location{
+  color:#668078;
+  font-size:12px;
+  margin-bottom:9px;
+}
 
-    select:focus {
-      border-color: #0B8F6A;
-    }
+.profile-description{
+  color:#55736A;
+  font-size:13px;
+  line-height:1.5;
+  margin-bottom:12px;
+}
 
-    .search-button {
-      width: 100%;
-      border: none;
-      background: #0B8F6A;
-      color: white;
-      padding: 13px;
-      border-radius: 12px;
-      font-size: 15px;
-      font-weight: bold;
-      cursor: pointer;
-      margin-top: 3px;
-    }
+.profile-link{
+  display:block;
+  text-align:center;
+  background:#E0F7EE;
+  color:#087557;
+  text-decoration:none;
+  padding:10px;
+  border-radius:10px;
+  font-size:13px;
+  font-weight:bold;
+}
 
-    .search-button:active {
-      transform: scale(0.98);
-    }
+.info-card{
+  margin-top:20px;
+  background:white;
+  border-radius:18px;
+  padding:18px;
+  box-shadow:0 3px 12px rgba(0,0,0,.05);
+}
 
-    /* =========================
-       PROFILS
-    ========================= */
+.info-card h2{
+  color:#087557;
+  font-size:18px;
+  margin-bottom:8px;
+}
 
-    .section-title {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 14px;
-    }
+.info-card p{
+  color:#668078;
+  font-size:13px;
+  line-height:1.5;
+}
 
-    .section-title h2 {
-      font-size: 21px;
-    }
+.steps{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  margin-top:13px;
+}
 
-    .profiles-container {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
+.step{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  background:#F3FBF7;
+  border-radius:11px;
+  padding:11px;
+}
 
-    .profile-card {
-      background: white;
-      border-radius: 20px;
-      overflow: hidden;
-      box-shadow: 0 5px 18px rgba(0, 0, 0, 0.06);
-    }
+.step-icon{
+  width:36px;
+  height:36px;
+  border-radius:10px;
+  background:#E0F7EE;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-shrink:0;
+}
 
-    .profile-photo {
-      width: 100%;
-      height: 270px;
-      object-fit: cover;
-      display: block;
-      background: #E0F7EE;
-    }
+.step strong{
+  display:block;
+  font-size:13px;
+  margin-bottom:3px;
+}
 
-    .profile-content {
-      padding: 16px;
-    }
+.step small{
+  color:#668078;
+  font-size:11px;
+}
 
-    .profile-name {
-      font-size: 20px;
-      font-weight: bold;
-      margin-bottom: 6px;
-    }
+.bonus{
+  margin-top:18px;
+  background:linear-gradient(135deg,#087557,#3DBB91);
+  color:white;
+  border-radius:18px;
+  padding:18px;
+  text-align:center;
+}
 
-    .profile-location {
-      color: #087557;
-      font-size: 14px;
-      margin-bottom: 10px;
-    }
+.bonus h2{
+  font-size:18px;
+  margin-bottom:7px;
+}
 
-    .profile-description {
-      color: #536960;
-      font-size: 14px;
-      line-height: 1.5;
-      margin-bottom: 12px;
-    }
+.bonus p{
+  font-size:12px;
+  line-height:1.5;
+  opacity:.95;
+}
 
-    .looking-for {
-      display: inline-block;
-      background: #E0F7EE;
-      color: #087557;
-      padding: 7px 10px;
-      border-radius: 15px;
-      font-size: 13px;
-      margin-bottom: 14px;
-    }
+.bonus button{
+  margin-top:12px;
+  border:0;
+  background:white;
+  color:#087557;
+  padding:10px 17px;
+  border-radius:10px;
+  font-weight:bold;
+}
 
-    .profile-button {
-      display: block;
-      width: 100%;
-      padding: 12px;
-      border-radius: 12px;
-      background: #0B8F6A;
-      color: white;
-      text-align: center;
-      text-decoration: none;
-      font-size: 14px;
-      font-weight: bold;
-    }
+.empty{
+  background:white;
+  border-radius:18px;
+  padding:30px 15px;
+  text-align:center;
+  color:#668078;
+  font-size:13px;
+}
 
-    /* =========================
-       MESSAGE VIDE
-    ========================= */
+.bottom-nav{
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
+  height:68px;
+  background:white;
+  border-top:1px solid #dcefe7;
+  display:flex;
+  z-index:50;
+  box-shadow:0 -2px 10px rgba(0,0,0,.06);
+}
 
-    .empty-message {
-      background: white;
-      padding: 25px 18px;
-      text-align: center;
-      border-radius: 20px;
-      box-shadow: 0 5px 18px rgba(0, 0, 0, 0.05);
-    }
+.bottom-nav a{
+  flex:1;
+  text-decoration:none;
+  color:#668078;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:3px;
+  font-size:11px;
+  font-weight:bold;
+}
 
-    .empty-icon {
-      font-size: 40px;
-      margin-bottom: 10px;
-    }
+.bottom-nav span{
+  font-size:20px;
+  line-height:1;
+}
 
-    .empty-message h3 {
-      font-size: 17px;
-      margin-bottom: 8px;
-    }
+.bottom-nav a.active{
+  color:#0B8F6A;
+}
 
-    .empty-message p {
-      color: #65766F;
-      font-size: 14px;
-      line-height: 1.5;
-    }
-
-    /* =========================
-       NAVIGATION
-    ========================= */
-
-    .bottom-nav {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 70px;
-      background: white;
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      box-shadow: 0 -3px 15px rgba(0, 0, 0, 0.08);
-      z-index: 1000;
-    }
-
-    .nav-link {
-      text-decoration: none;
-      color: #71827B;
-      text-align: center;
-      font-size: 12px;
-    }
-
-    .nav-link span {
-      display: block;
-      font-size: 21px;
-      margin-bottom: 3px;
-    }
-
-    .nav-link.active {
-      color: #0B8F6A;
-      font-weight: bold;
-    }
-
-    /* =========================
-       MOBILE
-    ========================= */
-
-    @media (max-width: 500px) {
-
-      header h1 {
-        font-size: 24px;
-      }
-
-      header p {
-        font-size: 14px;
-      }
-
-      .profile-photo {
-        height: 240px;
-      }
-    }
-  </style>
+@media(min-width:700px){
+  .bottom-nav{
+    max-width:700px;
+    left:50%;
+    right:auto;
+    width:100%;
+    transform:translateX(-50%);
+    border-radius:16px 16px 0 0;
+  }
+}
+</style>
 </head>
 
 <body>
 
-  <!-- =========================
-       HEADER
-  ========================= -->
+<header>
 
-  <header>
+  <div class="logo">
+    💚 Afrilove
+  </div>
 
-    <div class="top-bar">
+  <div class="points">
+    ⭐ <span id="points">3</span> points
+  </div>
 
-      <div class="logo">
-        💚 Rencontres
-      </div>
+</header>
 
-      <div class="points">
-        ⭐ <span id="points">3</span> points
-      </div>
 
-    </div>
+<main class="container">
+
+  <!-- ACCUEIL -->
+
+  <section class="hero">
 
     <h1>
       Trouvez l’amour qui vous correspond ❤️
@@ -334,383 +326,277 @@
       Une personne, une rencontre, peut-être une belle histoire à écrire.
     </p>
 
-  </header>
+    <a href="explorer.html" class="hero-button">
+      💚 Découvrir des profils
+    </a>
+
+  </section>
 
 
-  <main>
+  <!-- PROFILS -->
 
-    <!-- =========================
-         RECHERCHE
-    ========================= -->
-
-    <section class="search-card">
-
-      <h2>
-        🔎 Trouver quelqu’un
-      </h2>
-
-      <div class="field">
-
-        <label for="country">
-          Pays
-        </label>
-
-        <select id="country">
-
-          <option value="">
-            🌍 Tous les pays
-          </option>
-
-        </select>
-
-      </div>
-
-
-      <div class="field">
-
-        <label for="city">
-          Ville
-        </label>
-
-        <select id="city" disabled>
-
-          <option value="">
-            🏙️ Toutes les villes
-          </option>
-
-        </select>
-
-      </div>
-
-
-      <button
-        type="button"
-        class="search-button"
-        id="searchButton"
-      >
-        🔎 Rechercher
-      </button>
-
-    </section>
-
-
-    <!-- =========================
-         PROFILS
-    ========================= -->
+  <section>
 
     <div class="section-title">
 
       <h2>
-        ❤️ Profils
+        ✨ Des personnes à découvrir
       </h2>
+
+      <a href="explorer.html">
+        Voir plus
+      </a>
 
     </div>
 
 
-    <section
-      class="profiles-container"
-      id="profiles"
-    >
+    <div class="profiles" id="profiles">
 
-      <div class="empty-message">
+      <div class="profile-card">
 
-        <div class="empty-icon">
-          💚
+        <img
+          src="https://via.placeholder.com/700x500/E0F7EE/087557?text=Afrilove"
+          alt="Profil">
+
+        <div class="profile-content">
+
+          <h3 class="profile-name">
+            Profil à découvrir
+          </h3>
+
+          <p class="profile-location">
+            🌍 Afrique
+          </p>
+
+          <p class="profile-description">
+            Les profils approuvés apparaîtront ici.
+            Explorez Afrilove pour découvrir des personnes
+            qui pourraient vous correspondre.
+          </p>
+
+          <a href="explorer.html" class="profile-link">
+            🔎 Découvrir les profils
+          </a>
+
         </div>
-
-        <h3>
-          Les profils arrivent bientôt
-        </h3>
-
-        <p>
-          Les profils approuvés seront affichés ici.
-        </p>
 
       </div>
 
-    </section>
+    </div>
 
-  </main>
-
-
-  <!-- =========================
-       NAVIGATION
-  ========================= -->
-
-  <nav class="bottom-nav">
-
-    <a
-      href="index.html"
-      class="nav-link active"
-    >
-      <span>🏠</span>
-      Accueil
-    </a>
+  </section>
 
 
-    <a
-      href="explorer.html"
-      class="nav-link"
-    >
-      <span>🔎</span>
-      Explorer
-    </a>
+  <!-- COMMENT ÇA MARCHE -->
+
+  <section class="info-card">
+
+    <h2>
+      💚 Comment ça marche ?
+    </h2>
+
+    <p>
+      Afrilove vous permet de découvrir des personnes
+      et d'ouvrir une discussion lorsque vous souhaitez
+      faire connaissance.
+    </p>
 
 
-    <a
-      href="messagerie.html"
-      class="nav-link"
-    >
-      <span>💬</span>
-      Messagerie
-    </a>
+    <div class="steps">
 
+      <div class="step">
 
-    <a
-      href="profil.html"
-      class="nav-link"
-    >
-      <span>👤</span>
-      Profil
-    </a>
-
-  </nav>
-
-
-  <!-- =========================
-       SDK APPWRITE (CDN)
-  ========================= -->
-
-  <script src="https://cdn.jsdelivr.net/npm/appwrite@20.0.0"></script>
-
-
-  <!-- =========================
-       APPWRITE
-  ========================= -->
-
-  <script>
-
-    /*
-     * ==============================================
-     * CONNEXION APPWRITE
-     * ==============================================
-     */
-
-    const client = new Appwrite.Client();
-
-    client
-      .setEndpoint("https://fra.cloud.appwrite.io/v1")
-      .setProject("6aac203e00209ccb3014");
-
-    const tablesDB = new Appwrite.TablesDB(client);
-
-    const DATABASE_ID = "6aac2a200000e6be5877";
-    const TABLE_PAYS = "pays";
-
-
-    /*
-     * ==============================================
-     * DONNÉES TEMPORAIRES
-     * ==============================================
-     */
-
-    let pays = [];
-    let villes = [];
-    let profils = [];
-
-
-    /*
-     * ==============================================
-     * CHARGER LES PAYS
-     * ==============================================
-     */
-
-    async function chargerPays() {
-
-      const countrySelect =
-        document.getElementById("country");
-
-      try {
-
-        const reponse = await tablesDB.listRows({
-          databaseId: DATABASE_ID,
-          tableId: TABLE_PAYS
-        });
-
-        pays = reponse.rows;
-
-        let optionsHTML = `
-          <option value="">
-            🌍 Tous les pays
-          </option>
-        `;
-
-        pays.forEach(function (unPays) {
-
-          optionsHTML += `
-            <option value="${unPays.$id}">
-              ${unPays.nom}
-            </option>
-          `;
-
-        });
-
-        countrySelect.innerHTML = optionsHTML;
-
-      } catch (erreur) {
-
-        console.error("Erreur chargement pays :", erreur);
-
-        countrySelect.innerHTML = `
-          <option value="">
-            🌍 Tous les pays
-          </option>
-        `;
-
-      }
-    }
-
-
-    /*
-     * ==============================================
-     * CHARGER LES VILLES
-     * ==============================================
-     */
-
-    async function chargerVilles(paysId) {
-
-      const citySelect =
-        document.getElementById("city");
-
-      citySelect.innerHTML = `
-        <option value="">
-          🏙️ Toutes les villes
-        </option>
-      `;
-
-      citySelect.disabled = !paysId;
-
-      /*
-       * Les villes seront récupérées depuis
-       * Appwrite selon le pays sélectionné.
-       */
-    }
-
-
-    /*
-     * ==============================================
-     * CHARGER LES PROFILS
-     * ==============================================
-     */
-
-    async function chargerProfils() {
-
-      /*
-       * Plus tard, Appwrite récupérera uniquement
-       * les profils dont le statut est "approuve".
-       *
-       * Exemple :
-       *
-       * statut = approuve
-       */
-
-      afficherMessageVide();
-    }
-
-
-    /*
-     * ==============================================
-     * AFFICHER LE MESSAGE
-     * ==============================================
-     */
-
-    function afficherMessageVide() {
-
-      const profiles =
-        document.getElementById("profiles");
-
-      profiles.innerHTML = `
-        <div class="empty-message">
-
-          <div class="empty-icon">
-            💚
-          </div>
-
-          <h3>
-            Les profils arrivent bientôt
-          </h3>
-
-          <p>
-            Les profils approuvés seront affichés ici.
-          </p>
-
+        <div class="step-icon">
+          👤
         </div>
-      `;
-    }
+
+        <div>
+          <strong>
+            Créez votre profil
+          </strong>
+
+          <small>
+            Présentez-vous simplement.
+          </small>
+        </div>
+
+      </div>
 
 
-    /*
-     * ==============================================
-     * CHANGEMENT DE PAYS
-     * ==============================================
-     */
+      <div class="step">
 
-    document
-      .getElementById("country")
-      .addEventListener("change", function () {
+        <div class="step-icon">
+          🔎
+        </div>
 
-        chargerVilles(this.value);
+        <div>
+          <strong>
+            Découvrez des profils
+          </strong>
 
-      });
+          <small>
+            Explorez les personnes disponibles.
+          </small>
+        </div>
 
-
-    /*
-     * ==============================================
-     * RECHERCHE
-     * ==============================================
-     */
-
-    document
-      .getElementById("searchButton")
-      .addEventListener("click", function () {
-
-        const selectedCountry =
-          document.getElementById("country").value;
-
-        const selectedCity =
-          document.getElementById("city").value;
-
-        /*
-         * La recherche réelle sera connectée
-         * à Appwrite plus tard.
-         */
-
-        console.log(
-          "Recherche :",
-          selectedCountry,
-          selectedCity
-        );
-
-      });
+      </div>
 
 
-    /*
-     * ==============================================
-     * INITIALISATION
-     * ==============================================
-     */
+      <div class="step">
 
-    async function initialiser() {
+        <div class="step-icon">
+          💬
+        </div>
 
-      await chargerPays();
+        <div>
+          <strong>
+            Faites connaissance
+          </strong>
 
-      await chargerProfils();
+          <small>
+            Envoyez une demande de discussion.
+          </small>
+        </div>
 
-    }
+      </div>
 
-    initialiser();
+    </div>
 
-  </script>
+  </section>
+
+
+  <!-- BONUS -->
+
+  <section class="bonus">
+
+    <h2>
+      🌟 Une petite surprise vous attend
+    </h2>
+
+    <p>
+      Découvrez une fonctionnalité pensée pour rendre
+      vos premières rencontres plus simples.
+    </p>
+
+    <button onclick="ouvrirBonus()">
+      Découvrir
+    </button>
+
+  </section>
+
+</main>
+
+
+<!-- NAVIGATION -->
+
+<nav class="bottom-nav">
+
+  <a href="index.html" class="active">
+    <span>🏠</span>
+    Accueil
+  </a>
+
+  <a href="explorer.html">
+    <span>🔎</span>
+    Explorer
+  </a>
+
+  <a href="messagerie.html">
+    <span>💬</span>
+    Messagerie
+  </a>
+
+  <a href="profil.html">
+    <span>👤</span>
+    Profil
+  </a>
+
+</nav>
+
+
+<script>
+
+/*
+==========================================
+CONFIGURATION APPWRITE
+==========================================
+*/
+
+const APPWRITE_ENDPOINT = "";
+const APPWRITE_PROJECT_ID = "";
+const APPWRITE_DATABASE_ID = "";
+
+
+/*
+==========================================
+SOLDE TEMPORAIRE
+==========================================
+*/
+
+let points = 3;
+
+document.getElementById("points").textContent = points;
+
+
+/*
+==========================================
+BONUS
+==========================================
+*/
+
+function ouvrirBonus(){
+
+  alert(
+    "💚 Cette fonctionnalité sera activée avec la prochaine étape d'Afrilove."
+  );
+
+}
+
+
+/*
+==========================================
+PROFILS APPWRITE
+==========================================
+
+Plus tard :
+
+Appwrite
+   ↓
+profils approuvés
+   ↓
+Accueil
+   ↓
+affichage des profils
+
+La recherche reste exclusivement
+dans Explorer.
+*/
+
+async function chargerProfils(){
+
+  console.log(
+    "Les profils approuvés seront chargés depuis Appwrite."
+  );
+
+}
+
+
+/*
+==========================================
+INITIALISATION
+==========================================
+*/
+
+document.addEventListener(
+  "DOMContentLoaded",
+  function(){
+
+    chargerProfils();
+
+  }
+);
+
+</script>
 
 </body>
 </html>
