@@ -478,6 +478,13 @@
 
 
   <!-- =========================
+       SDK APPWRITE (CDN)
+  ========================= -->
+
+  <script src="https://cdn.jsdelivr.net/npm/appwrite@20.0.0"></script>
+
+
+  <!-- =========================
        APPWRITE
   ========================= -->
 
@@ -485,15 +492,20 @@
 
     /*
      * ==============================================
-     * APPWRITE
+     * CONNEXION APPWRITE
      * ==============================================
-     *
-     * La connexion Appwrite sera ajoutée lorsque
-     * nous aurons créé notre projet Appwrite.
-     *
-     * Nous ne mettons volontairement aucune clé
-     * ou identifiant ici pour le moment.
      */
+
+    const client = new Appwrite.Client();
+
+    client
+      .setEndpoint("https://fra.cloud.appwrite.io/v1")
+      .setProject("6aac203e00209ccb3014");
+
+    const tablesDB = new Appwrite.TablesDB(client);
+
+    const DATABASE_ID = "6aac2a200000e6be5877";
+    const TABLE_PAYS = "pays";
 
 
     /*
@@ -511,14 +523,6 @@
      * ==============================================
      * CHARGER LES PAYS
      * ==============================================
-     *
-     * Plus tard :
-     *
-     * Appwrite Database
-     *       ↓
-     * collection "pays"
-     *       ↓
-     * pays affichés ici
      */
 
     async function chargerPays() {
@@ -526,16 +530,44 @@
       const countrySelect =
         document.getElementById("country");
 
-      /*
-       * La connexion Appwrite sera ajoutée
-       * après la création du projet.
-       */
+      try {
 
-      countrySelect.innerHTML = `
-        <option value="">
-          🌍 Tous les pays
-        </option>
-      `;
+        const reponse = await tablesDB.listRows({
+          databaseId: DATABASE_ID,
+          tableId: TABLE_PAYS
+        });
+
+        pays = reponse.rows;
+
+        let optionsHTML = `
+          <option value="">
+            🌍 Tous les pays
+          </option>
+        `;
+
+        pays.forEach(function (unPays) {
+
+          optionsHTML += `
+            <option value="${unPays.$id}">
+              ${unPays.nom}
+            </option>
+          `;
+
+        });
+
+        countrySelect.innerHTML = optionsHTML;
+
+      } catch (erreur) {
+
+        console.error("Erreur chargement pays :", erreur);
+
+        countrySelect.innerHTML = `
+          <option value="">
+            🌍 Tous les pays
+          </option>
+        `;
+
+      }
     }
 
 
@@ -681,4 +713,4 @@
   </script>
 
 </body>
-        </html>
+</html>
