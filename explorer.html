@@ -3,45 +3,39 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <title>Explorer - Rencontres</title>
+  <title>Explorer - Afrilove</title>
 
   <style>
     * {
+      box-sizing: border-box;
       margin: 0;
       padding: 0;
-      box-sizing: border-box;
     }
 
     body {
       font-family: Arial, sans-serif;
       background: #F3FBF7;
-      color: #17352B;
-      padding-bottom: 85px;
+      color: #17352C;
+      padding-bottom: 80px;
     }
 
-    /* =========================
-       HEADER
-    ========================= */
+    button,
+    select {
+      font-family: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
 
     header {
-      background: linear-gradient(
-        145deg,
-        #0B8F6A,
-        #3DBB91,
-        #E0F7EE
-      );
-
+      background: linear-gradient(135deg, #0B8F6A, #3DBB91);
       color: white;
-      padding: 20px 16px 28px;
-      border-radius: 0 0 28px 28px;
-    }
-
-    .top-bar {
+      padding: 18px 16px;
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      margin-bottom: 25px;
+      justify-content: space-between;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.08);
     }
 
     .logo {
@@ -50,72 +44,69 @@
     }
 
     .points {
-      background: rgba(255,255,255,0.22);
-      padding: 8px 13px;
+      background: rgba(255,255,255,0.18);
+      padding: 8px 12px;
       border-radius: 20px;
       font-size: 14px;
+      font-weight: bold;
     }
 
-    header h1 {
-      font-size: 26px;
+    .container {
+      width: 100%;
+      max-width: 700px;
+      margin: auto;
+      padding: 18px 14px 30px;
+    }
+
+    h1 {
+      font-size: 24px;
       margin-bottom: 8px;
+      color: #087557;
     }
 
-    header p {
+    .intro {
+      color: #55736A;
       font-size: 14px;
       line-height: 1.5;
+      margin-bottom: 18px;
     }
 
-    /* =========================
-       CONTENU
-    ========================= */
-
-    main {
-      max-width: 650px;
-      margin: auto;
-      padding: 18px 15px;
-    }
-
-    /* =========================
-       RECHERCHE
-    ========================= */
-
-    .search-card {
+    .search-box {
       background: white;
-      padding: 18px;
-      border-radius: 20px;
-      box-shadow: 0 5px 18px rgba(0,0,0,0.06);
-      margin-bottom: 25px;
-    }
-
-    .search-card h2 {
-      font-size: 18px;
-      margin-bottom: 15px;
+      padding: 15px;
+      border-radius: 16px;
+      box-shadow: 0 2px 9px rgba(0,0,0,0.06);
+      margin-bottom: 18px;
     }
 
     .field {
+      margin-bottom: 10px;
+    }
+
+    .field:last-of-type {
       margin-bottom: 12px;
     }
 
     .field label {
       display: block;
-      color: #526960;
-      font-size: 13px;
-      margin-bottom: 6px;
+      font-size: 12px;
+      font-weight: bold;
+      color: #55736A;
+      margin-bottom: 5px;
     }
 
-    select {
+    .field select {
       width: 100%;
-      padding: 13px;
-      border: 1px solid #CDE7DC;
-      border-radius: 12px;
+      border: 1px solid #cce5dc;
       background: white;
-      color: #17352B;
+      border-radius: 10px;
+      padding: 11px;
       font-size: 14px;
+      color: #17352C;
       outline: none;
     }
 
-    select:focus {
+    .field select:focus {
       border-color: #0B8F6A;
     }
 
@@ -124,114 +115,85 @@
       border: none;
       background: #0B8F6A;
       color: white;
-      padding: 13px;
-      border-radius: 12px;
-      font-size: 15px;
+      padding: 12px;
+      border-radius: 10px;
       font-weight: bold;
-      cursor: pointer;
+      font-size: 14px;
     }
 
-    /* =========================
-       TITRE PROFILS
-    ========================= */
-
-    .section-title {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 14px;
-    }
-
-    .section-title h2 {
-      font-size: 21px;
-    }
-
-    .result-count {
+    .profiles-title {
       color: #087557;
-      font-size: 13px;
-    }
-
-    /* =========================
-       PROFILS
-    ========================= */
-
-    #profiles {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
+      font-size: 18px;
+      margin-bottom: 12px;
     }
 
     .profile-card {
       background: white;
-      border-radius: 20px;
+      border-radius: 16px;
       overflow: hidden;
-      box-shadow: 0 5px 18px rgba(0,0,0,0.06);
+      margin-bottom: 14px;
+      box-shadow: 0 2px 9px rgba(0,0,0,0.06);
     }
 
     .profile-photo {
       width: 100%;
-      height: 270px;
+      height: 300px;
       object-fit: cover;
       display: block;
       background: #E0F7EE;
     }
 
     .profile-content {
-      padding: 16px;
+      padding: 15px;
     }
 
     .profile-name {
-      font-size: 20px;
-      font-weight: bold;
-      margin-bottom: 6px;
+      color: #17352C;
+      font-size: 19px;
+      margin-bottom: 5px;
     }
 
     .profile-location {
-      color: #087557;
-      font-size: 14px;
+      color: #668078;
+      font-size: 13px;
       margin-bottom: 10px;
     }
 
     .profile-description {
-      color: #536960;
+      color: #55736A;
       font-size: 14px;
       line-height: 1.5;
+      margin-bottom: 10px;
+    }
+
+    .research-box {
+      background: #F3FBF7;
+      border-radius: 10px;
+      padding: 10px;
+      color: #087557;
+      font-size: 12px;
       margin-bottom: 12px;
     }
 
-    .looking-for {
-      display: inline-block;
-      background: #E0F7EE;
-      color: #087557;
-      padding: 7px 10px;
-      border-radius: 15px;
-      font-size: 13px;
-      margin-bottom: 14px;
-    }
-
-    .view-profile {
+    .profile-button {
       display: block;
-      width: 100%;
-      padding: 12px;
+      text-align: center;
+      text-decoration: none;
       background: #0B8F6A;
       color: white;
-      text-decoration: none;
-      text-align: center;
-      border-radius: 12px;
-      font-size: 14px;
+      padding: 11px;
+      border-radius: 10px;
+      font-size: 13px;
       font-weight: bold;
     }
 
-    /* =========================
-       MESSAGE VIDE
-    ========================= */
-
-    .empty-message {
+    .empty {
       background: white;
-      border-radius: 20px;
-      padding: 25px 18px;
+      border-radius: 16px;
+      padding: 35px 20px;
       text-align: center;
-      box-shadow: 0 5px 18px rgba(0,0,0,0.05);
+      color: #668078;
+      box-shadow: 0 2px 9px rgba(0,0,0,0.05);
     }
 
     .empty-icon {
@@ -239,65 +201,61 @@
       margin-bottom: 10px;
     }
 
-    .empty-message h3 {
-      font-size: 17px;
-      margin-bottom: 8px;
+    .empty h3 {
+      color: #087557;
+      margin-bottom: 7px;
     }
 
-    .empty-message p {
-      color: #65766F;
+    .empty p {
       font-size: 14px;
       line-height: 1.5;
     }
 
-    /* =========================
-       NAVIGATION
-    ========================= */
-
     .bottom-nav {
       position: fixed;
-      bottom: 0;
       left: 0;
       right: 0;
-      height: 70px;
+      bottom: 0;
+      height: 68px;
       background: white;
+      border-top: 1px solid #dcefe7;
       display: flex;
-      justify-content: space-around;
-      align-items: center;
-      box-shadow: 0 -3px 15px rgba(0,0,0,0.08);
-      z-index: 1000;
+      z-index: 40;
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.06);
     }
 
-    .nav-link {
+    .bottom-nav a {
+      flex: 1;
       text-decoration: none;
-      color: #71827B;
-      text-align: center;
-      font-size: 12px;
-    }
-
-    .nav-link span {
-      display: block;
-      font-size: 21px;
-      margin-bottom: 3px;
-    }
-
-    .nav-link.active {
-      color: #0B8F6A;
+      color: #668078;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      font-size: 11px;
       font-weight: bold;
     }
 
-    /* =========================
-       MOBILE
-    ========================= */
+    .bottom-nav a span {
+      font-size: 20px;
+      line-height: 1;
+    }
 
-    @media (max-width: 500px) {
+    .bottom-nav a.active {
+      color: #0B8F6A;
+    }
 
-      header h1 {
-        font-size: 24px;
+    @media (min-width: 700px) {
+      .bottom-nav {
+        max-width: 700px;
+        left: 50%;
+        transform: translateX(-50%);
+        border-radius: 16px 16px 0 0;
       }
 
       .profile-photo {
-        height: 240px;
+        height: 360px;
       }
     }
   </style>
@@ -305,119 +263,63 @@
 
 <body>
 
-  <!-- =========================
-       HEADER
-  ========================= -->
-
   <header>
+    <div class="logo">💚 Afrilove</div>
 
-    <div class="top-bar">
-
-      <div class="logo">
-        💚 Rencontres
-      </div>
-
-      <div class="points">
-        ⭐ <span id="points">3</span> points
-      </div>
-
+    <div class="points">
+      ⭐ <span id="pointsBalance">3</span> points
     </div>
-
-    <h1>Explorer 🔎</h1>
-
-    <p>
-      Découvrez des personnes qui recherchent l’amour.
-    </p>
-
   </header>
 
+  <main class="container">
 
-  <main>
+    <h1>🔎 Explorer</h1>
 
-    <!-- =========================
-         RECHERCHE
-    ========================= -->
+    <p class="intro">
+      Découvrez des personnes à travers l'Afrique et trouvez celle qui pourrait vous correspondre.
+    </p>
 
-    <section class="search-card">
-
-      <h2>
-        🔎 Rechercher un profil
-      </h2>
+    <div class="search-box">
 
       <div class="field">
+        <label for="countrySelect">Pays</label>
 
-        <label for="country">
-          Pays
-        </label>
-
-        <select id="country">
-
-          <option value="">
-            🌍 Tous les pays
-          </option>
-
+        <select id="countrySelect" onchange="chargerVilles(this.value)">
+          <option value="">Tous les pays</option>
         </select>
-
       </div>
-
 
       <div class="field">
+        <label for="citySelect">Ville</label>
 
-        <label for="city">
-          Ville
-        </label>
-
-        <select id="city" disabled>
-
-          <option value="">
-            🏙️ Toutes les villes
-          </option>
-
+        <select id="citySelect" disabled>
+          <option value="">Toutes les villes</option>
         </select>
-
       </div>
-
 
       <button
         type="button"
         class="search-button"
-        id="searchButton"
+        onclick="rechercherProfils()"
       >
         🔎 Rechercher
       </button>
 
-    </section>
-
-
-    <!-- =========================
-         PROFILS
-    ========================= -->
-
-    <div class="section-title">
-
-      <h2>
-        ❤️ Profils
-      </h2>
-
-      <span
-        class="result-count"
-        id="resultCount"
-      ></span>
-
     </div>
 
+    <h2 class="profiles-title">
+      ❤️ Profils
+    </h2>
 
-    <section id="profiles">
+    <section id="profilesSection">
 
-      <div class="empty-message">
+      <div class="empty" id="emptyState">
 
         <div class="empty-icon">
           💚
         </div>
 
-        <h3>
-          Les profils arrivent bientôt
-        </h3>
+        <h3>Les profils arrivent bientôt</h3>
 
         <p>
           Les profils approuvés apparaîtront ici.
@@ -429,41 +331,27 @@
 
   </main>
 
-
-  <!-- =========================
-       NAVIGATION
-  ========================= -->
-
   <nav class="bottom-nav">
 
-    <a
-      href="index.html"
-      class="nav-link"
-    >
+    <a href="index.html">
       <span>🏠</span>
       Accueil
     </a>
 
     <a
       href="explorer.html"
-      class="nav-link active"
+      class="active"
     >
       <span>🔎</span>
       Explorer
     </a>
 
-    <a
-      href="messagerie.html"
-      class="nav-link"
-    >
+    <a href="messagerie.html">
       <span>💬</span>
       Messagerie
     </a>
 
-    <a
-      href="profil.html"
-      class="nav-link"
-    >
+    <a href="profil.html">
       <span>👤</span>
       Profil
     </a>
@@ -471,96 +359,125 @@
   </nav>
 
 
-  <!-- =========================
-       LOGIQUE APPWRITE
-    ========================= -->
-
   <script>
 
     /*
-     * ==================================================
-     * APPWRITE
-     * ==================================================
-     *
-     * La connexion réelle à Appwrite sera ajoutée
-     * lorsque notre projet Appwrite sera créé.
-     *
-     * Aucun identifiant ou secret n'est placé ici
-     * pour le moment.
-     */
+    ==========================================
+    CONFIGURATION APPWRITE
+    ==========================================
+    */
 
+    const APPWRITE_ENDPOINT =
+      "https://fra.cloud.appwrite.io/v1";
 
-    let profils = [];
+    const APPWRITE_PROJECT_ID =
+      "6aac203e00209ccb3014";
+
+    const APPWRITE_DATABASE_ID =
+      "6aac2a200000e6be5877";
 
 
     /*
-     * ==================================================
-     * CHARGER LES PAYS
-     * ==================================================
-     *
-     * Les pays seront récupérés depuis Appwrite.
-     *
-     * Collection prévue :
-     *
-     * pays
-     *
-     * Champs :
-     * - nom
-     * - code
-     * - indicatif
-     */
+    ==========================================
+    VARIABLES
+    ==========================================
+    */
+
+    let paysDisponibles = [];
+    let villesDisponibles = [];
+
+
+    /*
+    ==========================================
+    CHARGER LES PAYS
+    ==========================================
+    */
 
     async function chargerPays() {
 
-      const country =
-        document.getElementById("country");
+      const select =
+        document.getElementById("countrySelect");
+
+      if (!select) return;
+
+      select.innerHTML =
+        `<option value="">Tous les pays</option>`;
 
       /*
-       * Connexion Appwrite à ajouter
-       * après création de la base.
-       */
+      L'intégration complète Appwrite sera ajoutée
+      avec les permissions de la table pays.
 
-      country.innerHTML = `
-        <option value="">
-          🌍 Tous les pays
-        </option>
-      `;
+      Pour le moment, le select reste prêt
+      à recevoir les pays depuis Appwrite.
+      */
 
+      console.log("Chargement des pays...");
     }
 
 
     /*
-     * ==================================================
-     * CHARGER LES VILLES
-     * ==================================================
-     */
+    ==========================================
+    CHARGER LES VILLES
+    ==========================================
+    */
 
     async function chargerVilles(paysId) {
 
-      const city =
-        document.getElementById("city");
+      const citySelect =
+        document.getElementById("citySelect");
 
-      city.innerHTML = `
-        <option value="">
-          🏙️ Toutes les villes
-        </option>
-      `;
+      if (!citySelect) return;
 
-      city.disabled = !paysId;
+      citySelect.innerHTML =
+        `<option value="">Toutes les villes</option>`;
+
+      citySelect.disabled = !paysId;
+
+      if (!paysId) {
+        return;
+      }
 
       /*
-       * Les villes seront récupérées depuis Appwrite
-       * en fonction du pays sélectionné.
-       */
+      Plus tard :
+
+      récupérer les villes liées au pays
+      depuis la table villes Appwrite.
+      */
+
+      console.log(
+        "Pays sélectionné :",
+        paysId
+      );
+    }
+
+
+    /*
+    ==========================================
+    RECHERCHE
+    ==========================================
+    */
+
+    function rechercherProfils() {
+
+      const paysId =
+        document.getElementById("countrySelect").value;
+
+      const villeId =
+        document.getElementById("citySelect").value;
+
+      chargerProfils(
+        paysId,
+        villeId
+      );
 
     }
 
 
     /*
-     * ==================================================
-     * CHARGER LES PROFILS
-     * ==================================================
-     */
+    ==========================================
+    CHARGER LES PROFILS
+    ==========================================
+    */
 
     async function chargerProfils(
       paysId = "",
@@ -568,59 +485,52 @@
     ) {
 
       /*
-       * Appwrite récupérera uniquement les profils
-       * dont le statut est :
-       *
-       * "approuve"
-       *
-       * Les profils refusés ou en attente ne seront
-       * jamais affichés publiquement.
-       */
+      Plus tard :
+
+      récupérer uniquement les profils
+      ayant le statut "approuve".
+
+      Les profils seront filtrés par pays
+      et ville lorsque nécessaire.
+      */
+
+      console.log(
+        "Recherche profils :",
+        paysId,
+        villeId
+      );
 
       afficherProfils([]);
-
     }
 
 
     /*
-     * ==================================================
-     * AFFICHER LES PROFILS
-     * ==================================================
-     */
+    ==========================================
+    AFFICHER LES PROFILS
+    ==========================================
+    */
 
     function afficherProfils(liste) {
 
-      const container =
-        document.getElementById("profiles");
+      const section =
+        document.getElementById("profilesSection");
 
-      const resultCount =
-        document.getElementById("resultCount");
+      if (!section) return;
 
-      container.innerHTML = "";
+      if (!liste || liste.length === 0) {
 
-      resultCount.textContent =
-        liste.length +
-        " profil" +
-        (liste.length > 1 ? "s" : "");
+        section.innerHTML = `
 
-
-      if (liste.length === 0) {
-
-        container.innerHTML = `
-
-          <div class="empty-message">
+          <div class="empty">
 
             <div class="empty-icon">
-              👥
+              💚
             </div>
 
-            <h3>
-              Aucun profil trouvé
-            </h3>
+            <h3>Les profils arrivent bientôt</h3>
 
             <p>
-              Les profils approuvés correspondant
-              à votre recherche apparaîtront ici.
+              Les profils approuvés apparaîtront ici.
             </p>
 
           </div>
@@ -631,121 +541,80 @@
       }
 
 
-      liste.forEach(profil => {
+      section.innerHTML =
+        liste.map((profil) => `
 
-        const card =
-          document.createElement("article");
+          <article class="profile-card">
 
-        card.className = "profile-card";
-
-
-        card.innerHTML = `
-
-          <img
-            class="profile-photo"
-            src="${profil.photo_url || ""}"
-            alt="Photo de profil"
-            loading="lazy"
-          >
-
-          <div class="profile-content">
-
-            <div class="profile-name">
-              ${profil.nom || "Membre"}
-              ${profil.age ? ", " + profil.age + " ans" : ""}
-            </div>
-
-            <div class="profile-location">
-              📍 ${profil.ville || ""}
-              ${profil.ville && profil.pays ? ", " : ""}
-              ${profil.pays || ""}
-            </div>
-
-            <div class="profile-description">
-              ${profil.description || ""}
-            </div>
-
-            <div class="looking-for">
-              ❤️ ${profil.recherche || "À la recherche de l’amour"}
-            </div>
-
-            <a
-              href="profil.html?id=${profil.id || ""}"
-              class="view-profile"
+            <img
+              class="profile-photo"
+              src="${profil.photoPrincipale || 'https://via.placeholder.com/600x500'}"
+              alt="Photo de ${profil.nom || 'profil'}"
             >
-              Voir le profil
-            </a>
 
-          </div>
+            <div class="profile-content">
 
-        `;
+              <h3 class="profile-name">
+                ${profil.nom || "Profil"}
+                ${profil.age ? ` · ${profil.age} ans` : ""}
+              </h3>
 
-        container.appendChild(card);
+              <div class="profile-location">
+                📍 ${profil.villeNom || ""}
+                ${profil.villeNom && profil.paysNom ? ", " : ""}
+                ${profil.paysNom || ""}
+              </div>
 
-      });
+              <p class="profile-description">
+                ${profil.description || ""}
+              </p>
 
-    }
+              ${
+                profil.recherche
+                ? `
+                  <div class="research-box">
+                    ❤️ Recherche : ${profil.recherche}
+                  </div>
+                `
+                : ""
+              }
 
+              <a
+                class="profile-button"
+                href="profil.html?id=${encodeURIComponent(profil.$id || profil.id || "")}"
+              >
+                Voir le profil
+              </a>
 
-    /*
-     * ==================================================
-     * CHANGEMENT DE PAYS
-     * ==================================================
-     */
+            </div>
 
-    document
-      .getElementById("country")
-      .addEventListener(
-        "change",
-        function () {
+          </article>
 
-          chargerVilles(this.value);
-
-        }
-      );
-
-
-    /*
-     * ==================================================
-     * BOUTON RECHERCHE
-     * ==================================================
-     */
-
-    document
-      .getElementById("searchButton")
-      .addEventListener(
-        "click",
-        function () {
-
-          const pays =
-            document.getElementById("country").value;
-
-          const ville =
-            document.getElementById("city").value;
-
-          chargerProfils(pays, ville);
-
-        }
-      );
-
-
-    /*
-     * ==================================================
-     * INITIALISATION
-     * ==================================================
-     */
-
-    async function initialiser() {
-
-      await chargerPays();
-
-      await chargerProfils();
+        `).join("");
 
     }
 
-    initialiser();
+
+    /*
+    ==========================================
+    INITIALISATION
+    ==========================================
+    */
+
+    document.addEventListener(
+      "DOMContentLoaded",
+      function() {
+
+        chargerPays();
+
+        console.log(
+          "Explorer Afrilove initialisé."
+        );
+
+      }
+    );
 
   </script>
 
 </body>
-  </html>
+</html>
