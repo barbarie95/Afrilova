@@ -121,6 +121,36 @@ h1{color:#087557;font-size:25px;margin-bottom:7px}
  white-space:nowrap
 }
 
+.divider-text{
+ display:flex;align-items:center;gap:10px;
+ color:#95a8a1;font-size:12px;margin:16px 0
+}
+.divider-text::before,.divider-text::after{
+ content:"";flex:1;height:1px;background:#dcefe7
+}
+
+.custom-amount-box{
+ border:1px solid #dcefe7;background:#F9FEFC;
+ border-radius:13px;padding:14px
+}
+.custom-amount-row{
+ display:flex;align-items:center;gap:10px;margin-top:10px
+}
+.custom-amount-row input{
+ flex:1;border:1px solid #cce5dc;border-radius:10px;
+ padding:11px;font-size:14px;color:#17352C;outline:none
+}
+.custom-amount-row input:focus{border-color:#0B8F6A}
+.custom-amount-price{
+ color:#087557;font-weight:bold;font-size:14px;
+ min-width:95px;text-align:right
+}
+.custom-amount-button{
+ width:100%;border:none;background:#0B8F6A;color:white;
+ padding:11px;border-radius:10px;font-weight:bold;
+ margin-top:10px;font-size:13px
+}
+
 .usage-list{display:flex;flex-direction:column;gap:10px}
 .usage-item{
  display:flex;align-items:center;gap:10px;
@@ -422,7 +452,7 @@ h1{color:#087557;font-size:25px;margin-bottom:7px}
 </section>
 
 
-<!-- ======== RÉINITIALISATION MOT DE PASSE (depuis le lien reçu par email) ======== -->
+<!-- ======== RÉINITIALISATION MOT DE PASSE ======== -->
 
 <section id="resetSection" style="display:none">
 
@@ -511,7 +541,7 @@ Profil pas encore créé
 </div>
 
 <div class="info-box">
-<span>Recherche</span>
+<span>Type de relation</span>
 <strong id="profileSearch">—</strong>
 </div>
 
@@ -559,27 +589,49 @@ et d'utiliser l'Aide à la discussion.
 <section class="section-card">
 <h2>⭐ Acheter des points</h2>
 <p class="section-description">
-Choisissez le nombre de points que vous souhaitez acheter.
-Les points seront ajoutés à votre compte après confirmation
-réelle du paiement.
+Choisissez un pack avantageux, ou achetez exactement le nombre
+de points dont vous avez besoin (1 point = 200 FCFA à l'unité).
 </p>
 
 <div class="packs">
-<button type="button" class="pack" onclick="ouvrirPaiement(5,1000)">
-<div class="pack-info"><strong>5 points</strong><small>Pour commencer à utiliser la plateforme</small></div>
+<button type="button" class="pack" onclick="ouvrirPaiement(7,1000)">
+<div class="pack-info"><strong>7 points</strong><small>Pour commencer à utiliser la plateforme</small></div>
 <div class="pack-price">1 000 FCFA</div>
 </button>
 
-<button type="button" class="pack" onclick="ouvrirPaiement(10,2000)">
-<div class="pack-info"><strong>10 points</strong><small>Pour plusieurs demandes et aides</small></div>
+<button type="button" class="pack" onclick="ouvrirPaiement(14,2000)">
+<div class="pack-info"><strong>14 points</strong><small>Pour plusieurs demandes et aides</small></div>
 <div class="pack-price">2 000 FCFA</div>
 </button>
 
-<button type="button" class="pack" onclick="ouvrirPaiement(20,4000)">
-<div class="pack-info"><strong>20 points</strong><small>Pour une utilisation plus régulière</small></div>
+<button type="button" class="pack" onclick="ouvrirPaiement(28,4000)">
+<div class="pack-info"><strong>28 points</strong><small>Pour une utilisation plus régulière</small></div>
 <div class="pack-price">4 000 FCFA</div>
 </button>
 </div>
+
+<div class="divider-text">ou</div>
+
+<div class="custom-amount-box">
+<strong style="font-size:13px;color:#17352C">Choisir mon propre montant</strong>
+
+<div class="custom-amount-row">
+<input
+  type="number"
+  id="customPointsInput"
+  min="1"
+  max="500"
+  value="1"
+  oninput="mettreAJourPrixPersonnalise()">
+<span class="custom-amount-price" id="customPointsPrice">200 FCFA</span>
+</div>
+
+<button type="button" class="custom-amount-button" onclick="ouvrirPaiementPersonnalise()">
+Acheter ce montant
+</button>
+
+</div>
+
 </section>
 
 <section class="section-card">
@@ -618,8 +670,8 @@ en cas de problème.
 
 </div>
 
-  </main>
-  <!-- MODALE MODIFICATION PROFIL -->
+     </main>
+     <!-- MODALE MODIFICATION PROFIL -->
 
 <div class="modal" id="editProfileModal">
 
@@ -635,7 +687,7 @@ en cas de problème.
 <label>Photo principale</label>
 <img id="photoPreview" class="photo-preview" src="https://via.placeholder.com/200/E0F7EE/087557?text=Photo">
 <input type="file" id="editPhoto" accept="image/jpeg,image/png,image/webp" onchange="gererPhotoSelectionnee(event)">
-<div class="choice-note">JPG, PNG ou WEBP — 500 Ko maximum.</div>
+<div class="choice-note">JPG, PNG ou WEBP — compression automatique appliquée si nécessaire.</div>
 </div>
 
 <div class="form-group">
@@ -665,11 +717,6 @@ en cas de problème.
 <div class="form-group">
 <label for="editDescription">À propos de moi</label>
 <textarea id="editDescription" maxlength="1000" placeholder="Présentez-vous en quelques mots..."></textarea>
-</div>
-
-<div class="form-group">
-<label for="editSearch">Je recherche</label>
-<input type="text" id="editSearch" maxlength="255" placeholder="Ex : une relation sérieuse">
 </div>
 
 <div class="form-group">
@@ -775,6 +822,8 @@ const TABLE_PAYS = "pays";
 const TABLE_VILLES = "villes";
 const TABLE_POINTS = "points";
 
+const PRIX_PAR_POINT = 200;
+
 const client = new Appwrite.Client();
 client.setEndpoint(APPWRITE_ENDPOINT).setProject(APPWRITE_PROJECT_ID);
 
@@ -789,6 +838,12 @@ let villesDisponibles = [];
 let photoFichierSelectionne = null;
 let nombrePointsSelectionne = 0;
 let prixSelectionne = 0;
+
+const LABELS_TYPE_RELATION = {
+  mariage: "💍 Mariage",
+  amoureuse: "🌹 Sans précipitation",
+  projet: "💕 Projet de vie à deux"
+};
 
 
 /* ========================================== ONGLETS AUTH ========================================== */
@@ -1051,9 +1106,9 @@ function nomVille(villeId) {
 }
 
 
-/* ========================================== PHOTO ========================================== */
+/* ========================================== PHOTO (avec compression automatique) ========================================== */
 
-function gererPhotoSelectionnee(event) {
+async function gererPhotoSelectionnee(event) {
   const fichier = event.target.files[0];
   if (!fichier) return;
 
@@ -1065,14 +1120,103 @@ function gererPhotoSelectionnee(event) {
     return;
   }
 
-  if (fichier.size > 500000) {
-    alert("La photo dépasse 500 Ko. Choisissez un fichier plus léger.");
-    event.target.value = "";
-    return;
-  }
+  try {
 
-  photoFichierSelectionne = fichier;
-  document.getElementById("photoPreview").src = URL.createObjectURL(fichier);
+    let fichierFinal = fichier;
+
+    if (fichier.size > 500000) {
+      fichierFinal = await compresserImage(fichier);
+    }
+
+    if (fichierFinal.size > 500000) {
+      alert("Cette photo reste trop volumineuse même après compression. Essayez une autre photo.");
+      event.target.value = "";
+      return;
+    }
+
+    photoFichierSelectionne = fichierFinal;
+    document.getElementById("photoPreview").src = URL.createObjectURL(fichierFinal);
+
+  } catch (erreur) {
+    console.error("Erreur compression photo :", erreur);
+    alert("Impossible de traiter cette photo. Essayez-en une autre.");
+    event.target.value = "";
+  }
+}
+
+function compresserImage(fichier, tailleMaxOctets, largeurMax) {
+
+  tailleMaxOctets = tailleMaxOctets || 500000;
+  largeurMax = largeurMax || 1024;
+
+  return new Promise(function (resolve, reject) {
+
+    const lecteur = new FileReader();
+
+    lecteur.onload = function (e) {
+
+      const image = new Image();
+
+      image.onload = function () {
+
+        let largeur = image.width;
+        let hauteur = image.height;
+
+        if (largeur > largeurMax) {
+          hauteur = Math.round((hauteur * largeurMax) / largeur);
+          largeur = largeurMax;
+        }
+
+        const canvas = document.createElement("canvas");
+        canvas.width = largeur;
+        canvas.height = hauteur;
+
+        const contexte = canvas.getContext("2d");
+        contexte.drawImage(image, 0, 0, largeur, hauteur);
+
+        essayerQualite(canvas, 0.85);
+
+      };
+
+      image.onerror = reject;
+      image.src = e.target.result;
+
+    };
+
+    lecteur.onerror = reject;
+    lecteur.readAsDataURL(fichier);
+
+    function essayerQualite(canvas, qualite) {
+
+      canvas.toBlob(function (blob) {
+
+        if (!blob) {
+          reject(new Error("Compression impossible."));
+          return;
+        }
+
+        if (blob.size <= tailleMaxOctets || qualite <= 0.4) {
+
+          const fichierCompresse = new File(
+            [blob],
+            "photo.jpg",
+            { type: "image/jpeg" }
+          );
+
+          resolve(fichierCompresse);
+
+        } else {
+
+          essayerQualite(canvas, qualite - 0.1);
+
+        }
+
+      }, "image/jpeg", qualite);
+
+    }
+
+  });
+
 }
 
 function urlPhoto(photoId) {
@@ -1088,7 +1232,6 @@ function ouvrirModificationProfil() {
     document.getElementById("editName").value = profilActuel.nom || "";
     document.getElementById("editAge").value = profilActuel.age || "";
     document.getElementById("editDescription").value = profilActuel.description || "";
-    document.getElementById("editSearch").value = profilActuel.recherche || "";
     document.getElementById("editEnfants").value = profilActuel.aDesEnfants === true ? "oui" : (profilActuel.aDesEnfants === false ? "non" : "");
     document.getElementById("editPolygamie").value = profilActuel.polygamie || "";
     document.getElementById("editTypeRelation").value = profilActuel.typeRelation || "";
@@ -1103,7 +1246,6 @@ function ouvrirModificationProfil() {
   document.getElementById("editProfileModal").classList.add("show");
 }
 
-
 /* ========================================== ENREGISTRER LE PROFIL ========================================== */
 
 async function enregistrerProfil(event) {
@@ -1114,7 +1256,6 @@ async function enregistrerProfil(event) {
   const paysId = document.getElementById("editCountry").value;
   const villeId = document.getElementById("editCity").value;
   const description = document.getElementById("editDescription").value.trim();
-  const recherche = document.getElementById("editSearch").value.trim();
   const enfants = document.getElementById("editEnfants").value;
   const polygamie = document.getElementById("editPolygamie").value;
   const typeRelation = document.getElementById("editTypeRelation").value;
@@ -1147,7 +1288,7 @@ async function enregistrerProfil(event) {
     }
 
     const donnees = {
-      nom, age, paysId, villeId, description, recherche,
+      nom, age, paysId, villeId, description,
       aDesEnfants: enfants === "oui",
       polygamie,
       typeRelation,
@@ -1237,7 +1378,8 @@ function afficherProfil() {
   document.getElementById("profileAge").textContent = profilActuel.age + " ans";
   document.getElementById("profileCountry").textContent = nomPays(profilActuel.paysId);
   document.getElementById("profileCity").textContent = nomVille(profilActuel.villeId);
-  document.getElementById("profileSearch").textContent = profilActuel.recherche || "—";
+  document.getElementById("profileSearch").textContent =
+    LABELS_TYPE_RELATION[profilActuel.typeRelation] || "—";
   document.getElementById("profileDescription").textContent = profilActuel.description;
   document.getElementById("profilePhoto").src = urlPhoto(profilActuel.photoPrincipale);
 
@@ -1304,7 +1446,33 @@ async function chargerEtatConnexion() {
 }
 
 
-/* ========================================== PAIEMENT ========================================== */
+/* ========================================== ACHAT DE POINTS (packs + montant personnalisé) ========================================== */
+
+function mettreAJourPrixPersonnalise() {
+
+  const input = document.getElementById("customPointsInput");
+  let nombre = parseInt(input.value, 10);
+
+  if (!nombre || nombre < 1) nombre = 1;
+  if (nombre > 500) nombre = 500;
+
+  input.value = nombre;
+
+  const prix = nombre * PRIX_PAR_POINT;
+
+  document.getElementById("customPointsPrice").textContent =
+    formaterPrix(prix) + " FCFA";
+
+}
+
+function ouvrirPaiementPersonnalise() {
+
+  const nombre = parseInt(document.getElementById("customPointsInput").value, 10) || 1;
+  const prix = nombre * PRIX_PAR_POINT;
+
+  ouvrirPaiement(nombre, prix);
+
+}
 
 function ouvrirPaiement(nombrePoints, prix) {
   nombrePointsSelectionne = nombrePoints;
