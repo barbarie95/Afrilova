@@ -352,34 +352,8 @@ header{
 
     <div class="profiles" id="profiles">
 
-      <div class="profile-card">
-
-        <img
-          src="https://via.placeholder.com/700x500/E0F7EE/087557?text=Afrilova"
-          alt="Profil">
-
-        <div class="profile-content">
-
-          <h3 class="profile-name">
-            Profil à découvrir
-          </h3>
-
-          <p class="profile-location">
-            🌍 Afrique
-          </p>
-
-          <p class="profile-description">
-            Les profils approuvés apparaîtront ici.
-            Explorez Afrilova pour découvrir des personnes
-            qui pourraient vous correspondre.
-          </p>
-
-          <a href="explorer.html" class="profile-link">
-            🔎 Découvrir les profils
-          </a>
-
-        </div>
-
+      <div class="empty">
+        Chargement des profils...
       </div>
 
     </div>
@@ -528,7 +502,11 @@ CONFIGURATION APPWRITE
 const APPWRITE_ENDPOINT = "https://fra.cloud.appwrite.io/v1";
 const APPWRITE_PROJECT_ID = "6aac203e00209ccb3014";
 const APPWRITE_DATABASE_ID = "6aac2a200000e6be5877";
+const APPWRITE_BUCKET_PHOTOS = "6aad2a754e0e095d6a9a";
 const TABLE_PROFILS = "6aac2b35002a0debbb85";
+
+const PHOTO_PLACEHOLDER =
+  "https://via.placeholder.com/700x500/E0F7EE/087557?text=Afrilova";
 
 const client = new Appwrite.Client();
 
@@ -537,6 +515,7 @@ client
   .setProject(APPWRITE_PROJECT_ID);
 
 const tablesDB = new Appwrite.TablesDB(client);
+const storage = new Appwrite.Storage(client);
 
 
 /*
@@ -567,16 +546,102 @@ function ouvrirBonus(){
 
 /*
 ==========================================
-PROFILS APPWRITE
+OBTENIR L'URL D'UNE PHOTO
 ==========================================
+*/
 
-Étape de test : on affiche une alerte
-avec le nombre de profils trouvés,
-avant de construire l'affichage visuel
-complet à l'étape suivante.
+function urlPhoto(photoId){
+
+  if (!photoId){
+    return PHOTO_PLACEHOLDER;
+  }
+
+  return storage.getFileView({
+    bucketId: APPWRITE_BUCKET_PHOTOS,
+    fileId: photoId
+  });
+
+}
+
+
+/*
+==========================================
+CRÉER UNE CARTE DE PROFIL
+==========================================
+*/
+
+function creerCarteProfil(profil){
+
+  const nom = profil.nom || "Profil";
+  const age = profil.age ? ", " + profil.age + " ans" : "";
+  const description = profil.description || "";
+  const recherche = profil.recherche
+    ? "🔎 Recherche : " + profil.recherche
+    : "";
+
+  return `
+    <div class="profile-card">
+
+      <img
+        src="${urlPhoto(profil.photoPrincipale)}"
+        alt="${nom}">
+
+      <div class="profile-content">
+
+        <h3 class="profile-name">
+          ${nom}${age}
+        </h3>
+
+        <p class="profile-location">
+          🌍 Afrilova
+        </p>
+
+        <p class="profile-description">
+          ${description}
+          ${recherche ? "<br>" + recherche : ""}
+        </p>
+
+        <a href="explorer.html" class="profile-link">
+          👀 Voir le profil
+        </a>
+
+      </div>
+
+    </div>
+  `;
+
+}
+
+
+/*
+==========================================
+MESSAGE VIDE
+==========================================
+*/
+
+function messageVide(){
+
+  return `
+    <div class="empty">
+      Les profils approuvés apparaîtront ici.
+      Explorez Afrilova pour découvrir des personnes
+      qui pourraient vous correspondre.
+    </div>
+  `;
+
+}
+
+
+/*
+==========================================
+CHARGER LES PROFILS
+==========================================
 */
 
 async function chargerProfils(){
+
+  const conteneur =
+    document.getElementById("profiles");
 
   try {
 
@@ -584,19 +649,31 @@ async function chargerProfils(){
       databaseId: APPWRITE_DATABASE_ID,
       tableId: TABLE_PROFILS,
       queries: [
-        Appwrite.Query.equal("statut", "approuve")
+        Appwrite.Query.equal("statut", "approuve"),
+        Appwrite.Query.limit(10)
       ]
     });
 
-    alert(
-      "Profils trouvés : " + reponse.total
-    );
+    if (reponse.total === 0){
+
+      conteneur.innerHTML = messageVide();
+
+      return;
+
+    }
+
+    conteneur.innerHTML = reponse.rows
+      .map(creerCarteProfil)
+      .join("");
 
   } catch (erreur) {
 
-    alert(
-      "Erreur : " + erreur.message
+    console.error(
+      "Erreur chargement profils :",
+      erreur
     );
+
+    conteneur.innerHTML = messageVide();
 
   }
 
