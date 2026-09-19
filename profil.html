@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Mon profil - Rencontres</title>
+<title>Mon profil - Afrilova</title>
 
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -78,6 +78,12 @@ h1{color:#087557;font-size:25px;margin-bottom:7px}
  width:100%;border:none;background:#E0F7EE;
  color:#087557;padding:12px;border-radius:11px;
  font-weight:bold;margin-top:15px
+}
+
+.logout-button{
+ width:100%;border:none;background:#FDEDED;
+ color:#C0392B;padding:12px;border-radius:11px;
+ font-weight:bold;margin-top:10px
 }
 
 .points-card{
@@ -206,6 +212,53 @@ h1{color:#087557;font-size:25px;margin-bottom:7px}
 }
 .continue-payment{margin-top:15px}
 
+/* =========================
+   AUTHENTIFICATION
+========================= */
+
+.auth-card{
+ background:white;border-radius:18px;padding:22px;
+ box-shadow:0 3px 12px rgba(0,0,0,.05)
+}
+.auth-tabs{
+ display:flex;background:#F3FBF7;border-radius:11px;
+ padding:4px;margin-bottom:18px
+}
+.auth-tab{
+ flex:1;border:none;background:transparent;
+ padding:10px;border-radius:9px;font-weight:bold;
+ color:#668078;font-size:13px
+}
+.auth-tab.active{
+ background:#0B8F6A;color:white
+}
+.auth-form{display:none}
+.auth-form.active{display:block}
+
+.auth-error{
+ background:#FDEDED;color:#C0392B;border-radius:10px;
+ padding:10px 12px;font-size:12px;margin-bottom:12px;
+ display:none
+}
+.auth-error.show{display:block}
+
+.verify-banner{
+ background:#FFF6E0;color:#8A6100;border-radius:14px;
+ padding:14px;margin-bottom:16px;font-size:13px;
+ line-height:1.5
+}
+.verify-banner button{
+ margin-top:8px;border:none;background:#8A6100;
+ color:white;padding:8px 12px;border-radius:8px;
+ font-size:12px;font-weight:bold
+}
+
+.pending-badge{
+ display:inline-block;background:#FFF6E0;color:#8A6100;
+ padding:6px 11px;border-radius:20px;font-size:12px;
+ font-weight:bold;margin-top:10px
+}
+
 .bottom-nav{
  position:fixed;left:0;right:0;bottom:0;height:68px;
  background:white;border-top:1px solid #dcefe7;
@@ -233,19 +286,107 @@ h1{color:#087557;font-size:25px;margin-bottom:7px}
 <body>
 
 <header>
-<div class="logo">💚 Rencontres</div>
+<div class="logo">💚 Afrilova</div>
 <div class="header-points">
-⭐ <span id="headerPoints">3</span> points
+⭐ <span id="headerPoints">-</span> points
 </div>
 </header>
 
 <main class="container">
+
+<!-- ========================
+     BLOC AUTHENTIFICATION (visiteur non connecté)
+======================== -->
+
+<section id="authSection" style="display:none">
+
+  <h1>👋 Bienvenue</h1>
+
+  <p class="intro">
+  Connectez-vous ou créez un compte pour accéder à votre profil.
+  </p>
+
+  <div class="auth-card">
+
+    <div class="auth-tabs">
+      <button type="button" class="auth-tab active" id="tabConnexion" onclick="afficherOnglet('connexion')">
+      Se connecter
+      </button>
+      <button type="button" class="auth-tab" id="tabInscription" onclick="afficherOnglet('inscription')">
+      Créer un compte
+      </button>
+    </div>
+
+    <div class="auth-error" id="authErrorConnexion"></div>
+
+    <form class="auth-form active" id="formConnexion" onsubmit="connexion(event)">
+
+      <div class="form-group">
+        <label for="loginEmail">Adresse email</label>
+        <input type="email" id="loginEmail" required placeholder="vous@exemple.com">
+      </div>
+
+      <div class="form-group">
+        <label for="loginPassword">Mot de passe</label>
+        <input type="password" id="loginPassword" required placeholder="Votre mot de passe">
+      </div>
+
+      <button type="submit" class="save-button" id="btnConnexion">
+      Se connecter
+      </button>
+
+    </form>
+
+    <div class="auth-error" id="authErrorInscription"></div>
+
+    <form class="auth-form" id="formInscription" onsubmit="inscription(event)">
+
+      <div class="form-group">
+        <label for="signupEmail">Adresse email</label>
+        <input type="email" id="signupEmail" required placeholder="vous@exemple.com">
+      </div>
+
+      <div class="form-group">
+        <label for="signupPassword">Mot de passe</label>
+        <input type="password" id="signupPassword" required minlength="8" placeholder="8 caractères minimum">
+      </div>
+
+      <button type="submit" class="save-button" id="btnInscription">
+      Créer mon compte
+      </button>
+
+      <p class="choice-note">
+      En créant un compte, vous confirmez avoir 16 ans ou plus et acceptez
+      de recevoir un email de vérification.
+      </p>
+
+    </form>
+
+  </div>
+
+</section>
+
+
+<!-- ========================
+     BLOC PROFIL (utilisateur connecté)
+======================== -->
+
+<div id="profilConnecte" style="display:none">
 
 <h1>👤 Mon profil</h1>
 
 <p class="intro">
 Gérez vos informations personnelles et votre solde de points.
 </p>
+
+<div class="verify-banner" id="verifyBanner" style="display:none">
+📧 Votre email n'est pas encore vérifié. Consultez votre boîte mail
+pour confirmer votre adresse.
+<br>
+<button type="button" onclick="renvoyerVerification()">
+Renvoyer l'email de vérification
+</button>
+</div>
 
 <section class="profile-card">
 
@@ -262,31 +403,11 @@ Mon profil
 </h2>
 
 <p id="profileLocation" class="profile-location">
-Burkina Faso
+Profil pas encore créé
 </p>
 
-</div>
-
-<div class="profile-info-grid">
-
-<div class="info-box">
-<span>Âge</span>
-<strong id="profileAge">Non renseigné</strong>
-</div>
-
-<div class="info-box">
-<span>Pays</span>
-<strong id="profileCountry">Non renseigné</strong>
-</div>
-
-<div class="info-box">
-<span>Ville</span>
-<strong id="profileCity">Non renseignée</strong>
-</div>
-
-<div class="info-box">
-<span>Recherche</span>
-<strong id="profileSearch">Trouver l'amour</strong>
+<div id="pendingBadge" class="pending-badge" style="display:none">
+⏳ Profil en attente de validation
 </div>
 
 </div>
@@ -296,9 +417,8 @@ Burkina Faso
 <strong>À propos de moi</strong>
 
 <p id="profileDescription">
-Présentez-vous en quelques mots pour permettre
-aux personnes qui consultent votre profil
-de mieux vous connaître.
+Vous n'avez pas encore créé votre profil de rencontre.
+Cliquez sur "Créer mon profil" pour commencer.
 </p>
 
 </div>
@@ -307,7 +427,14 @@ de mieux vous connaître.
  type="button"
  class="edit-button"
  onclick="ouvrirModificationProfil()">
-✏️ Modifier mon profil
+✏️ Créer / modifier mon profil
+</button>
+
+<button
+ type="button"
+ class="logout-button"
+ onclick="deconnexion()">
+🚪 Se déconnecter
 </button>
 
 </section>
@@ -317,7 +444,7 @@ de mieux vous connaître.
 <div class="points-title">Mon solde</div>
 
 <div class="points-number" id="mainPoints">
-3 points
+0 point
 </div>
 
 <div class="points-description">
@@ -410,12 +537,14 @@ certaines actions sur la plateforme.
 <h2>🔐 Sécurité</h2>
 
 <p class="section-description">
-Vos informations et votre solde seront protégés par notre
-système de compte. Les opérations importantes seront
+Vos informations et votre solde sont protégés par notre
+système de compte. Les opérations importantes sont
 vérifiées côté serveur.
 </p>
 
 </section>
+
+</div>
 
 </main>
 
@@ -434,109 +563,11 @@ vérifiées côté serveur.
 
 <h2>✏️ Modifier mon profil</h2>
 
-<form id="profileForm" onsubmit="enregistrerProfil(event)">
+<p class="section-description">
+🚧 La création complète du profil (avec photo et validation
+automatique) sera activée à la prochaine étape.
+</p>
 
-<div class="form-group">
-<label for="editName">Nom ou pseudonyme</label>
-<input
- type="text"
- id="editName"
- placeholder="Votre nom ou pseudonyme"
- maxlength="60">
-</div>
-
-<div class="form-group">
-<label for="editAge">Âge</label>
-<input
- type="number"
- id="editAge"
- min="18"
- max="100"
- placeholder="Votre âge">
-</div>
-
-<div class="form-group">
-<label for="editCountry">Pays</label>
-<select id="editCountry">
-<option value="">Sélectionner un pays</option>
-</select>
-</div>
-
-<div class="form-group">
-<label for="editCity">Ville</label>
-<select id="editCity">
-<option value="">Sélectionner une ville</option>
-</select>
-</div>
-
-<div class="form-group">
-<label for="editDescription">À propos de moi</label>
-<textarea
- id="editDescription"
- maxlength="500"
- placeholder="Présentez-vous en quelques mots..."></textarea>
-</div>
-
-<div class="form-group">
-<label for="editSearch">Je recherche</label>
-<select id="editSearch">
-<option value="relation-serieuse">Une relation sérieuse</option>
-<option value="trouver-amour">Trouver l'amour</option>
-<option value="ame-soeur">Mon âme sœur</option>
-</select>
-</div>
-
-<!-- NOUVEAUX CHAMPS VALIDÉS -->
-
-<div class="form-group">
-<label for="editEnfants">
-Accepte une personne ayant déjà des enfants
-</label>
-
-<select id="editEnfants">
-<option value="">Sélectionner</option>
-<option value="oui">Oui</option>
-<option value="non">Non</option>
-</select>
-</div>
-
-<div class="form-group">
-<label for="editPolygamie">
-Accepte la polygamie
-</label>
-
-<select id="editPolygamie">
-<option value="">Sélectionner</option>
-<option value="oui">Oui</option>
-<option value="non">Non</option>
-<option value="indifferent">Indifférent</option>
-</select>
-</div>
-
-<div class="form-group">
-<label for="editTypeRelation">
-Type de relation recherchée
-</label>
-
-<select id="editTypeRelation">
-<option value="">Sélectionner</option>
-<option value="mariage">
-💍 Relation pouvant aboutir au mariage
-</option>
-<option value="amoureuse">
-🌹 Relation amoureuse sans précipitation
-</option>
-<option value="projet">
-💕 Relation avec projet de vie à deux
-</option>
-</select>
-</div>
-
-<button type="submit" class="save-button">
-💾 Enregistrer les modifications
-</button>
-
-</form>
 </div>
 </div>
 
@@ -618,192 +649,266 @@ Profil
 
 </nav>
 
+<!-- SDK APPWRITE (CDN) -->
+<script src="https://cdn.jsdelivr.net/npm/appwrite@20.0.0"></script>
+
 <script>
-const APPWRITE_ENDPOINT="";
-const APPWRITE_PROJECT_ID="";
-const APPWRITE_DATABASE_ID="";
 
-let nombrePointsSelectionne=0;
-let prixSelectionne=0;
+/*
+==========================================
+CONFIGURATION APPWRITE
+==========================================
+*/
 
-function ouvrirModificationProfil(){
- document.getElementById("editProfileModal").classList.add("show");
+const APPWRITE_ENDPOINT = "https://fra.cloud.appwrite.io/v1";
+const APPWRITE_PROJECT_ID = "6aac203e00209ccb3014";
+const APPWRITE_DATABASE_ID = "6aac2a200000e6be5877";
+const TABLE_POINTS = "points";
+
+const client = new Appwrite.Client();
+
+client
+  .setEndpoint(APPWRITE_ENDPOINT)
+  .setProject(APPWRITE_PROJECT_ID);
+
+const account = new Appwrite.Account(client);
+const tablesDB = new Appwrite.TablesDB(client);
+
+
+/*
+==========================================
+VARIABLES
+==========================================
+*/
+
+let nombrePointsSelectionne = 0;
+let prixSelectionne = 0;
+let utilisateurConnecte = null;
+
+
+/*
+==========================================
+GESTION DES ONGLETS CONNEXION / INSCRIPTION
+==========================================
+*/
+
+function afficherOnglet(nom) {
+
+  document.getElementById("tabConnexion").classList.toggle(
+    "active", nom === "connexion"
+  );
+
+  document.getElementById("tabInscription").classList.toggle(
+    "active", nom === "inscription"
+  );
+
+  document.getElementById("formConnexion").classList.toggle(
+    "active", nom === "connexion"
+  );
+
+  document.getElementById("formInscription").classList.toggle(
+    "active", nom === "inscription"
+  );
+
 }
 
-function ouvrirPaiement(nombrePoints,prix){
- nombrePointsSelectionne=nombrePoints;
- prixSelectionne=prix;
 
- document.getElementById("selectedPoints").textContent=
-   nombrePoints+" points";
+/*
+==========================================
+AFFICHER UNE ERREUR D'AUTHENTIFICATION
+==========================================
+*/
 
- document.getElementById("selectedPrice").textContent=
-   formaterPrix(prix)+" FCFA";
+function afficherErreurAuth(id, message) {
 
- document.getElementById("paymentModal").classList.add("show");
+  const bloc = document.getElementById(id);
+  bloc.textContent = message;
+  bloc.classList.add("show");
+
 }
 
-function formaterPrix(prix){
- return Number(prix).toLocaleString("fr-FR");
+function cacherErreursAuth() {
+
+  document.getElementById("authErrorConnexion").classList.remove("show");
+  document.getElementById("authErrorInscription").classList.remove("show");
+
 }
 
-function continuerPaiement(){
 
- const methode=document.querySelector(
-  'input[name="paymentMethod"]:checked'
- );
+/*
+==========================================
+CONNEXION
+==========================================
+*/
 
- if(!methode){
-  alert("Veuillez sélectionner un moyen de paiement.");
-  return;
- }
+async function connexion(event) {
 
- console.log({
-  points:nombrePointsSelectionne,
-  montant:prixSelectionne,
-  passerelle:"PayDunya",
-  methode:methode.value
- });
+  event.preventDefault();
+  cacherErreursAuth();
 
- alert(
-  "Le paiement réel sera connecté avec PayDunya. Les points seront crédités uniquement après confirmation du paiement."
- );
+  const email = document.getElementById("loginEmail").value.trim();
+  const motDePasse = document.getElementById("loginPassword").value;
+
+  const bouton = document.getElementById("btnConnexion");
+  bouton.disabled = true;
+  bouton.textContent = "Connexion...";
+
+  try {
+
+    await account.createEmailPasswordSession({
+      email: email,
+      password: motDePasse
+    });
+
+    await chargerEtatConnexion();
+
+  } catch (erreur) {
+
+    afficherErreurAuth(
+      "authErrorConnexion",
+      "Email ou mot de passe incorrect."
+    );
+
+  } finally {
+
+    bouton.disabled = false;
+    bouton.textContent = "Se connecter";
+
+  }
+
 }
 
-function enregistrerProfil(event){
- event.preventDefault();
 
- const nom=document.getElementById("editName").value.trim();
- const age=Number(document.getElementById("editAge").value);
- const pays=document.getElementById("editCountry").value;
- const ville=document.getElementById("editCity").value;
- const description=document.getElementById("editDescription").value.trim();
- const recherche=document.getElementById("editSearch").value;
- const accepteEnfants=document.getElementById("editEnfants").value;
- const acceptePolygamie=document.getElementById("editPolygamie").value;
- const typeRelation=document.getElementById("editTypeRelation").value;
+/*
+==========================================
+INSCRIPTION
+==========================================
+*/
 
- if(!nom){
-  alert("Veuillez renseigner votre nom ou pseudonyme.");
-  return;
- }
+async function inscription(event) {
 
- if(!age || age<18 || age>100){
-  alert("L'âge doit être compris entre 18 et 100 ans.");
-  return;
- }
+  event.preventDefault();
+  cacherErreursAuth();
 
- if(!pays){
-  alert("Veuillez sélectionner votre pays.");
-  return;
- }
+  const email = document.getElementById("signupEmail").value.trim();
+  const motDePasse = document.getElementById("signupPassword").value;
 
- if(!ville){
-  alert("Veuillez sélectionner votre ville.");
-  return;
- }
+  const bouton = document.getElementById("btnInscription");
+  bouton.disabled = true;
+  bouton.textContent = "Création...";
 
- if(!description){
-  alert("Veuillez ajouter une courte description.");
-  return;
- }
+  try {
 
- if(!accepteEnfants){
-  alert("Veuillez indiquer si vous acceptez une personne ayant déjà des enfants.");
-  return;
- }
+    await account.create({
+      userId: Appwrite.ID.unique(),
+      email: email,
+      password: motDePasse
+    });
 
- if(!acceptePolygamie){
-  alert("Veuillez indiquer votre préférence concernant la polygamie.");
-  return;
- }
+    await account.createEmailPasswordSession({
+      email: email,
+      password: motDePasse
+    });
 
- if(!typeRelation){
-  alert("Veuillez sélectionner le type de relation recherché.");
-  return;
- }
+    await envoyerEmailVerification();
 
- const profil={
-  nom,
-  age,
-  pays,
-  ville,
-  description,
-  recherche,
-  accepteEnfants,
-  acceptePolygamie,
-  typeRelation
- };
+    await chargerEtatConnexion();
 
- console.log("Profil à enregistrer :",profil);
+  } catch (erreur) {
 
- afficherProfilLocal(profil);
+    afficherErreurAuth(
+      "authErrorInscription",
+      erreur.message || "Impossible de créer le compte. Cette adresse est peut-être déjà utilisée."
+    );
 
- fermerModal("editProfileModal");
+  } finally {
 
- alert(
-  "Les informations sont enregistrées provisoirement. La validation administrateur sera activée avec Appwrite."
- );
+    bouton.disabled = false;
+    bouton.textContent = "Créer mon compte";
+
+  }
+
 }
 
-function afficherProfilLocal(profil){
 
- document.getElementById("profileName").textContent=profil.nom;
- document.getElementById("profileAge").textContent=profil.age+" ans";
- document.getElementById("profileCountry").textContent=profil.pays;
- document.getElementById("profileCity").textContent=profil.ville;
- document.getElementById("profileDescription").textContent=profil.description;
- document.getElementById("profileLocation").textContent=
-   profil.ville+", "+profil.pays;
+/*
+==========================================
+EMAIL DE VÉRIFICATION
+==========================================
+*/
 
- const recherche=document.getElementById("profileSearch");
+function urlVerification() {
 
- if(profil.recherche==="relation-serieuse")
-  recherche.textContent="Relation sérieuse";
- else if(profil.recherche==="ame-soeur")
-  recherche.textContent="Mon âme sœur";
- else
-  recherche.textContent="Trouver l'amour";
+  return window.location.origin + window.location.pathname;
+
 }
 
-function fermerModal(id){
- const modal=document.getElementById(id);
- if(modal) modal.classList.remove("show");
+async function envoyerEmailVerification() {
+
+  try {
+
+    await account.createEmailVerification({
+      url: urlVerification()
+    });
+
+  } catch (erreur) {
+
+    console.error("Erreur envoi email de vérification :", erreur);
+
+  }
+
 }
 
-document.addEventListener("click",function(event){
- if(event.target.classList.contains("modal")){
-  event.target.classList.remove("show");
- }
-});
+async function renvoyerVerification() {
 
-async function chargerProfil(){
- afficherSolde(3);
+  await envoyerEmailVerification();
+
+  alert("Un nouvel email de vérification vient d'être envoyé.");
+
 }
 
-function afficherSolde(points){
+async function verifierRetourEmail() {
 
- document.getElementById("headerPoints").textContent=points;
+  const parametres = new URLSearchParams(window.location.search);
+  const userId = parametres.get("userId");
+  const secret = parametres.get("secret");
 
- document.getElementById("mainPoints").textContent=
-   points+(points>1?" points":" point");
+  if (!userId || !secret) {
+    return;
+  }
+
+  try {
+
+    await account.updateEmailVerification({
+      userId: userId,
+      secret: secret
+    });
+
+    window.history.replaceState(
+      {}, document.title, window.location.pathname
+    );
+
+  } catch (erreur) {
+
+    console.error("Erreur vérification email :", erreur);
+
+  }
+
 }
 
-async function chargerPays(){
- console.log("Les pays seront chargés depuis Appwrite.");
-}
 
-async function chargerVilles(paysId){
- console.log("Chargement des villes pour :",paysId);
-}
+/*
+==========================================
+DÉCONNEXION
+==========================================
+*/
 
-document.addEventListener("DOMContentLoaded",function(){
+async function deconnexion() {
 
- chargerProfil();
- chargerPays();
+  try {
 
-});
-</script>
+    await account.deleteSession({ sessionId: "current" });
 
-</body>
-</html>
+  } catch (erreur) {
+
+    console.
