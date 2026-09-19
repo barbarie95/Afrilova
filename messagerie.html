@@ -304,6 +304,13 @@ let peerActuel = null;
 let messagesActuels = [];
 
 
+/* ========================================== PERMISSIONS (texte brut) ========================================== */
+
+function permLireUtilisateur(id) { return 'read("user:' + id + '")'; }
+function permModifierUtilisateur(id) { return 'update("user:' + id + '")'; }
+function permLireEquipe(id) { return 'read("team:' + id + '")'; }
+
+
 /* ========================================== PAYS / VILLES / PROFILS ========================================== */
 
 async function chargerPaysEtVilles() {
@@ -502,7 +509,7 @@ async function accepterDemande(demandeId, expediteurId, boutonElement) {
 
   } catch (erreur) {
     console.error("Erreur acceptation demande :", erreur);
-    alert("Impossible d'accepter cette demande pour le moment.");
+    alert("Impossible d'accepter cette demande pour le moment : " + erreur.message);
     carte.querySelectorAll("button").forEach(b => b.disabled = false);
   }
 
@@ -529,8 +536,6 @@ async function refuserDemande(demandeId, boutonElement) {
   }
 
 }
-
-
 /* ========================================== CONVERSATIONS ========================================== */
 
 async function creerOuRecupererConversation(peerId) {
@@ -568,11 +573,11 @@ async function creerOuRecupererConversation(peerId) {
       statut: "active"
     },
     permissions: [
-      Appwrite.Permission.read(Appwrite.Role.user(moi)),
-      Appwrite.Permission.read(Appwrite.Role.user(peerId)),
-      Appwrite.Permission.update(Appwrite.Role.user(moi)),
-      Appwrite.Permission.update(Appwrite.Role.user(peerId)),
-      Appwrite.Permission.read(Appwrite.Role.team(ADMIN_TEAM_ID))
+      permLireUtilisateur(moi),
+      permLireUtilisateur(peerId),
+      permModifierUtilisateur(moi),
+      permModifierUtilisateur(peerId),
+      permLireEquipe(ADMIN_TEAM_ID)
     ]
   });
 
@@ -643,6 +648,8 @@ async function chargerDiscussions() {
   }
 
 }
+
+
 /* ========================================== CHAT ========================================== */
 
 async function ouvrirConversation(conversationId, peerId) {
@@ -747,9 +754,9 @@ async function envoyerMessage() {
         dateEnvoi: new Date().toISOString()
       },
       permissions: [
-        Appwrite.Permission.read(Appwrite.Role.user(utilisateurConnecte.$id)),
-        Appwrite.Permission.read(Appwrite.Role.user(peerActuel)),
-        Appwrite.Permission.read(Appwrite.Role.team(ADMIN_TEAM_ID))
+        permLireUtilisateur(utilisateurConnecte.$id),
+        permLireUtilisateur(peerActuel),
+        permLireEquipe(ADMIN_TEAM_ID)
       ]
     });
 
@@ -757,7 +764,7 @@ async function envoyerMessage() {
 
   } catch (erreur) {
     console.error("Erreur envoi message :", erreur);
-    alert("Le message n'a pas pu être envoyé.");
+    alert("Le message n'a pas pu être envoyé : " + erreur.message);
   }
 
 }
@@ -869,8 +876,8 @@ async function selectionnerPhotos(event) {
       const fichierUploade = await storage.createFile({
         bucketId: APPWRITE_BUCKET_PHOTOS, fileId: Appwrite.ID.unique(), file: fichierFinal,
         permissions: [
-          Appwrite.Permission.read(Appwrite.Role.user(utilisateurConnecte.$id)),
-          Appwrite.Permission.read(Appwrite.Role.user(peerActuel))
+          permLireUtilisateur(utilisateurConnecte.$id),
+          permLireUtilisateur(peerActuel)
         ]
       });
 
@@ -883,15 +890,15 @@ async function selectionnerPhotos(event) {
           dateEnvoi: new Date().toISOString()
         },
         permissions: [
-          Appwrite.Permission.read(Appwrite.Role.user(utilisateurConnecte.$id)),
-          Appwrite.Permission.read(Appwrite.Role.user(peerActuel)),
-          Appwrite.Permission.read(Appwrite.Role.team(ADMIN_TEAM_ID))
+          permLireUtilisateur(utilisateurConnecte.$id),
+          permLireUtilisateur(peerActuel),
+          permLireEquipe(ADMIN_TEAM_ID)
         ]
       });
 
     } catch (erreur) {
       console.error("Erreur envoi photo :", erreur);
-      alert("Une photo n'a pas pu être envoyée.");
+      alert("Une photo n'a pas pu être envoyée : " + erreur.message);
     }
 
   }
@@ -954,8 +961,8 @@ async function signaler() {
         dateCreation: new Date().toISOString()
       },
       permissions: [
-        Appwrite.Permission.read(Appwrite.Role.user(utilisateurConnecte.$id)),
-        Appwrite.Permission.read(Appwrite.Role.team(ADMIN_TEAM_ID))
+        permLireUtilisateur(utilisateurConnecte.$id),
+        permLireEquipe(ADMIN_TEAM_ID)
       ]
     });
 
@@ -964,7 +971,7 @@ async function signaler() {
 
   } catch (erreur) {
     console.error("Erreur signalement :", erreur);
-    alert("Le signalement n'a pas pu être enregistré.");
+    alert("Le signalement n'a pas pu être enregistré : " + erreur.message);
   } finally {
     bouton.disabled = false;
   }
@@ -993,8 +1000,8 @@ async function confirmerBlocage() {
         dateCreation: new Date().toISOString()
       },
       permissions: [
-        Appwrite.Permission.read(Appwrite.Role.user(utilisateurConnecte.$id)),
-        Appwrite.Permission.read(Appwrite.Role.team(ADMIN_TEAM_ID))
+        permLireUtilisateur(utilisateurConnecte.$id),
+        permLireEquipe(ADMIN_TEAM_ID)
       ]
     });
 
@@ -1007,7 +1014,7 @@ async function confirmerBlocage() {
 
   } catch (erreur) {
     console.error("Erreur blocage :", erreur);
-    alert("Le blocage n'a pas pu être enregistré.");
+    alert("Le blocage n'a pas pu être enregistré : " + erreur.message);
   } finally {
     bouton.disabled = false;
   }
