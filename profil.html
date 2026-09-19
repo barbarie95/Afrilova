@@ -911,4 +911,164 @@ async function deconnexion() {
 
   } catch (erreur) {
 
-    console.
+    console.error("Erreur déconnexion :", erreur);
+
+  }
+
+  window.location.reload();
+
+}
+
+
+/*
+==========================================
+CHARGER LE SOLDE DE POINTS
+==========================================
+*/
+
+async function chargerSoldePoints(userId) {
+
+  try {
+
+    const reponse = await tablesDB.listRows({
+      databaseId: APPWRITE_DATABASE_ID,
+      tableId: TABLE_POINTS,
+      queries: [
+        Appwrite.Query.equal("userId", userId),
+        Appwrite.Query.limit(1)
+      ]
+    });
+
+    const solde = reponse.total > 0 ? reponse.rows[0].solde : 0;
+
+    afficherSolde(solde || 0);
+
+  } catch (erreur) {
+
+    console.error("Erreur chargement points :", erreur);
+
+    afficherSolde(0);
+
+  }
+
+}
+
+function afficherSolde(points) {
+
+  document.getElementById("headerPoints").textContent = points;
+
+  document.getElementById("mainPoints").textContent =
+    points + (points > 1 ? " points" : " point");
+
+}
+
+
+/*
+==========================================
+ÉTAT DE CONNEXION (AFFICHAGE PRINCIPAL)
+==========================================
+*/
+
+async function chargerEtatConnexion() {
+
+  try {
+
+    utilisateurConnecte = await account.get();
+
+    document.getElementById("authSection").style.display = "none";
+    document.getElementById("profilConnecte").style.display = "block";
+
+    document.getElementById("verifyBanner").style.display =
+      utilisateurConnecte.emailVerification ? "none" : "block";
+
+    await chargerSoldePoints(utilisateurConnecte.$id);
+
+  } catch (erreur) {
+
+    utilisateurConnecte = null;
+
+    document.getElementById("authSection").style.display = "block";
+    document.getElementById("profilConnecte").style.display = "none";
+
+    document.getElementById("headerPoints").textContent = "-";
+
+  }
+
+}
+
+
+/*
+==========================================
+MODALES
+==========================================
+*/
+
+function ouvrirModificationProfil() {
+  document.getElementById("editProfileModal").classList.add("show");
+}
+
+function ouvrirPaiement(nombrePoints, prix) {
+
+  nombrePointsSelectionne = nombrePoints;
+  prixSelectionne = prix;
+
+  document.getElementById("selectedPoints").textContent =
+    nombrePoints + " points";
+
+  document.getElementById("selectedPrice").textContent =
+    formaterPrix(prix) + " FCFA";
+
+  document.getElementById("paymentModal").classList.add("show");
+
+}
+
+function formaterPrix(prix) {
+  return Number(prix).toLocaleString("fr-FR");
+}
+
+function continuerPaiement() {
+
+  const methode = document.querySelector(
+    'input[name="paymentMethod"]:checked'
+  );
+
+  if (!methode) {
+    alert("Veuillez sélectionner un moyen de paiement.");
+    return;
+  }
+
+  alert(
+    "Le paiement réel sera connecté avec PayDunya à une prochaine étape."
+  );
+
+}
+
+function fermerModal(id) {
+  const modal = document.getElementById(id);
+  if (modal) modal.classList.remove("show");
+}
+
+document.addEventListener("click", function (event) {
+  if (event.target.classList.contains("modal")) {
+    event.target.classList.remove("show");
+  }
+});
+
+
+/*
+==========================================
+INITIALISATION
+==========================================
+*/
+
+document.addEventListener("DOMContentLoaded", async function () {
+
+  await verifierRetourEmail();
+  await chargerEtatConnexion();
+
+});
+
+</script>
+
+</body>
+</html>
