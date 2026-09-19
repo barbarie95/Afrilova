@@ -3,669 +3,312 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Mon profil - Affrilova</title>
+<title>Mon profil - Afrilova</title>
 
 <style>
-*{
-  box-sizing:border-box;
-  margin:0;
-  padding:0
-}
-
+*{box-sizing:border-box;margin:0;padding:0}
 body{
-  font-family:Arial,sans-serif;
-  background:#F3FBF7;
-  color:#17352C;
-  padding-bottom:85px
+ font-family:Arial,sans-serif;background:#F3FBF7;
+ color:#17352C;padding-bottom:85px
 }
-
-button,input,textarea,select{
-  font-family:inherit
-}
-
-button{
-  cursor:pointer
-}
-
-button:disabled{
-  opacity:.6;
-  cursor:not-allowed
-}
+button,input,textarea,select{font-family:inherit}
+button{cursor:pointer}
 
 header{
-  background:linear-gradient(135deg,#0B8F6A,#3DBB91);
-  color:white;
-  padding:18px 16px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  box-shadow:0 3px 10px rgba(0,0,0,.08)
+ background:linear-gradient(135deg,#0B8F6A,#3DBB91);
+ color:white;padding:18px 16px;
+ display:flex;align-items:center;justify-content:space-between;
+ box-shadow:0 3px 10px rgba(0,0,0,.08)
 }
-
-.logo{
-  font-size:20px;
-  font-weight:bold
-}
-
+.logo{font-size:20px;font-weight:bold}
 .header-points{
-  background:rgba(255,255,255,.18);
-  padding:8px 12px;
-  border-radius:20px;
-  font-size:13px;
-  font-weight:bold
+ background:rgba(255,255,255,.18);
+ padding:8px 12px;border-radius:20px;
+ font-size:13px;font-weight:bold
 }
 
 .container{
-  width:100%;
-  max-width:700px;
-  margin:auto;
-  padding:20px 14px 30px
+ width:100%;max-width:700px;margin:auto;
+ padding:20px 14px 30px
 }
-
-h1{
-  color:#087557;
-  font-size:25px;
-  margin-bottom:7px
-}
-
+h1{color:#087557;font-size:25px;margin-bottom:7px}
 .intro{
-  color:#668078;
-  font-size:14px;
-  line-height:1.5;
-  margin-bottom:18px
+ color:#668078;font-size:14px;line-height:1.5;margin-bottom:18px
 }
 
-.profile-card,
-.section-card,
-.auth-card{
-  background:white;
-  border-radius:18px;
-  padding:18px;
-  margin-bottom:16px;
-  box-shadow:0 3px 12px rgba(0,0,0,.05)
+.profile-card,.section-card{
+ background:white;border-radius:18px;padding:18px;
+ margin-bottom:16px;
+ box-shadow:0 3px 12px rgba(0,0,0,.05)
 }
-
-.profile-card{
-  padding:20px
-}
-
-.profile-top{
-  text-align:center
-}
-
+.profile-card{padding:20px}
+.profile-top{text-align:center}
 .profile-photo{
-  width:115px;
-  height:115px;
-  border-radius:50%;
-  object-fit:cover;
-  background:#E0F7EE;
-  border:4px solid #E0F7EE;
-  margin-bottom:12px
+ width:115px;height:115px;border-radius:50%;
+ object-fit:cover;background:#E0F7EE;
+ border:4px solid #E0F7EE;margin-bottom:12px
 }
-
-.profile-name{
-  font-size:21px;
-  color:#17352C;
-  margin-bottom:5px
-}
-
-.profile-location{
-  color:#668078;
-  font-size:14px
-}
+.profile-name{font-size:21px;color:#17352C;margin-bottom:5px}
+.profile-location{color:#668078;font-size:14px}
 
 .profile-description{
-  margin-top:15px;
-  background:#F3FBF7;
-  border-radius:12px;
-  padding:13px;
-  text-align:left
+ margin-top:15px;background:#F3FBF7;
+ border-radius:12px;padding:13px;text-align:left
 }
-
 .profile-description strong{
-  display:block;
-  color:#087557;
-  font-size:13px;
-  margin-bottom:6px
+ display:block;color:#087557;font-size:13px;margin-bottom:6px
 }
-
 .profile-description p{
-  color:#55736A;
-  font-size:14px;
-  line-height:1.5
+ color:#55736A;font-size:14px;line-height:1.5
 }
 
 .profile-info-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:9px;
-  margin-top:15px
+ display:grid;grid-template-columns:1fr 1fr;
+ gap:9px;margin-top:15px
 }
-
 .info-box{
-  background:#F3FBF7;
-  border-radius:11px;
-  padding:11px
+ background:#F3FBF7;border-radius:11px;padding:11px
 }
-
 .info-box span{
-  display:block;
-  color:#668078;
-  font-size:11px;
-  margin-bottom:4px
+ display:block;color:#668078;font-size:11px;margin-bottom:4px
 }
-
-.info-box strong{
-  color:#087557;
-  font-size:13px
-}
+.info-box strong{color:#087557;font-size:13px}
 
 .edit-button{
-  width:100%;
-  border:none;
-  background:#E0F7EE;
-  color:#087557;
-  padding:12px;
-  border-radius:11px;
-  font-weight:bold;
-  margin-top:15px
+ width:100%;border:none;background:#E0F7EE;
+ color:#087557;padding:12px;border-radius:11px;
+ font-weight:bold;margin-top:15px
 }
-
 .logout-button{
-  width:100%;
-  border:none;
-  background:#FDEDED;
-  color:#C0392B;
-  padding:12px;
-  border-radius:11px;
-  font-weight:bold;
-  margin-top:10px
+ width:100%;border:none;background:#FDEDED;
+ color:#C0392B;padding:12px;border-radius:11px;
+ font-weight:bold;margin-top:10px
 }
 
 .points-card{
-  background:linear-gradient(135deg,#0B8F6A,#3DBB91);
-  color:white;
-  border-radius:18px;
-  padding:20px;
-  margin-bottom:16px;
-  box-shadow:0 4px 12px rgba(11,143,106,.18)
+ background:linear-gradient(135deg,#0B8F6A,#3DBB91);
+ color:white;border-radius:18px;padding:20px;
+ margin-bottom:16px;
+ box-shadow:0 4px 12px rgba(11,143,106,.18)
 }
-
-.points-title{
-  font-size:14px;
-  opacity:.9;
-  margin-bottom:7px
-}
-
-.points-number{
-  font-size:32px;
-  font-weight:bold;
-  margin-bottom:5px
-}
-
-.points-description{
-  font-size:12px;
-  opacity:.9;
-  line-height:1.4
-}
+.points-title{font-size:14px;opacity:.9;margin-bottom:7px}
+.points-number{font-size:32px;font-weight:bold;margin-bottom:5px}
+.points-description{font-size:12px;opacity:.9;line-height:1.4}
 
 .section-card h2{
-  color:#087557;
-  font-size:18px;
-  margin-bottom:6px
+ color:#087557;font-size:18px;margin-bottom:6px
 }
-
 .section-description{
-  color:#668078;
-  font-size:13px;
-  line-height:1.5;
-  margin-bottom:15px
+ color:#668078;font-size:13px;
+ line-height:1.5;margin-bottom:15px
 }
 
-.packs{
-  display:flex;
-  flex-direction:column;
-  gap:10px
-}
-
+.packs{display:flex;flex-direction:column;gap:10px}
 .pack{
-  width:100%;
-  border:1px solid #dcefe7;
-  background:#F9FEFC;
-  border-radius:13px;
-  padding:14px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  text-align:left
+ width:100%;border:1px solid #dcefe7;
+ background:#F9FEFC;border-radius:13px;padding:14px;
+ display:flex;align-items:center;justify-content:space-between;
+ text-align:left
 }
-
-.pack:hover{
-  background:#E0F7EE
-}
-
+.pack:hover{background:#E0F7EE}
 .pack-info strong{
-  display:block;
-  color:#17352C;
-  font-size:15px;
-  margin-bottom:4px
+ display:block;color:#17352C;font-size:15px;margin-bottom:4px
 }
-
-.pack-info small{
-  color:#668078;
-  font-size:11px
-}
-
+.pack-info small{color:#668078;font-size:11px}
 .pack-price{
-  background:#0B8F6A;
-  color:white;
-  padding:9px 11px;
-  border-radius:9px;
-  font-size:12px;
-  font-weight:bold;
-  white-space:nowrap
+ background:#0B8F6A;color:white;padding:9px 11px;
+ border-radius:9px;font-size:12px;font-weight:bold;
+ white-space:nowrap
 }
 
-.usage-list{
-  display:flex;
-  flex-direction:column;
-  gap:10px
-}
-
+.usage-list{display:flex;flex-direction:column;gap:10px}
 .usage-item{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  background:#F3FBF7;
-  border-radius:11px;
-  padding:11px
+ display:flex;align-items:center;gap:10px;
+ background:#F3FBF7;border-radius:11px;padding:11px
 }
-
 .usage-icon{
-  width:36px;
-  height:36px;
-  border-radius:10px;
-  background:#E0F7EE;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:18px;
-  flex-shrink:0
+ width:36px;height:36px;border-radius:10px;
+ background:#E0F7EE;display:flex;
+ align-items:center;justify-content:center;
+ font-size:18px;flex-shrink:0
 }
-
 .usage-text strong{
-  display:block;
-  color:#17352C;
-  font-size:13px;
-  margin-bottom:3px
+ display:block;color:#17352C;font-size:13px;margin-bottom:3px
 }
+.usage-text small{color:#668078;font-size:11px}
 
-.usage-text small{
-  color:#668078;
-  font-size:11px
+.security-note{
+ background:#FFF6E0;color:#8A6100;border-radius:11px;
+ padding:12px;font-size:12px;line-height:1.5;margin-top:10px
 }
 
 .modal{
-  display:none;
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.45);
-  z-index:100;
-  align-items:center;
-  justify-content:center;
-  padding:15px
+ display:none;position:fixed;inset:0;
+ background:rgba(0,0,0,.45);z-index:100;
+ align-items:center;justify-content:center;padding:15px
 }
-
-.modal.show{
-  display:flex
-}
-
+.modal.show{display:flex}
 .modal-content{
-  width:100%;
-  max-width:520px;
-  max-height:90vh;
-  overflow-y:auto;
-  background:white;
-  border-radius:18px;
-  padding:20px;
-  position:relative
+ width:100%;max-width:520px;max-height:90vh;
+ overflow-y:auto;background:white;border-radius:18px;
+ padding:20px;position:relative
 }
-
 .close-button{
-  position:absolute;
-  right:12px;
-  top:10px;
-  width:32px;
-  height:32px;
-  border:none;
-  border-radius:50%;
-  background:#E0F7EE;
-  color:#087557;
-  font-size:21px
+ position:absolute;right:12px;top:10px;
+ width:32px;height:32px;border:none;border-radius:50%;
+ background:#E0F7EE;color:#087557;font-size:21px
 }
-
 .modal-content h2{
-  color:#087557;
-  font-size:19px;
-  margin-bottom:15px;
-  padding-right:35px
+ color:#087557;font-size:19px;margin-bottom:15px;padding-right:35px
 }
 
-.form-group{
-  margin-bottom:13px
-}
-
+.form-group{margin-bottom:13px}
 .form-group label{
-  display:block;
-  color:#17352C;
-  font-size:12px;
-  font-weight:bold;
-  margin-bottom:6px
+ display:block;color:#17352C;font-size:12px;
+ font-weight:bold;margin-bottom:6px
 }
-
 .form-group input,
 .form-group textarea,
 .form-group select{
-  width:100%;
-  border:1px solid #cce5dc;
-  border-radius:10px;
-  padding:11px;
-  outline:none;
-  font-size:13px;
-  background:white;
-  color:#17352C
+ width:100%;border:1px solid #cce5dc;
+ border-radius:10px;padding:11px;outline:none;
+ font-size:13px;background:white;color:#17352C
 }
-
-.form-group textarea{
-  min-height:100px;
-  resize:vertical
-}
-
+.form-group textarea{min-height:100px;resize:vertical}
 .form-group input:focus,
 .form-group textarea:focus,
-.form-group select:focus{
-  border-color:#0B8F6A
-}
-
-.save-button,
-.continue-payment{
-  width:100%;
-  border:none;
-  background:#0B8F6A;
-  color:white;
-  padding:12px;
-  border-radius:10px;
-  font-weight:bold;
-  margin-top:5px
-}
-
-.choice-note{
-  background:#F3FBF7;
-  border-radius:10px;
-  padding:10px;
-  font-size:11px;
-  color:#668078;
-  margin-top:5px;
-  line-height:1.5
-}
-
-.choice-group{
-  display:flex;
-  flex-direction:column;
-  gap:8px
-}
-
-.choice-option{
-  border:1px solid #dcefe7;
-  background:#F9FEFC;
-  border-radius:10px;
-  padding:11px;
-  display:flex;
-  align-items:flex-start;
-  gap:9px;
-  font-size:12px;
-  color:#17352C;
-  line-height:1.4
-}
-
-.choice-option input{
-  margin-top:2px;
-  accent-color:#0B8F6A
-}
+.form-group select:focus{border-color:#0B8F6A}
 
 .photo-preview{
-  width:100px;
-  height:100px;
-  object-fit:cover;
-  border-radius:50%;
-  display:block;
-  margin:0 auto 10px;
-  background:#E0F7EE;
-  border:4px solid #E0F7EE
+ width:100px;height:100px;border-radius:50%;
+ object-fit:cover;background:#E0F7EE;
+ margin-bottom:10px;display:block
 }
 
-.status-message{
-  border-radius:10px;
-  padding:10px 12px;
-  font-size:12px;
-  margin-bottom:12px;
-  display:none;
-  line-height:1.5
+.checkbox-row{
+ display:flex;align-items:flex-start;gap:8px;
+ font-size:12px;color:#55736A;margin-top:8px
 }
+.checkbox-row input{width:auto;margin-top:3px}
 
-.status-message.show{
-  display:block
+.save-button,.continue-payment{
+ width:100%;border:none;background:#0B8F6A;
+ color:white;padding:12px;border-radius:10px;
+ font-weight:bold;margin-top:5px
 }
+.save-button:disabled{opacity:.6}
 
-.status-message.success{
-  background:#E7F8EF;
-  color:#167347
-}
-
-.status-message.error{
-  background:#FDEDED;
-  color:#C0392B
-}
-
-.status-message.info{
-  background:#EEF7FF;
-  color:#25638A
-}
-
-.verify-banner{
-  background:#FFF6E0;
-  color:#8A6100;
-  border-radius:14px;
-  padding:14px;
-  margin-bottom:16px;
-  font-size:13px;
-  line-height:1.5
-}
-
-.verify-banner button{
-  margin-top:8px;
-  border:none;
-  background:#8A6100;
-  color:white;
-  padding:8px 12px;
-  border-radius:8px;
-  font-size:12px;
-  font-weight:bold
-}
-
-.pending-badge{
-  display:inline-block;
-  background:#FFF6E0;
-  color:#8A6100;
-  padding:6px 11px;
-  border-radius:20px;
-  font-size:12px;
-  font-weight:bold;
-  margin-top:10px
-}
-
-.active-badge{
-  display:inline-block;
-  background:#E7F8EF;
-  color:#167347;
-  padding:6px 11px;
-  border-radius:20px;
-  font-size:12px;
-  font-weight:bold;
-  margin-top:10px
-}
-
-.auth-tabs{
-  display:flex;
-  background:#F3FBF7;
-  border-radius:11px;
-  padding:4px;
-  margin-bottom:18px
-}
-
-.auth-tab{
-  flex:1;
-  border:none;
-  background:transparent;
-  padding:10px;
-  border-radius:9px;
-  font-weight:bold;
-  color:#668078;
-  font-size:13px
-}
-
-.auth-tab.active{
-  background:#0B8F6A;
-  color:white
-}
-
-.auth-form{
-  display:none
-}
-
-.auth-form.active{
-  display:block
-}
-
-.auth-error{
-  background:#FDEDED;
-  color:#C0392B;
-  border-radius:10px;
-  padding:10px 12px;
-  font-size:12px;
-  margin-bottom:12px;
-  display:none
-}
-
-.auth-error.show{
-  display:block
+.choice-note{
+ background:#F3FBF7;border-radius:10px;
+ padding:10px;font-size:11px;color:#668078;
+ margin-top:5px
 }
 
 .payment-info{
-  background:#F3FBF7;
-  border-radius:11px;
-  padding:12px;
-  margin-bottom:15px
+ background:#F3FBF7;border-radius:11px;
+ padding:12px;margin-bottom:15px
 }
-
 .payment-info p{
-  color:#55736A;
-  font-size:12px;
-  line-height:1.5
+ color:#55736A;font-size:12px;line-height:1.5
 }
-
 .payment-methods{
-  display:flex;
-  flex-direction:column;
-  gap:9px
+ display:flex;flex-direction:column;gap:9px
 }
-
 .payment-method{
-  border:1px solid #dcefe7;
-  background:white;
-  border-radius:11px;
-  padding:12px;
-  display:flex;
-  align-items:center;
-  gap:10px
+ border:1px solid #dcefe7;background:white;
+ border-radius:11px;padding:12px;
+ display:flex;align-items:center;gap:10px
 }
-
-.payment-method input{
-  accent-color:#0B8F6A
-}
-
+.payment-method input{accent-color:#0B8F6A}
 .payment-method label{
-  flex:1;
-  color:#17352C;
-  font-size:13px;
-  font-weight:bold
+ flex:1;color:#17352C;font-size:13px;font-weight:bold
 }
-
 .payment-method small{
-  display:block;
-  color:#668078;
-  font-size:10px;
-  font-weight:normal;
-  margin-top:3px
+ display:block;color:#668078;font-size:10px;
+ font-weight:normal;margin-top:3px
+}
+.continue-payment{margin-top:15px}
+
+.auth-card{
+ background:white;border-radius:18px;padding:22px;
+ box-shadow:0 3px 12px rgba(0,0,0,.05)
+}
+.auth-tabs{
+ display:flex;background:#F3FBF7;border-radius:11px;
+ padding:4px;margin-bottom:18px
+}
+.auth-tab{
+ flex:1;border:none;background:transparent;
+ padding:10px;border-radius:9px;font-weight:bold;
+ color:#668078;font-size:13px
+}
+.auth-tab.active{background:#0B8F6A;color:white}
+.auth-form{display:none}
+.auth-form.active{display:block}
+.auth-error{
+ background:#FDEDED;color:#C0392B;border-radius:10px;
+ padding:10px 12px;font-size:12px;margin-bottom:12px;
+ display:none
+}
+.auth-error.show{display:block}
+.auth-success{
+ background:#E6F7EF;color:#0B8F6A;border-radius:10px;
+ padding:10px 12px;font-size:12px;margin-bottom:12px;
+ display:none
+}
+.auth-success.show{display:block}
+.link-button{
+ background:none;border:none;color:#0B8F6A;
+ font-size:12px;font-weight:bold;margin-top:10px;
+ text-decoration:underline;padding:0
 }
 
-.continue-payment{
-  margin-top:15px
+.verify-banner{
+ background:#FFF6E0;color:#8A6100;border-radius:14px;
+ padding:14px;margin-bottom:16px;font-size:13px;line-height:1.5
+}
+.verify-banner button{
+ margin-top:8px;border:none;background:#8A6100;
+ color:white;padding:8px 12px;border-radius:8px;
+ font-size:12px;font-weight:bold
+}
+
+.pending-badge{
+ display:inline-block;background:#FFF6E0;color:#8A6100;
+ padding:6px 11px;border-radius:20px;font-size:12px;
+ font-weight:bold;margin-top:10px
+}
+.approved-badge{
+ display:inline-block;background:#E6F7EF;color:#0B8F6A;
+ padding:6px 11px;border-radius:20px;font-size:12px;
+ font-weight:bold;margin-top:10px
+}
+.refused-badge{
+ display:inline-block;background:#FDEDED;color:#C0392B;
+ padding:6px 11px;border-radius:20px;font-size:12px;
+ font-weight:bold;margin-top:10px
 }
 
 .bottom-nav{
-  position:fixed;
-  left:0;
-  right:0;
-  bottom:0;
-  height:68px;
-  background:white;
-  border-top:1px solid #dcefe7;
-  display:flex;
-  z-index:40;
-  box-shadow:0 -2px 10px rgba(0,0,0,.06)
+ position:fixed;left:0;right:0;bottom:0;height:68px;
+ background:white;border-top:1px solid #dcefe7;
+ display:flex;z-index:40;
+ box-shadow:0 -2px 10px rgba(0,0,0,.06)
 }
-
 .bottom-nav a{
-  flex:1;
-  text-decoration:none;
-  color:#668078;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  gap:3px;
-  font-size:11px;
-  font-weight:bold
+ flex:1;text-decoration:none;color:#668078;
+ display:flex;flex-direction:column;
+ align-items:center;justify-content:center;
+ gap:3px;font-size:11px;font-weight:bold
 }
-
-.bottom-nav a span{
-  font-size:20px;
-  line-height:1
-}
-
-.bottom-nav a.active{
-  color:#0B8F6A
-}
-
-.legal-links{
-  text-align:center;
-  margin-top:14px;
-  font-size:11px
-}
-
-.legal-links a{
-  color:#087557;
-  text-decoration:none
-}
+.bottom-nav a span{font-size:20px;line-height:1}
+.bottom-nav a.active{color:#0B8F6A}
 
 @media(min-width:700px){
-  .bottom-nav{
-    max-width:700px;
-    left:50%;
-    transform:translateX(-50%);
-    border-radius:16px 16px 0 0
-  }
+ .bottom-nav{
+  max-width:700px;left:50%;transform:translateX(-50%);
+  border-radius:16px 16px 0 0
+ }
 }
 </style>
 </head>
@@ -673,143 +316,104 @@ h1{
 <body>
 
 <header>
-  <div class="logo">💚 Affrilova</div>
-
-  <div class="header-points">
-    ⭐ <span id="headerPoints">-</span> points
-  </div>
+<div class="logo">💚 Afrilova</div>
+<div class="header-points">
+⭐ <span id="headerPoints">-</span> points
+</div>
 </header>
 
 <main class="container">
 
-<!-- =====================================================
-     AUTHENTIFICATION
-===================================================== -->
+<!-- ======== AUTHENTIFICATION ======== -->
 
 <section id="authSection" style="display:none">
 
   <h1>👋 Bienvenue</h1>
 
   <p class="intro">
-    Connectez-vous ou créez votre compte pour accéder à votre profil.
+  Connectez-vous ou créez un compte pour accéder à votre profil.
   </p>
 
   <div class="auth-card">
 
     <div class="auth-tabs">
-
-      <button
-        type="button"
-        class="auth-tab active"
-        id="tabConnexion"
-        onclick="afficherOnglet('connexion')">
-        Se connecter
+      <button type="button" class="auth-tab active" id="tabConnexion" onclick="afficherOnglet('connexion')">
+      Se connecter
       </button>
-
-      <button
-        type="button"
-        class="auth-tab"
-        id="tabInscription"
-        onclick="afficherOnglet('inscription')">
-        Créer un compte
+      <button type="button" class="auth-tab" id="tabInscription" onclick="afficherOnglet('inscription')">
+      Créer un compte
       </button>
-
     </div>
 
     <div class="auth-error" id="authErrorConnexion"></div>
 
-    <form
-      class="auth-form active"
-      id="formConnexion"
-      onsubmit="connexion(event)">
+    <form class="auth-form active" id="formConnexion" onsubmit="connexion(event)">
 
       <div class="form-group">
-
-        <label for="loginEmail">
-          Adresse email
-        </label>
-
-        <input
-          type="email"
-          id="loginEmail"
-          required
-          placeholder="vous@exemple.com">
-
+        <label for="loginEmail">Adresse email</label>
+        <input type="email" id="loginEmail" required placeholder="vous@exemple.com">
       </div>
 
       <div class="form-group">
-
-        <label for="loginPassword">
-          Mot de passe
-        </label>
-
-        <input
-          type="password"
-          id="loginPassword"
-          required
-          placeholder="Votre mot de passe">
-
+        <label for="loginPassword">Mot de passe</label>
+        <input type="password" id="loginPassword" required placeholder="Votre mot de passe">
       </div>
 
-      <button
-        type="submit"
-        class="save-button"
-        id="btnConnexion">
-        Se connecter
+      <button type="submit" class="save-button" id="btnConnexion">
+      Se connecter
+      </button>
+
+      <button type="button" class="link-button" onclick="afficherOnglet('recuperation')">
+      Mot de passe oublié ?
       </button>
 
     </form>
 
-
     <div class="auth-error" id="authErrorInscription"></div>
 
-    <form
-      class="auth-form"
-      id="formInscription"
-      onsubmit="inscription(event)">
+    <form class="auth-form" id="formInscription" onsubmit="inscription(event)">
 
       <div class="form-group">
-
-        <label for="signupEmail">
-          Adresse email
-        </label>
-
-        <input
-          type="email"
-          id="signupEmail"
-          required
-          placeholder="vous@exemple.com">
-
+        <label for="signupEmail">Adresse email</label>
+        <input type="email" id="signupEmail" required placeholder="vous@exemple.com">
       </div>
 
       <div class="form-group">
-
-        <label for="signupPassword">
-          Mot de passe
-        </label>
-
-        <input
-          type="password"
-          id="signupPassword"
-          required
-          minlength="8"
-          placeholder="8 caractères minimum">
-
+        <label for="signupPassword">Mot de passe</label>
+        <input type="password" id="signupPassword" required minlength="8" placeholder="8 caractères minimum">
       </div>
 
-      <button
-        type="submit"
-        class="save-button"
-        id="btnInscription">
-        Créer mon compte
+      <div class="checkbox-row">
+        <input type="checkbox" id="signupTerms" required>
+        <label for="signupTerms">
+        J'ai lu et j'accepte la Politique de confidentialité d'Afrilova
+        et les Conditions d'utilisation. Je confirme avoir 18 ans ou plus.
+        </label>
+      </div>
+
+      <button type="submit" class="save-button" id="btnInscription">
+      Créer mon compte
       </button>
 
-      <p class="choice-note">
-        En créant un compte, vous confirmez avoir
-        <strong>18 ans ou plus</strong>.
-        Vous devrez également accepter la Politique de confidentialité
-        et les Conditions d'utilisation lors de la création de votre profil.
-      </p>
+    </form>
+
+    <div class="auth-success" id="authSuccessRecuperation"></div>
+    <div class="auth-error" id="authErrorRecuperation"></div>
+
+    <form class="auth-form" id="formRecuperation" onsubmit="demanderRecuperation(event)">
+
+      <div class="form-group">
+        <label for="recoveryEmail">Adresse email</label>
+        <input type="email" id="recoveryEmail" required placeholder="vous@exemple.com">
+      </div>
+
+      <button type="submit" class="save-button" id="btnRecuperation">
+      Recevoir un lien de réinitialisation
+      </button>
+
+      <button type="button" class="link-button" onclick="afficherOnglet('connexion')">
+      Retour à la connexion
+      </button>
 
     </form>
 
@@ -818,1714 +422,940 @@ h1{
 </section>
 
 
-<!-- =====================================================
-     PROFIL CONNECTÉ
-===================================================== -->
+<!-- ======== RÉINITIALISATION MOT DE PASSE (depuis le lien reçu par email) ======== -->
+
+<section id="resetSection" style="display:none">
+
+  <h1>🔑 Nouveau mot de passe</h1>
+
+  <div class="auth-card">
+
+    <div class="auth-error" id="authErrorReset"></div>
+
+    <form onsubmit="reinitialiserMotDePasse(event)">
+
+      <div class="form-group">
+        <label for="newPassword">Nouveau mot de passe</label>
+        <input type="password" id="newPassword" required minlength="8" placeholder="8 caractères minimum">
+      </div>
+
+      <button type="submit" class="save-button" id="btnReset">
+      Réinitialiser le mot de passe
+      </button>
+
+    </form>
+
+  </div>
+
+</section>
+
+
+<!-- ======== PROFIL (utilisateur connecté) ======== -->
 
 <div id="profilConnecte" style="display:none">
 
-  <h1>👤 Mon profil</h1>
-
-  <p class="intro">
-    Gérez vos informations personnelles et votre solde de points.
-  </p>
-
-
-  <!-- VÉRIFICATION EMAIL -->
-
-  <div
-    class="verify-banner"
-    id="verifyBanner"
-    style="display:none">
-
-    📧 Votre adresse email n'est pas encore vérifiée.
-    Consultez votre boîte mail pour confirmer votre adresse.
-
-    <br>
-
-    <button
-      type="button"
-      onclick="renvoyerVerification()">
-      Renvoyer l'email de vérification
-    </button>
-
-  </div>
-
-
-  <!-- MESSAGE DE STATUT -->
-
-  <div
-    class="status-message"
-    id="profileStatusMessage">
-  </div>
-
-
-  <!-- CARTE PROFIL -->
-
-  <section class="profile-card">
-
-    <div class="profile-top">
-
-      <img
-        id="profilePhoto"
-        class="profile-photo"
-        src="https://via.placeholder.com/200"
-        alt="Photo de profil">
-
-      <h2
-        id="profileName"
-        class="profile-name">
-        Mon profil
-      </h2>
-
-      <p
-        id="profileLocation"
-        class="profile-location">
-        Profil pas encore créé
-      </p>
-
-      <div
-        id="pendingBadge"
-        class="pending-badge"
-        style="display:none">
-        ⏳ Profil en attente de validation
-      </div>
-
-      <div
-        id="activeBadge"
-        class="active-badge"
-        style="display:none">
-        ✅ Profil validé
-      </div>
-
-    </div>
-
-
-    <div class="profile-description">
-
-      <strong>À propos de moi</strong>
-
-      <p id="profileDescription">
-        Vous n'avez pas encore créé votre profil de rencontre.
-        Cliquez sur « Créer / modifier mon profil » pour commencer.
-      </p>
-
-    </div>
-
-
-    <div
-      class="profile-info-grid"
-      id="profileInfoGrid"
-      style="display:none">
-
-      <div class="info-box">
-
-        <span>Âge</span>
-
-        <strong id="profileAge">
-          -
-        </strong>
-
-      </div>
-
-
-      <div class="info-box">
-
-        <span>Ce que je recherche</span>
-
-        <strong id="profileSearch">
-          -
-        </strong>
-
-      </div>
-
-
-      <div class="info-box">
-
-        <span>Enfants</span>
-
-        <strong id="profileChildren">
-          -
-        </strong>
-
-      </div>
-
-
-      <div class="info-box">
-
-        <span>Polygamie</span>
-
-        <strong id="profilePolygamy">
-          -
-        </strong>
-
-      </div>
-
-
-      <div
-        class="info-box"
-        style="grid-column:1 / -1">
-
-        <span>Type de relation recherché</span>
-
-        <strong id="profileRelation">
-          -
-        </strong>
-
-      </div>
-
-    </div>
-
-
-    <button
-      type="button"
-      class="edit-button"
-      onclick="ouvrirModificationProfil()">
-      ✏️ Créer / modifier mon profil
-    </button>
-
-
-    <button
-      type="button"
-      class="logout-button"
-      onclick="deconnexion()">
-      🚪 Se déconnecter
-    </button>
-
-  </section>
-
-
-  <!-- ===================================================
-       POINTS
-  ==================================================== -->
-
-  <section class="points-card">
-
-    <div class="points-title">
-      Mon solde
-    </div>
-
-    <div
-      class="points-number"
-      id="mainPoints">
-      0 point
-    </div>
-
-    <div class="points-description">
-      1 point = 200 FCFA.
-      Les points permettent d'envoyer des demandes de discussion
-      et d'utiliser l'Aide à la discussion.
-    </div>
-
-  </section>
-
-
-  <!-- ===================================================
-       ACHAT DE POINTS
-  ==================================================== -->
-
-  <section class="section-card">
-
-    <h2>⭐ Acheter des points</h2>
-
-    <p class="section-description">
-      Les points peuvent être achetés uniquement depuis votre profil.
-      Ils seront ajoutés après confirmation réelle du paiement.
-    </p>
-
-    <div class="packs">
-
-      <button
-        type="button"
-        class="pack"
-        onclick="ouvrirPaiement(5,1000)">
-
-        <div class="pack-info">
-
-          <strong>
-            5 points
-          </strong>
-
-          <small>
-            1 000 FCFA
-          </small>
-
-        </div>
-
-        <div class="pack-price">
-          1 000 FCFA
-        </div>
-
-      </button>
-
-
-      <button
-        type="button"
-        class="pack"
-        onclick="ouvrirPaiement(10,2000)">
-
-        <div class="pack-info">
-
-          <strong>
-            10 points
-          </strong>
-
-          <small>
-            2 000 FCFA
-          </small>
-
-        </div>
-
-        <div class="pack-price">
-          2 000 FCFA
-        </div>
-
-      </button>
-
-
-      <button
-        type="button"
-        class="pack"
-        onclick="ouvrirPaiement(20,4000)">
-
-        <div class="pack-info">
-
-          <strong>
-            20 points
-          </strong>
-
-          <small>
-            4 000 FCFA
-          </small>
-
-        </div>
-
-        <div class="pack-price">
-          4 000 FCFA
-        </div>
-
-      </button>
-
-    </div>
-
-  </section>
-
-
-  <!-- ===================================================
-       UTILISATION DES POINTS
-  ==================================================== -->
-
-  <section class="section-card">
-
-    <h2>💡 À quoi servent les points ?</h2>
-
-    <p class="section-description">
-      Les points sont utilisés pour certaines fonctionnalités
-      de la plateforme.
-    </p>
-
-    <div class="usage-list">
-
-      <div class="usage-item">
-
-        <div class="usage-icon">
-          💬
-        </div>
-
-        <div class="usage-text">
-
-          <strong>
-            Envoyer une demande de discussion
-          </strong>
-
-          <small>
-            1 point · 200 FCFA
-          </small>
-
-        </div>
-
-      </div>
-
-
-      <div class="usage-item">
-
-        <div class="usage-icon">
-          💡
-        </div>
-
-        <div class="usage-text">
-
-          <strong>
-            Aide à la discussion
-          </strong>
-
-          <small>
-            1 point · 200 FCFA par utilisation
-          </small>
-
-        </div>
-
-      </div>
-
-    </div>
-
-  </section>
-
-
-  <!-- ===================================================
-       SÉCURITÉ
-  ==================================================== -->
-
-  <section class="section-card">
-
-    <h2>🛡️ Sécurité</h2>
-
-    <p class="section-description">
-      Affrilova ne peut pas garantir l'identité ou les intentions
-      des personnes présentes sur la plateforme.
-      Ne transférez jamais d'argent à une personne rencontrée
-      sur Affrilova et ne partagez jamais vos mots de passe,
-      codes de paiement ou documents personnels.
-    </p>
-
-    <p class="section-description">
-      En cas de comportement suspect, utilisez les fonctions
-      de blocage et de signalement.
-    </p>
-
-  </section>
-
-
-  <!-- DOCUMENTS -->
-
-  <div class="legal-links">
-
-    <a href="politique-de-confidentialite.html">
-      Politique de confidentialité
-    </a>
-
-    ·
-
-    <a href="conditions-utilisation.html">
-      Conditions d'utilisation
-    </a>
-
-  </div>
+<h1>👤 Mon profil</h1>
+
+<p class="intro">
+Gérez vos informations personnelles et votre solde de points.
+</p>
+
+<div class="verify-banner" id="verifyBanner" style="display:none">
+📧 Votre email n'est pas encore vérifié. Consultez votre boîte mail
+pour confirmer votre adresse.
+<br>
+<button type="button" onclick="renvoyerVerification()">
+Renvoyer l'email de vérification
+</button>
+</div>
+
+<section class="profile-card">
+
+<div class="profile-top">
+
+<img
+ id="profilePhoto"
+ class="profile-photo"
+ src="https://via.placeholder.com/200/E0F7EE/087557?text=Afrilova"
+ alt="Photo de profil">
+
+<h2 id="profileName" class="profile-name">
+Profil pas encore créé
+</h2>
+
+<p id="profileLocation" class="profile-location">
+—
+</p>
+
+<div id="statutBadge"></div>
 
 </div>
 
-</main>
+<div id="profileDetailsBlock" style="display:none">
+
+<div class="profile-info-grid">
+
+<div class="info-box">
+<span>Âge</span>
+<strong id="profileAge">—</strong>
+</div>
+
+<div class="info-box">
+<span>Pays</span>
+<strong id="profileCountry">—</strong>
+</div>
+
+<div class="info-box">
+<span>Ville</span>
+<strong id="profileCity">—</strong>
+</div>
+
+<div class="info-box">
+<span>Recherche</span>
+<strong id="profileSearch">—</strong>
+</div>
+
+</div>
+
+<div class="profile-description">
+<strong>À propos de moi</strong>
+<p id="profileDescription">—</p>
+</div>
+
+</div>
+
+<div id="profileEmptyNote">
+<p class="section-description">
+Vous n'avez pas encore créé votre profil de rencontre.
+Cliquez ci-dessous pour commencer.
+</p>
+</div>
+
+<button
+ type="button"
+ class="edit-button"
+ onclick="ouvrirModificationProfil()">
+✏️ Créer / modifier mon profil
+</button>
+
+<button
+ type="button"
+ class="logout-button"
+ onclick="deconnexion()">
+🚪 Se déconnecter
+</button>
+
+</section>
+
+<section class="points-card">
+<div class="points-title">Mon solde</div>
+<div class="points-number" id="mainPoints">0 point</div>
+<div class="points-description">
+Les points permettent d'envoyer des demandes de discussion
+et d'utiliser l'Aide à la discussion.
+</div>
+</section>
+
+<section class="section-card">
+<h2>⭐ Acheter des points</h2>
+<p class="section-description">
+Choisissez le nombre de points que vous souhaitez acheter.
+Les points seront ajoutés à votre compte après confirmation
+réelle du paiement.
+</p>
+
+<div class="packs">
+<button type="button" class="pack" onclick="ouvrirPaiement(5,1000)">
+<div class="pack-info"><strong>5 points</strong><small>Pour commencer à utiliser la plateforme</small></div>
+<div class="pack-price">1 000 FCFA</div>
+</button>
+
+<button type="button" class="pack" onclick="ouvrirPaiement(10,2000)">
+<div class="pack-info"><strong>10 points</strong><small>Pour plusieurs demandes et aides</small></div>
+<div class="pack-price">2 000 FCFA</div>
+</button>
+
+<button type="button" class="pack" onclick="ouvrirPaiement(20,4000)">
+<div class="pack-info"><strong>20 points</strong><small>Pour une utilisation plus régulière</small></div>
+<div class="pack-price">4 000 FCFA</div>
+</button>
+</div>
+</section>
+
+<section class="section-card">
+<h2>💡 À quoi servent les points ?</h2>
+<p class="section-description">
+Les points sont utilisés uniquement lorsque vous effectuez
+certaines actions sur la plateforme.
+</p>
+<div class="usage-list">
+<div class="usage-item">
+<div class="usage-icon">💬</div>
+<div class="usage-text"><strong>Envoyer une demande de discussion</strong><small>1 point · 200 FCFA</small></div>
+</div>
+<div class="usage-item">
+<div class="usage-icon">💡</div>
+<div class="usage-text"><strong>Aide à la discussion</strong><small>1 point · 200 FCFA par utilisation</small></div>
+</div>
+</div>
+</section>
+
+<section class="section-card">
+<h2>🔐 Sécurité</h2>
+<p class="section-description">
+Vos informations et votre solde sont protégés par notre
+système de compte. Les opérations importantes sont
+vérifiées côté serveur.
+</p>
+<div class="security-note">
+⚠️ Restez prudent(e). Ne transférez jamais d'argent à une personne
+rencontrée sur Afrilova, ne partagez jamais vos mots de passe,
+codes de paiement ou documents bancaires. Privilégiez une première
+rencontre dans un lieu public et utilisez le bouton bloquer/signaler
+en cas de problème.
+</div>
+</section>
+
+</div>
+
+  </main>
+  <!-- MODALE MODIFICATION PROFIL -->
+
+<div class="modal" id="editProfileModal">
+
+<div class="modal-content">
+
+<button type="button" class="close-button" onclick="fermerModal('editProfileModal')">×</button>
+
+<h2>✏️ Modifier mon profil</h2>
+
+<form id="profileForm" onsubmit="enregistrerProfil(event)">
+
+<div class="form-group">
+<label>Photo principale</label>
+<img id="photoPreview" class="photo-preview" src="https://via.placeholder.com/200/E0F7EE/087557?text=Photo">
+<input type="file" id="editPhoto" accept="image/jpeg,image/png,image/webp" onchange="gererPhotoSelectionnee(event)">
+<div class="choice-note">JPG, PNG ou WEBP — 500 Ko maximum.</div>
+</div>
+
+<div class="form-group">
+<label for="editName">Nom ou pseudonyme</label>
+<input type="text" id="editName" placeholder="Votre nom ou pseudonyme" maxlength="60">
+</div>
+
+<div class="form-group">
+<label for="editAge">Âge</label>
+<input type="number" id="editAge" min="18" max="100" placeholder="Votre âge (18 ans minimum)">
+</div>
+
+<div class="form-group">
+<label for="editCountry">Pays</label>
+<select id="editCountry" onchange="chargerVilles(this.value)">
+<option value="">Sélectionner un pays</option>
+</select>
+</div>
+
+<div class="form-group">
+<label for="editCity">Ville</label>
+<select id="editCity">
+<option value="">Sélectionner une ville</option>
+</select>
+</div>
+
+<div class="form-group">
+<label for="editDescription">À propos de moi</label>
+<textarea id="editDescription" maxlength="1000" placeholder="Présentez-vous en quelques mots..."></textarea>
+</div>
+
+<div class="form-group">
+<label for="editSearch">Je recherche</label>
+<input type="text" id="editSearch" maxlength="255" placeholder="Ex : une relation sérieuse">
+</div>
+
+<div class="form-group">
+<label for="editEnfants">Accepte un partenaire ayant déjà des enfants</label>
+<select id="editEnfants">
+<option value="">Sélectionner</option>
+<option value="oui">Oui</option>
+<option value="non">Non</option>
+</select>
+</div>
+
+<div class="form-group">
+<label for="editPolygamie">Accepte la polygamie</label>
+<select id="editPolygamie">
+<option value="">Sélectionner</option>
+<option value="oui">Oui</option>
+<option value="non">Non</option>
+<option value="indifferent">Indifférent</option>
+</select>
+</div>
+
+<div class="form-group">
+<label for="editTypeRelation">Type de relation recherchée</label>
+<select id="editTypeRelation">
+<option value="">Sélectionner</option>
+<option value="mariage">💍 Relation pouvant aboutir au mariage</option>
+<option value="amoureuse">🌹 Relation amoureuse sans précipitation</option>
+<option value="projet">💕 Relation avec projet de vie à deux</option>
+</select>
+</div>
+
+<button type="submit" class="save-button" id="btnEnregistrerProfil">
+💾 Enregistrer
+</button>
+
+<div class="choice-note">
+Votre profil sera examiné avant d'être visible publiquement
+(statut « en attente »).
+</div>
+
+</form>
+</div>
+</div>
 
 
-<!-- =====================================================
-     MODALE CRÉATION / MODIFICATION PROFIL
-===================================================== -->
+<!-- MODALE PAIEMENT -->
 
-<div
-  class="modal"
-  id="editProfileModal">
+<div class="modal" id="paymentModal">
+<div class="modal-content">
 
-  <div class="modal-content">
+<button type="button" class="close-button" onclick="fermerModal('paymentModal')">×</button>
 
-    <button
-      type="button"
-      class="close-button"
-      onclick="fermerModal('editProfileModal')">
-      ×
-    </button>
+<h2>💳 Acheter des points</h2>
 
-    <h2>
-      ✏️ Mon profil Affrilova
-    </h2>
+<div class="payment-info">
+<p>Vous avez sélectionné <strong id="selectedPoints">5 points</strong> pour <strong id="selectedPrice">1 000 FCFA</strong>.</p>
+</div>
 
-    <p class="section-description">
-      Votre profil sera soumis à validation avant d'être rendu visible
-      aux autres utilisateurs.
-    </p>
+<p class="section-description">
+Choisissez votre moyen de paiement.
+Le solde sera crédité uniquement après confirmation réelle du paiement.
+</p>
+
+<div class="payment-methods">
+<div class="payment-method">
+<input type="radio" name="paymentMethod" value="paydunya">
+<label>PayDunya<small>Paiement sécurisé</small></label>
+</div>
+</div>
+
+<button type="button" class="continue-payment" onclick="continuerPaiement()">
+Continuer vers le paiement
+</button>
+
+</div>
+</div>
 
 
-    <div
-      class="status-message"
-      id="form
+<!-- NAVIGATION -->
 
-     /*
-==========================================================
-CHARGER LE PROFIL EXISTANT
-==========================================================
-*/
+<nav class="bottom-nav">
+<a href="index.html"><span>🏠</span>Accueil</a>
+<a href="explorer.html"><span>🔎</span>Explorer</a>
+<a href="messagerie.html"><span>💬</span>Messagerie</a>
+<a href="profil.html" class="active"><span>👤</span>Profil</a>
+</nav>
 
-async function chargerProfil(){
 
-  if(!utilisateurConnecte){
+<!-- SDK APPWRITE (CDN) -->
+<script src="https://cdn.jsdelivr.net/npm/appwrite@20.0.0"></script>
+
+<script>
+
+/* ========================================== CONFIGURATION ========================================== */
+
+const APPWRITE_ENDPOINT = "https://fra.cloud.appwrite.io/v1";
+const APPWRITE_PROJECT_ID = "6aac203e00209ccb3014";
+const APPWRITE_DATABASE_ID = "6aac2a200000e6be5877";
+const APPWRITE_BUCKET_PHOTOS = "6aad2a754e0e095d6a9a";
+
+const TABLE_PROFILS = "6aac2b35002a0debbb85";
+const TABLE_PAYS = "pays";
+const TABLE_VILLES = "villes";
+const TABLE_POINTS = "points";
+
+const client = new Appwrite.Client();
+client.setEndpoint(APPWRITE_ENDPOINT).setProject(APPWRITE_PROJECT_ID);
+
+const account = new Appwrite.Account(client);
+const tablesDB = new Appwrite.TablesDB(client);
+const storage = new Appwrite.Storage(client);
+
+let utilisateurConnecte = null;
+let profilActuel = null;
+let paysDisponibles = [];
+let villesDisponibles = [];
+let photoFichierSelectionne = null;
+let nombrePointsSelectionne = 0;
+let prixSelectionne = 0;
+
+
+/* ========================================== ONGLETS AUTH ========================================== */
+
+function afficherOnglet(nom) {
+  document.getElementById("tabConnexion").classList.toggle("active", nom === "connexion");
+  document.getElementById("tabInscription").classList.toggle("active", nom === "inscription");
+  document.getElementById("formConnexion").classList.toggle("active", nom === "connexion");
+  document.getElementById("formInscription").classList.toggle("active", nom === "inscription");
+  document.getElementById("formRecuperation").classList.toggle("active", nom === "recuperation");
+}
+
+function afficherErreurAuth(id, message) {
+  const bloc = document.getElementById(id);
+  bloc.textContent = message;
+  bloc.classList.add("show");
+}
+
+function cacherErreursAuth() {
+  ["authErrorConnexion","authErrorInscription","authErrorRecuperation","authErrorReset"]
+    .forEach(id => document.getElementById(id).classList.remove("show"));
+  document.getElementById("authSuccessRecuperation").classList.remove("show");
+}
+
+
+/* ========================================== CONNEXION ========================================== */
+
+async function connexion(event) {
+  event.preventDefault();
+  cacherErreursAuth();
+
+  const email = document.getElementById("loginEmail").value.trim();
+  const motDePasse = document.getElementById("loginPassword").value;
+
+  const bouton = document.getElementById("btnConnexion");
+  bouton.disabled = true;
+  bouton.textContent = "Connexion...";
+
+  try {
+    await account.createEmailPasswordSession({ email, password: motDePasse });
+    await chargerEtatConnexion();
+  } catch (erreur) {
+    afficherErreurAuth("authErrorConnexion", "Email ou mot de passe incorrect.");
+  } finally {
+    bouton.disabled = false;
+    bouton.textContent = "Se connecter";
+  }
+}
+
+
+/* ========================================== INSCRIPTION ========================================== */
+
+async function inscription(event) {
+  event.preventDefault();
+  cacherErreursAuth();
+
+  const email = document.getElementById("signupEmail").value.trim();
+  const motDePasse = document.getElementById("signupPassword").value;
+  const accepteCGU = document.getElementById("signupTerms").checked;
+
+  if (!accepteCGU) {
+    afficherErreurAuth("authErrorInscription", "Vous devez accepter les conditions pour continuer.");
     return;
   }
 
-  try{
+  const bouton = document.getElementById("btnInscription");
+  bouton.disabled = true;
+  bouton.textContent = "Création...";
 
-    const reponse =
-      await tablesDB.listRows({
-
-        databaseId:
-          APPWRITE_DATABASE_ID,
-
-        tableId:
-          TABLE_PROFILS,
-
-        queries:[
-          Appwrite.Query.equal(
-            "userId",
-            utilisateurConnecte.$id
-          ),
-
-          Appwrite.Query.limit(1)
-        ]
-
-      });
-
-    if(reponse.total === 0){
-
-      profilActuel = null;
-
-      afficherProfilVide();
-
-      return;
-    }
-
-    profilActuel =
-      reponse.rows[0];
-
-    afficherProfil(
-      profilActuel
-    );
-
-  }catch(erreur){
-
-    console.error(
-      "Erreur chargement profil :",
-      erreur
-    );
-
-    afficherMessageProfil(
-      "Impossible de charger votre profil pour le moment.",
-      "error"
-    );
-
+  try {
+    await account.create({ userId: Appwrite.ID.unique(), email, password: motDePasse });
+    await account.createEmailPasswordSession({ email, password: motDePasse });
+    await envoyerEmailVerification();
+    await chargerEtatConnexion();
+  } catch (erreur) {
+    afficherErreurAuth("authErrorInscription", erreur.message || "Impossible de créer le compte.");
+  } finally {
+    bouton.disabled = false;
+    bouton.textContent = "Créer mon compte";
   }
-
 }
 
 
-/*
-==========================================================
-AFFICHER PROFIL VIDE
-==========================================================
-*/
+/* ========================================== VÉRIFICATION EMAIL ========================================== */
 
-function afficherProfilVide(){
+function urlVerification() {
+  return window.location.origin + window.location.pathname;
+}
 
-  document.getElementById(
-    "profileName"
-  ).textContent =
-    "Mon profil";
+async function envoyerEmailVerification() {
+  try {
+    await account.createEmailVerification({ url: urlVerification() });
+  } catch (erreur) {
+    console.error("Erreur envoi vérification :", erreur);
+  }
+}
 
-  document.getElementById(
-    "profileLocation"
-  ).textContent =
-    "Profil pas encore créé";
-
-  document.getElementById(
-    "profileDescription"
-  ).textContent =
-    "Vous n'avez pas encore créé votre profil de rencontre. Cliquez sur « Créer / modifier mon profil » pour commencer.";
-
-  document.getElementById(
-    "profileInfoGrid"
-  ).style.display =
-    "none";
-
-  document.getElementById(
-    "pendingBadge"
-  ).style.display =
-    "none";
-
-  document.getElementById(
-    "activeBadge"
-  ).style.display =
-    "none";
-
-  document.getElementById(
-    "profilePhoto"
-  ).src =
-    "https://via.placeholder.com/200";
-
+async function renvoyerVerification() {
+  await envoyerEmailVerification();
+  alert("Un nouvel email de vérification vient d'être envoyé.");
 }
 
 
-/*
-==========================================================
-AFFICHER PROFIL
-==========================================================
-*/
+/* ========================================== MOT DE PASSE OUBLIÉ ========================================== */
 
-async function afficherProfil(profil){
-
-  document.getElementById(
-    "profileName"
-  ).textContent =
-    profil.nom || "Profil Affrilova";
-
-  document.getElementById(
-    "profileAge"
-  ).textContent =
-    profil.age
-      ? profil.age + " ans"
-      : "-";
-
-  document.getElementById(
-    "profileDescription"
-  ).textContent =
-    profil.description ||
-    "Aucune description renseignée.";
-
-  document.getElementById(
-    "profileSearch"
-  ).textContent =
-    profil.recherche ||
-    "-";
-
-  document.getElementById(
-    "profileChildren"
-  ).textContent =
-    convertirEnfants(
-      profil.accepteEnfants
-    );
-
-  document.getElementById(
-    "profilePolygamy"
-  ).textContent =
-    convertirPolygamie(
-      profil.acceptePolygamie
-    );
-
-  document.getElementById(
-    "profileRelation"
-  ).textContent =
-    convertirRelation(
-      profil.typeRelation
-    );
-
-  document.getElementById(
-    "profileInfoGrid"
-  ).style.display =
-    "grid";
-
-
-  /*
-   * STATUT DU PROFIL
-   */
-
-  document.getElementById(
-    "pendingBadge"
-  ).style.display =
-    profil.statut === "en_attente"
-      ? "inline-block"
-      : "none";
-
-  document.getElementById(
-    "activeBadge"
-  ).style.display =
-    profil.statut === "actif"
-      ? "inline-block"
-      : "none";
-
-
-  /*
-   * PHOTO
-   */
-
-  if(profil.photoPrincipale){
-
-    try{
-
-      const url =
-        storage.getFileView({
-          bucketId:
-            BUCKET_PHOTOS,
-
-          fileId:
-            profil.photoPrincipale
-        });
-
-      document.getElementById(
-        "profilePhoto"
-      ).src =
-        url;
-
-      document.getElementById(
-        "photoPreview"
-      ).src =
-        url;
-
-    }catch(erreur){
-
-      console.error(
-        "Erreur affichage photo :",
-        erreur
-      );
-
-    }
-
-  }
-
-
-  /*
-   * PAYS + VILLE
-   */
-
-  await afficherLocalisationProfil(
-    profil.paysId,
-    profil.villeId
-  );
-
+function urlRecuperation() {
+  return window.location.origin + window.location.pathname + "?type=reset";
 }
 
+async function demanderRecuperation(event) {
+  event.preventDefault();
+  cacherErreursAuth();
 
-/*
-==========================================================
-CONVERSIONS POUR L'AFFICHAGE
-==========================================================
-*/
+  const email = document.getElementById("recoveryEmail").value.trim();
+  const bouton = document.getElementById("btnRecuperation");
+  bouton.disabled = true;
+  bouton.textContent = "Envoi...";
 
-function convertirEnfants(valeur){
+  try {
+    await account.createRecovery({ email, url: urlRecuperation() });
 
-  if(valeur === true){
-    return "Oui";
+    const succes = document.getElementById("authSuccessRecuperation");
+    succes.textContent = "Un lien de réinitialisation a été envoyé à votre adresse email.";
+    succes.classList.add("show");
+  } catch (erreur) {
+    afficherErreurAuth("authErrorRecuperation", "Impossible d'envoyer le lien. Vérifiez l'adresse saisie.");
+  } finally {
+    bouton.disabled = false;
+    bouton.textContent = "Recevoir un lien de réinitialisation";
   }
-
-  if(valeur === false){
-    return "Non";
-  }
-
-  if(valeur === "oui"){
-    return "Oui";
-  }
-
-  if(valeur === "non"){
-    return "Non";
-  }
-
-  return "-";
-
 }
 
-
-function convertirPolygamie(valeur){
-
-  if(
-    valeur === "oui" ||
-    valeur === true
-  ){
-    return "Oui";
-  }
-
-  if(
-    valeur === "non" ||
-    valeur === false
-  ){
-    return "Non";
-  }
-
-  if(
-    valeur === "indifferent" ||
-    valeur === "indifférent"
-  ){
-    return "Indifférent";
-  }
-
-  return "-";
-
-}
-
-
-function convertirRelation(valeur){
-
-  if(valeur === "mariage"){
-    return "Relation pouvant mener au mariage";
-  }
-
-  if(valeur === "romantique"){
-    return "Relation romantique sans se précipiter";
-  }
-
-  if(valeur === "projet"){
-    return "Relation avec un projet de vie ensemble";
-  }
-
-  return valeur || "-";
-
-}
-
-
-/*
-==========================================================
-AFFICHER PAYS + VILLE DU PROFIL
-==========================================================
-*/
-
-async function afficherLocalisationProfil(
-  paysId,
-  villeId
-){
-
-  if(!paysId){
-
-    document.getElementById(
-      "profileLocation"
-    ).textContent =
-      "Localisation non renseignée";
-
-    return;
-  }
-
-  try{
-
-    const pays =
-      await tablesDB.getRow({
-
-        databaseId:
-          APPWRITE_DATABASE_ID,
-
-        tableId:
-          TABLE_PAYS,
-
-        rowId:
-          paysId
-
-      });
-
-    let texte =
-      pays.nom || "";
-
-    if(villeId){
-
-      try{
-
-        const ville =
-          await tablesDB.getRow({
-
-            databaseId:
-              APPWRITE_DATABASE_ID,
-
-            tableId:
-              TABLE_VILLES,
-
-            rowId:
-              villeId
-
-          });
-
-        if(ville.nom){
-
-          texte =
-            ville.nom +
-            " · " +
-            texte;
-
-        }
-
-      }catch(erreurVille){
-
-        console.error(
-          "Erreur chargement ville :",
-          erreurVille
-        );
-
-      }
-
-    }
-
-    document.getElementById(
-      "profileLocation"
-    ).textContent =
-      texte;
-
-  }catch(erreur){
-
-    console.error(
-      "Erreur chargement pays :",
-      erreur
-    );
-
-    document.getElementById(
-      "profileLocation"
-    ).textContent =
-      "Localisation non disponible";
-
-  }
-
-}
-
-
-/*
-==========================================================
-OUVRIR LE FORMULAIRE PROFIL
-==========================================================
-*/
-
-async function ouvrirModificationProfil(){
-
-  if(!utilisateurConnecte){
-    return;
-  }
-
-  afficherMessageFormulaire(
-    "",
-    "info"
-  );
-
-  document.getElementById(
-    "formProfileMessage"
-  ).className =
-    "status-message";
-
-
-  /*
-   * Charger les pays si nécessaire.
-   */
-
-  await chargerPays();
-
-
-  /*
-   * Réinitialiser le formulaire.
-   */
-
-  document
-    .getElementById("profileForm")
-    .reset();
-
-  document.getElementById(
-    "villeId"
-  ).innerHTML =
-    '<option value="">Sélectionnez d’abord un pays</option>';
-
-  document.getElementById(
-    "villeId"
-  ).disabled =
-    true;
-
-
-  /*
-   * Valeurs existantes.
-   */
-
-  if(profilActuel){
-
-    document.getElementById(
-      "nom"
-    ).value =
-      profilActuel.nom || "";
-
-    document.getElementById(
-      "age"
-    ).value =
-      profilActuel.age || "";
-
-    document.getElementById(
-      "description"
-    ).value =
-      profilActuel.description || "";
-
-    document.getElementById(
-      "recherche"
-    ).value =
-      profilActuel.recherche || "";
-
-
-    if(profilActuel.paysId){
-
-      document.getElementById(
-        "paysId"
-      ).value =
-        profilActuel.paysId;
-
-      await chargerVilles(
-        profilActuel.paysId
-      );
-
-      document.getElementById(
-        "villeId"
-      ).value =
-        profilActuel.villeId || "";
-
-    }
-
-
-    /*
-     * Enfants.
-     */
-
-    const enfants =
-      profilActuel.accepteEnfants;
-
-    if(enfants !== undefined){
-
-      const radio =
-        document.querySelector(
-          'input[name="accepteEnfants"][value="' +
-          (
-            enfants === true
-              ? "oui"
-              : enfants === false
-                ? "non"
-                : enfants
-          ) +
-          '"]'
-        );
-
-      if(radio){
-        radio.checked = true;
-      }
-
-    }
-
-
-    /*
-     * Polygamie.
-     */
-
-    const polygamie =
-      profilActuel.acceptePolygamie;
-
-    if(polygamie){
-
-      const radio =
-        document.querySelector(
-          'input[name="acceptePolygamie"][value="' +
-          polygamie +
-          '"]'
-        );
-
-      if(radio){
-        radio.checked = true;
-      }
-
-    }
-
-
-    /*
-     * Type de relation.
-     */
-
-    if(profilActuel.typeRelation){
-
-      const radio =
-        document.querySelector(
-          'input[name="typeRelation"][value="' +
-          profilActuel.typeRelation +
-          '"]'
-        );
-
-      if(radio){
-        radio.checked = true;
-      }
-
-    }
-
-
-    /*
-     * Photo existante.
-     */
-
-    if(profilActuel.photoPrincipale){
-
-      try{
-
-        const url =
-          storage.getFileView({
-
-            bucketId:
-              BUCKET_PHOTOS,
-
-            fileId:
-              profilActuel.photoPrincipale
-
-          });
-
-        document.getElementById(
-          "photoPreview"
-        ).src =
-          url;
-
-      }catch(erreur){
-
-        console.error(
-          "Erreur aperçu photo :",
-          erreur
-        );
-
-      }
-
-    }
-
-  }
-
-
-  document
-    .getElementById("editProfileModal")
-    .classList
-    .add("show");
-
-}
-
-
-/*
-==========================================================
-APERÇU PHOTO
-==========================================================
-*/
-
-document
-  .getElementById("photoPrincipale")
-  .addEventListener(
-    "change",
-    function(){
-
-      const fichier =
-        this.files[0];
-
-      if(!fichier){
-        return;
-      }
-
-      const typesAutorises = [
-        "image/jpeg",
-        "image/png",
-        "image/webp"
-      ];
-
-      if(
-        !typesAutorises.includes(
-          fichier.type
-        )
-      ){
-
-        alert(
-          "Format non accepté. Utilisez JPG, PNG ou WebP."
-        );
-
-        this.value = "";
-
-        return;
-      }
-
-
-      /*
-       * Limite cohérente avec le bucket prévu :
-       * 500 Ko.
-       */
-
-      if(
-        fichier.size >
-        500 * 1024
-      ){
-
-        alert(
-          "La photo ne doit pas dépasser 500 Ko."
-        );
-
-        this.value = "";
-
-        return;
-      }
-
-      const lecteur =
-        new FileReader();
-
-      lecteur.onload =
-        function(event){
-
-          document.getElementById(
-            "photoPreview"
-          ).src =
-            event.target.result;
-
-        };
-
-      lecteur.readAsDataURL(
-        fichier
-      );
-
-    }
-  );
-
-
-/*
-==========================================================
-ENREGISTRER LE PROFIL
-==========================================================
-*/
-
-async function enregistrerProfil(event){
-
+async function reinitialiserMotDePasse(event) {
   event.preventDefault();
 
-  if(!utilisateurConnecte){
+  const parametres = new URLSearchParams(window.location.search);
+  const userId = parametres.get("userId");
+  const secret = parametres.get("secret");
+  const nouveauMotDePasse = document.getElementById("newPassword").value;
 
-    afficherMessageFormulaire(
-      "Vous devez être connecté pour créer votre profil.",
-      "error"
-    );
-
-    return;
-  }
-
-
-  /*
-   * Récupération des champs.
-   */
-
-  const nom =
-    document
-      .getElementById("nom")
-      .value
-      .trim();
-
-  const age =
-    Number(
-      document
-        .getElementById("age")
-        .value
-    );
-
-  const paysId =
-    document
-      .getElementById("paysId")
-      .value;
-
-  const villeId =
-    document
-      .getElementById("villeId")
-      .value;
-
-  const description =
-    document
-      .getElementById("description")
-      .value
-      .trim();
-
-  const recherche =
-    document
-      .getElementById("recherche")
-      .value
-      .trim();
-
-
-  const accepteEnfants =
-    document.querySelector(
-      'input[name="accepteEnfants"]:checked'
-    );
-
-
-  const acceptePolygamie =
-    document.querySelector(
-      'input[name="acceptePolygamie"]:checked'
-    );
-
-
-  const typeRelation =
-    document.querySelector(
-      'input[name="typeRelation"]:checked'
-    );
-
-
-  const acceptationLegale =
-    document.getElementById(
-      "acceptationLegale"
-    ).checked;
-
-
-  /*
-   * Validation âge.
-   */
-
-  if(age < 18 || age > 100){
-
-    afficherMessageFormulaire(
-      "Vous devez avoir au moins 18 ans pour utiliser Affrilova.",
-      "error"
-    );
-
-    return;
-  }
-
-
-  if(!nom ||
-     !paysId ||
-     !villeId ||
-     !description ||
-     !recherche ||
-     !accepteEnfants ||
-     !acceptePolygamie ||
-     !typeRelation){
-
-    afficherMessageFormulaire(
-      "Veuillez remplir tous les champs obligatoires.",
-      "error"
-    );
-
-    return;
-  }
-
-
-  if(!acceptationLegale){
-
-    afficherMessageFormulaire(
-      "Vous devez accepter la Politique de confidentialité et les Conditions d'utilisation.",
-      "error"
-    );
-
-    return;
-  }
-
-
-  /*
-   * Photo.
-   */
-
-  const fichier =
-    document.getElementById(
-      "photoPrincipale"
-    ).files[0];
-
-
-  /*
-   * Une nouvelle photo est obligatoire
-   * uniquement lors de la première création.
-   */
-
-  if(
-    !fichier &&
-    !profilActuel?.photoPrincipale
-  ){
-
-    afficherMessageFormulaire(
-      "Une photo principale est obligatoire.",
-      "error"
-    );
-
-    return;
-  }
-
-
-  const bouton =
-    document.getElementById(
-      "btnEnregistrerProfil"
-    );
-
+  const bouton = document.getElementById("btnReset");
   bouton.disabled = true;
+  bouton.textContent = "Enregistrement...";
 
-  bouton.textContent =
-    "Enregistrement...";
+  try {
+    await account.updateRecovery({ userId, secret, password: nouveauMotDePasse });
+
+    alert("Mot de passe réinitialisé. Vous pouvez maintenant vous connecter.");
+
+    window.history.replaceState({}, document.title, window.location.pathname);
+    window.location.reload();
+  } catch (erreur) {
+    afficherErreurAuth("authErrorReset", "Ce lien n'est plus valide. Refaites une demande.");
+  } finally {
+    bouton.disabled = false;
+    bouton.textContent = "Réinitialiser le mot de passe";
+  }
+}
 
 
-  try{
+/* ========================================== RETOUR DEPUIS UN EMAIL ========================================== */
 
-    let photoId =
-      profilActuel?.photoPrincipale || "";
+async function verifierRetourEmail() {
+  const parametres = new URLSearchParams(window.location.search);
+  const type = parametres.get("type");
+  const userId = parametres.get("userId");
+  const secret = parametres.get("secret");
+
+  if (!userId || !secret) return false;
+
+  if (type === "reset") {
+    document.getElementById("resetSection").style.display = "block";
+    return true;
+  }
+
+  try {
+    await account.updateEmailVerification({ userId, secret });
+    window.history.replaceState({}, document.title, window.location.pathname);
+  } catch (erreur) {
+    console.error("Erreur vérification email :", erreur);
+  }
+
+  return false;
+}
 
 
-    /*
-     * UPLOAD PHOTO APPWRITE STORAGE
-     */
+/* ========================================== DÉCONNEXION ========================================== */
 
-    if(fichier){
+async function deconnexion() {
+  try {
+    await account.deleteSession({ sessionId: "current" });
+  } catch (erreur) {
+    console.error("Erreur déconnexion :", erreur);
+  }
+  window.location.reload();
+}
 
-      const upload =
-        await storage.createFile({
 
-          bucketId:
-            BUCKET_PHOTOS,
+/* ========================================== PAYS / VILLES ========================================== */
 
-          fileId:
-            Appwrite.ID.unique(),
+async function chargerPays() {
+  try {
+    const reponse = await tablesDB.listRows({
+      databaseId: APPWRITE_DATABASE_ID,
+      tableId: TABLE_PAYS,
+      queries: [Appwrite.Query.limit(50)]
+    });
 
-          file:
-            fichier
+    paysDisponibles = reponse.rows;
 
-        });
+    const select = document.getElementById("editCountry");
+    let optionsHTML = `<option value="">Sélectionner un pays</option>`;
 
-      photoId =
-        upload.$id;
+    paysDisponibles.forEach(p => {
+      optionsHTML += `<option value="${p.$id}">${p.nom}</option>`;
+    });
 
+    select.innerHTML = optionsHTML;
+  } catch (erreur) {
+    console.error("Erreur chargement pays :", erreur);
+  }
+}
+
+async function chargerToutesLesVilles() {
+  try {
+    const reponse = await tablesDB.listRows({
+      databaseId: APPWRITE_DATABASE_ID,
+      tableId: TABLE_VILLES,
+      queries: [Appwrite.Query.limit(200)]
+    });
+
+    villesDisponibles = reponse.rows;
+  } catch (erreur) {
+    console.error("Erreur chargement villes :", erreur);
+  }
+}
+
+function chargerVilles(paysId, villeSelectionnee) {
+  const citySelect = document.getElementById("editCity");
+  citySelect.innerHTML = `<option value="">Sélectionner une ville</option>`;
+
+  if (!paysId) return;
+
+  villesDisponibles
+    .filter(v => v.paysId === paysId)
+    .forEach(v => {
+      const selected = v.$id === villeSelectionnee ? "selected" : "";
+      citySelect.innerHTML += `<option value="${v.$id}" ${selected}>${v.nom}</option>`;
+    });
+}
+
+function nomPays(paysId) {
+  const trouve = paysDisponibles.find(p => p.$id === paysId);
+  return trouve ? trouve.nom : "";
+}
+
+function nomVille(villeId) {
+  const trouve = villesDisponibles.find(v => v.$id === villeId);
+  return trouve ? trouve.nom : "";
+}
+
+
+/* ========================================== PHOTO ========================================== */
+
+function gererPhotoSelectionnee(event) {
+  const fichier = event.target.files[0];
+  if (!fichier) return;
+
+  const typesAutorises = ["image/jpeg","image/png","image/webp"];
+
+  if (!typesAutorises.includes(fichier.type)) {
+    alert("Format non autorisé. Utilisez JPG, PNG ou WEBP.");
+    event.target.value = "";
+    return;
+  }
+
+  if (fichier.size > 500000) {
+    alert("La photo dépasse 500 Ko. Choisissez un fichier plus léger.");
+    event.target.value = "";
+    return;
+  }
+
+  photoFichierSelectionne = fichier;
+  document.getElementById("photoPreview").src = URL.createObjectURL(fichier);
+}
+
+function urlPhoto(photoId) {
+  if (!photoId) return "https://via.placeholder.com/200/E0F7EE/087557?text=Afrilova";
+  return storage.getFileView({ bucketId: APPWRITE_BUCKET_PHOTOS, fileId: photoId });
+}
+
+
+/* ========================================== MODALE PROFIL ========================================== */
+
+function ouvrirModificationProfil() {
+  if (profilActuel) {
+    document.getElementById("editName").value = profilActuel.nom || "";
+    document.getElementById("editAge").value = profilActuel.age || "";
+    document.getElementById("editDescription").value = profilActuel.description || "";
+    document.getElementById("editSearch").value = profilActuel.recherche || "";
+    document.getElementById("editEnfants").value = profilActuel.aDesEnfants === true ? "oui" : (profilActuel.aDesEnfants === false ? "non" : "");
+    document.getElementById("editPolygamie").value = profilActuel.polygamie || "";
+    document.getElementById("editTypeRelation").value = profilActuel.typeRelation || "";
+    document.getElementById("editCountry").value = profilActuel.paysId || "";
+    chargerVilles(profilActuel.paysId, profilActuel.villeId);
+
+    if (profilActuel.photoPrincipale) {
+      document.getElementById("photoPreview").src = urlPhoto(profilActuel.photoPrincipale);
+    }
+  }
+
+  document.getElementById("editProfileModal").classList.add("show");
+}
+
+
+/* ========================================== ENREGISTRER LE PROFIL ========================================== */
+
+async function enregistrerProfil(event) {
+  event.preventDefault();
+
+  const nom = document.getElementById("editName").value.trim();
+  const age = Number(document.getElementById("editAge").value);
+  const paysId = document.getElementById("editCountry").value;
+  const villeId = document.getElementById("editCity").value;
+  const description = document.getElementById("editDescription").value.trim();
+  const recherche = document.getElementById("editSearch").value.trim();
+  const enfants = document.getElementById("editEnfants").value;
+  const polygamie = document.getElementById("editPolygamie").value;
+  const typeRelation = document.getElementById("editTypeRelation").value;
+
+  if (!nom) { alert("Veuillez renseigner votre nom ou pseudonyme."); return; }
+  if (!age || age < 18 || age > 100) { alert("L'âge minimum requis est de 18 ans."); return; }
+  if (!paysId) { alert("Veuillez sélectionner votre pays."); return; }
+  if (!villeId) { alert("Veuillez sélectionner votre ville."); return; }
+  if (!description) { alert("Veuillez ajouter une description."); return; }
+  if (!enfants) { alert("Veuillez répondre concernant les enfants."); return; }
+  if (!polygamie) { alert("Veuillez répondre concernant la polygamie."); return; }
+  if (!typeRelation) { alert("Veuillez sélectionner le type de relation recherché."); return; }
+  if (!profilActuel && !photoFichierSelectionne) { alert("Veuillez ajouter une photo pour créer votre profil."); return; }
+
+  const bouton = document.getElementById("btnEnregistrerProfil");
+  bouton.disabled = true;
+  bouton.textContent = "Enregistrement...";
+
+  try {
+
+    let photoId = profilActuel ? profilActuel.photoPrincipale : null;
+
+    if (photoFichierSelectionne) {
+      const fichierUploade = await storage.createFile({
+        bucketId: APPWRITE_BUCKET_PHOTOS,
+        fileId: Appwrite.ID.unique(),
+        file: photoFichierSelectionne
+      });
+      photoId = fichierUploade.$id;
     }
 
-
-    /*
-     * DONNÉES PROFIL
-     *
-     * IMPORTANT :
-     * On ne met jamais le mot de passe ici.
-     */
-
-    const donneesProfil = {
-
-      userId:
-        utilisateurConnecte.$id,
-
-      nom:
-        nom,
-
-      age:
-        age,
-
-      paysId:
-        paysId,
-
-      villeId:
-        villeId,
-
-      description:
-        description,
-
-      recherche:
-        recherche,
-
-      photoPrincipale:
-        photoId,
-
-      statut:
-        "en_attente",
-
-      accepteEnfants:
-        accepteEnfants.value === "oui",
-
-      acceptePolygamie:
-        acceptePolygamie.value,
-
-      typeRelation:
-        typeRelation.value,
-
-      dateCreation:
-        profilActuel?.dateCreation ||
-        new Date().toISOString(),
-
-      dateValidation:
-        null
-
+    const donnees = {
+      nom, age, paysId, villeId, description, recherche,
+      aDesEnfants: enfants === "oui",
+      polygamie,
+      typeRelation,
+      photoPrincipale: photoId
     };
 
-
-    /*
-     * CRÉATION OU MISE À JOUR
-     */
-
-    if(profilActuel){
+    if (profilActuel) {
 
       await tablesDB.updateRow({
-
-        databaseId:
-          APPWRITE_DATABASE_ID,
-
-        tableId:
-          TABLE_PROFILS,
-
-        rowId:
-          profilActuel.$id,
-
-        data:
-          donneesProfil
-
+        databaseId: APPWRITE_DATABASE_ID,
+        tableId: TABLE_PROFILS,
+        rowId: profilActuel.$id,
+        data: donnees
       });
 
-    }else{
+    } else {
+
+      donnees.userId = utilisateurConnecte.$id;
+      donnees.statut = "en_attente";
+      donnees.dateCreation = new Date().toISOString();
 
       await tablesDB.createRow({
-
-        databaseId:
-          APPWRITE_DATABASE_ID,
-
-        tableId:
-          TABLE_PROFILS,
-
-        rowId:
-          Appwrite.ID.unique(),
-
-        data:
-          donneesProfil
-
+        databaseId: APPWRITE_DATABASE_ID,
+        tableId: TABLE_PROFILS,
+        rowId: Appwrite.ID.unique(),
+        data: donnees
       });
 
     }
 
+    photoFichierSelectionne = null;
+    await chargerProfilUtilisateur();
+    fermerModal("editProfileModal");
+    alert("Votre profil a été enregistré. Il sera visible après validation.");
 
-    /*
-     * Recharge le profil.
-     */
-
-    await chargerProfil();
-
-
-    fermerModal(
-      "editProfileModal"
-    );
-
-
-    afficherMessageProfil(
-      "Votre profil a été enregistré et envoyé à la validation. Il ne sera visible aux autres utilisateurs qu'après validation.",
-      "success"
-    );
-
-
-  }catch(erreur){
-
-    console.error(
-      "Erreur enregistrement profil :",
-      erreur
-    );
-
-    afficherMessageFormulaire(
-      erreur.message ||
-      "Impossible d'enregistrer votre profil.",
-      "error"
-    );
-
-  }finally{
-
+  } catch (erreur) {
+    console.error("Erreur enregistrement profil :", erreur);
+    alert("Une erreur est survenue lors de l'enregistrement : " + erreur.message);
+  } finally {
     bouton.disabled = false;
-
-    bouton.textContent =
-      "💾 Enregistrer et soumettre à validation";
-
+    bouton.textContent = "💾 Enregistrer";
   }
-
 }
 
 
-/*
-==========================================================
-PAIEMENT
-==========================================================
-*/
+/* ========================================== CHARGER / AFFICHER LE PROFIL ========================================== */
 
-function ouvrirPaiement(
-  nombrePoints,
-  prix
-){
+async function chargerProfilUtilisateur() {
+  try {
+    const reponse = await tablesDB.listRows({
+      databaseId: APPWRITE_DATABASE_ID,
+      tableId: TABLE_PROFILS,
+      queries: [
+        Appwrite.Query.equal("userId", utilisateurConnecte.$id),
+        Appwrite.Query.limit(1)
+      ]
+    });
 
-  nombrePointsSelectionne =
-    nombrePoints;
+    profilActuel = reponse.total > 0 ? reponse.rows[0] : null;
+    afficherProfil();
 
-  prixSelectionne =
-    prix;
-
-  document.getElementById(
-    "selectedPoints"
-  ).textContent =
-    nombrePoints +
-    (
-      nombrePoints > 1
-        ? " points"
-        : " point"
-    );
-
-  document.getElementById(
-    "selectedPrice"
-  ).textContent =
-    formaterPrix(prix) +
-    " FCFA";
-
-  document
-    .getElementById("paymentModal")
-    .classList
-    .add("show");
-
+  } catch (erreur) {
+    console.error("Erreur chargement profil :", erreur);
+  }
 }
 
+function afficherProfil() {
 
-function formaterPrix(prix){
+  const badge = document.getElementById("statutBadge");
 
-  return Number(prix)
-    .toLocaleString("fr-FR");
-
-}
-
-
-function continuerPaiement(){
-
-  const methode =
-    document.querySelector(
-      'input[name="paymentMethod"]:checked'
-    );
-
-  if(!methode){
-
-    alert(
-      "Veuillez sélectionner un moyen de paiement."
-    );
-
+  if (!profilActuel) {
+    document.getElementById("profileName").textContent = "Profil pas encore créé";
+    document.getElementById("profileLocation").textContent = "—";
+    document.getElementById("profileDetailsBlock").style.display = "none";
+    document.getElementById("profileEmptyNote").style.display = "block";
+    badge.innerHTML = "";
     return;
   }
 
+  document.getElementById("profileEmptyNote").style.display = "none";
+  document.getElementById("profileDetailsBlock").style.display = "block";
 
-  /*
-   * IMPORTANT :
-   * Aucun crédit local n'est effectué ici.
-   *
-   * Le paiement réel devra passer par
-   * PayDunya + confirmation serveur/webhook.
-   */
+  document.getElementById("profileName").textContent = profilActuel.nom;
+  document.getElementById("profileLocation").textContent =
+    nomVille(profilActuel.villeId) + ", " + nomPays(profilActuel.paysId);
 
-  alert(
-    "L'intégration PayDunya sera effectuée avec la partie serveur. Aucun point n'est crédité à ce stade."
-  );
+  document.getElementById("profileAge").textContent = profilActuel.age + " ans";
+  document.getElementById("profileCountry").textContent = nomPays(profilActuel.paysId);
+  document.getElementById("profileCity").textContent = nomVille(profilActuel.villeId);
+  document.getElementById("profileSearch").textContent = profilActuel.recherche || "—";
+  document.getElementById("profileDescription").textContent = profilActuel.description;
+  document.getElementById("profilePhoto").src = urlPhoto(profilActuel.photoPrincipale);
 
+  if (profilActuel.statut === "approuve") {
+    badge.innerHTML = `<span class="approved-badge">✅ Profil actif</span>`;
+  } else if (profilActuel.statut === "refuse") {
+    badge.innerHTML = `<span class="refused-badge">❌ Profil refusé</span>`;
+  } else {
+    badge.innerHTML = `<span class="pending-badge">⏳ Profil en attente de validation</span>`;
+  }
 }
 
 
-/*
-==========================================================
-FERMETURE DES MODALES
-==========================================================
-*/
+/* ========================================== POINTS ========================================== */
 
-function fermerModal(id){
+async function chargerSoldePoints(userId) {
+  try {
+    const reponse = await tablesDB.listRows({
+      databaseId: APPWRITE_DATABASE_ID,
+      tableId: TABLE_POINTS,
+      queries: [Appwrite.Query.equal("userId", userId), Appwrite.Query.limit(1)]
+    });
 
-  const modal =
-    document.getElementById(id);
+    const solde = reponse.total > 0 ? reponse.rows[0].solde : 0;
+    afficherSolde(solde || 0);
 
-  if(modal){
-
-    modal.classList.remove("show");
-
+  } catch (erreur) {
+    console.error("Erreur chargement points :", erreur);
+    afficherSolde(0);
   }
+}
 
+function afficherSolde(points) {
+  document.getElementById("headerPoints").textContent = points;
+  document.getElementById("mainPoints").textContent = points + (points > 1 ? " points" : " point");
 }
 
 
-document.addEventListener(
-  "click",
-  function(event){
+/* ========================================== ÉTAT DE CONNEXION ========================================== */
 
-    if(
-      event.target.classList
-        .contains("modal")
-    ){
+async function chargerEtatConnexion() {
+  try {
+    utilisateurConnecte = await account.get();
 
-      event.target
-        .classList
-        .remove("show");
+    document.getElementById("authSection").style.display = "none";
+    document.getElementById("resetSection").style.display = "none";
+    document.getElementById("profilConnecte").style.display = "block";
 
-    }
+    document.getElementById("verifyBanner").style.display =
+      utilisateurConnecte.emailVerification ? "none" : "block";
 
+    await chargerSoldePoints(utilisateurConnecte.$id);
+    await chargerProfilUtilisateur();
+
+  } catch (erreur) {
+    utilisateurConnecte = null;
+
+    const enReinitialisation = document.getElementById("resetSection").style.display === "block";
+
+    document.getElementById("authSection").style.display = enReinitialisation ? "none" : "block";
+    document.getElementById("profilConnecte").style.display = "none";
+    document.getElementById("headerPoints").textContent = "-";
   }
-);
-
-
-/*
-==========================================================
-ÉTAT DE CONNEXION
-==========================================================
-*/
-
-async function chargerEtatConnexion(){
-
-  try{
-
-    utilisateurConnecte =
-      await account.get();
-
-
-    /*
-     * Affichage connecté.
-     */
-
-    document.getElementById(
-      "authSection"
-    ).style.display =
-      "none";
-
-    document.getElementById(
-      "profilConnecte"
-    ).style.display =
-      "block";
-
-
-    /*
-     * Vérification email.
-     */
-
-    document.getElementById(
-      "verifyBanner"
-    ).style.display =
-      utilisateurConnecte.emailVerification
-        ? "none"
-        : "block";
-
-
-    /*
-     * Solde.
-     */
-
-    await chargerSoldePoints(
-      utilisateurConnecte.$id
-    );
-
-
-    /*
-     * Profil.
-     */
-
-    await chargerProfil();
-
-
-  }catch(erreur){
-
-    utilisateurConnecte =
-      null;
-
-    profilActuel =
-      null;
-
-
-    document.getElementById(
-      "authSection"
-    ).style.display =
-      "block";
-
-    document.getElementById(
-      "profilConnecte"
-    ).style.display =
-      "none";
-
-    document.getElementById(
-      "headerPoints"
-    ).textContent =
-      "-";
-
-  }
-
 }
 
 
-/*
-==========================================================
-INITIALISATION
-==========================================================
-*/
+/* ========================================== PAIEMENT ========================================== */
 
-document.addEventListener(
-  "DOMContentLoaded",
-  async function(){
+function ouvrirPaiement(nombrePoints, prix) {
+  nombrePointsSelectionne = nombrePoints;
+  prixSelectionne = prix;
 
-    await verifierRetourEmail();
+  document.getElementById("selectedPoints").textContent = nombrePoints + " points";
+  document.getElementById("selectedPrice").textContent = formaterPrix(prix) + " FCFA";
 
-    await chargerEtatConnexion();
+  document.getElementById("paymentModal").classList.add("show");
+}
 
+function formaterPrix(prix) {
+  return Number(prix).toLocaleString("fr-FR");
+}
+
+function continuerPaiement() {
+  const methode = document.querySelector('input[name="paymentMethod"]:checked');
+
+  if (!methode) {
+    alert("Veuillez sélectionner un moyen de paiement.");
+    return;
   }
-);
+
+  alert("Le paiement réel sera connecté avec PayDunya à une prochaine étape. Aucun point n'a été crédité.");
+}
+
+
+/* ========================================== MODALES ========================================== */
+
+function fermerModal(id) {
+  const modal = document.getElementById(id);
+  if (modal) modal.classList.remove("show");
+}
+
+document.addEventListener("click", function (event) {
+  if (event.target.classList.contains("modal")) {
+    event.target.classList.remove("show");
+  }
+});
+
+
+/* ========================================== INITIALISATION ========================================== */
+
+document.addEventListener("DOMContentLoaded", async function () {
+  await chargerPays();
+  await chargerToutesLesVilles();
+  await verifierRetourEmail();
+  await chargerEtatConnexion();
+});
 
 </script>
 
 </body>
-     </html>
+</html>
