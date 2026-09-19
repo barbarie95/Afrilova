@@ -3,282 +3,669 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Mon profil - Afrilova</title>
+<title>Mon profil - Affrilova</title>
 
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{
- font-family:Arial,sans-serif;background:#F3FBF7;
- color:#17352C;padding-bottom:85px
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0
 }
-button,input,textarea,select{font-family:inherit}
-button{cursor:pointer}
+
+body{
+  font-family:Arial,sans-serif;
+  background:#F3FBF7;
+  color:#17352C;
+  padding-bottom:85px
+}
+
+button,input,textarea,select{
+  font-family:inherit
+}
+
+button{
+  cursor:pointer
+}
+
+button:disabled{
+  opacity:.6;
+  cursor:not-allowed
+}
 
 header{
- background:linear-gradient(135deg,#0B8F6A,#3DBB91);
- color:white;padding:18px 16px;
- display:flex;align-items:center;justify-content:space-between;
- box-shadow:0 3px 10px rgba(0,0,0,.08)
+  background:linear-gradient(135deg,#0B8F6A,#3DBB91);
+  color:white;
+  padding:18px 16px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  box-shadow:0 3px 10px rgba(0,0,0,.08)
 }
-.logo{font-size:20px;font-weight:bold}
+
+.logo{
+  font-size:20px;
+  font-weight:bold
+}
+
 .header-points{
- background:rgba(255,255,255,.18);
- padding:8px 12px;border-radius:20px;
- font-size:13px;font-weight:bold
+  background:rgba(255,255,255,.18);
+  padding:8px 12px;
+  border-radius:20px;
+  font-size:13px;
+  font-weight:bold
 }
 
 .container{
- width:100%;max-width:700px;margin:auto;
- padding:20px 14px 30px
-}
-h1{color:#087557;font-size:25px;margin-bottom:7px}
-.intro{
- color:#668078;font-size:14px;line-height:1.5;margin-bottom:18px
+  width:100%;
+  max-width:700px;
+  margin:auto;
+  padding:20px 14px 30px
 }
 
-.profile-card,.section-card{
- background:white;border-radius:18px;padding:18px;
- margin-bottom:16px;
- box-shadow:0 3px 12px rgba(0,0,0,.05)
+h1{
+  color:#087557;
+  font-size:25px;
+  margin-bottom:7px
 }
-.profile-card{padding:20px}
-.profile-top{text-align:center}
+
+.intro{
+  color:#668078;
+  font-size:14px;
+  line-height:1.5;
+  margin-bottom:18px
+}
+
+.profile-card,
+.section-card,
+.auth-card{
+  background:white;
+  border-radius:18px;
+  padding:18px;
+  margin-bottom:16px;
+  box-shadow:0 3px 12px rgba(0,0,0,.05)
+}
+
+.profile-card{
+  padding:20px
+}
+
+.profile-top{
+  text-align:center
+}
+
 .profile-photo{
- width:115px;height:115px;border-radius:50%;
- object-fit:cover;background:#E0F7EE;
- border:4px solid #E0F7EE;margin-bottom:12px
+  width:115px;
+  height:115px;
+  border-radius:50%;
+  object-fit:cover;
+  background:#E0F7EE;
+  border:4px solid #E0F7EE;
+  margin-bottom:12px
 }
-.profile-name{font-size:21px;color:#17352C;margin-bottom:5px}
-.profile-location{color:#668078;font-size:14px}
+
+.profile-name{
+  font-size:21px;
+  color:#17352C;
+  margin-bottom:5px
+}
+
+.profile-location{
+  color:#668078;
+  font-size:14px
+}
 
 .profile-description{
- margin-top:15px;background:#F3FBF7;
- border-radius:12px;padding:13px;text-align:left
+  margin-top:15px;
+  background:#F3FBF7;
+  border-radius:12px;
+  padding:13px;
+  text-align:left
 }
+
 .profile-description strong{
- display:block;color:#087557;font-size:13px;margin-bottom:6px
+  display:block;
+  color:#087557;
+  font-size:13px;
+  margin-bottom:6px
 }
+
 .profile-description p{
- color:#55736A;font-size:14px;line-height:1.5
+  color:#55736A;
+  font-size:14px;
+  line-height:1.5
 }
 
 .profile-info-grid{
- display:grid;grid-template-columns:1fr 1fr;
- gap:9px;margin-top:15px
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:9px;
+  margin-top:15px
 }
+
 .info-box{
- background:#F3FBF7;border-radius:11px;padding:11px
+  background:#F3FBF7;
+  border-radius:11px;
+  padding:11px
 }
+
 .info-box span{
- display:block;color:#668078;font-size:11px;margin-bottom:4px
+  display:block;
+  color:#668078;
+  font-size:11px;
+  margin-bottom:4px
 }
-.info-box strong{color:#087557;font-size:13px}
+
+.info-box strong{
+  color:#087557;
+  font-size:13px
+}
 
 .edit-button{
- width:100%;border:none;background:#E0F7EE;
- color:#087557;padding:12px;border-radius:11px;
- font-weight:bold;margin-top:15px
+  width:100%;
+  border:none;
+  background:#E0F7EE;
+  color:#087557;
+  padding:12px;
+  border-radius:11px;
+  font-weight:bold;
+  margin-top:15px
 }
 
 .logout-button{
- width:100%;border:none;background:#FDEDED;
- color:#C0392B;padding:12px;border-radius:11px;
- font-weight:bold;margin-top:10px
+  width:100%;
+  border:none;
+  background:#FDEDED;
+  color:#C0392B;
+  padding:12px;
+  border-radius:11px;
+  font-weight:bold;
+  margin-top:10px
 }
 
 .points-card{
- background:linear-gradient(135deg,#0B8F6A,#3DBB91);
- color:white;border-radius:18px;padding:20px;
- margin-bottom:16px;
- box-shadow:0 4px 12px rgba(11,143,106,.18)
+  background:linear-gradient(135deg,#0B8F6A,#3DBB91);
+  color:white;
+  border-radius:18px;
+  padding:20px;
+  margin-bottom:16px;
+  box-shadow:0 4px 12px rgba(11,143,106,.18)
 }
-.points-title{font-size:14px;opacity:.9;margin-bottom:7px}
-.points-number{font-size:32px;font-weight:bold;margin-bottom:5px}
-.points-description{font-size:12px;opacity:.9;line-height:1.4}
+
+.points-title{
+  font-size:14px;
+  opacity:.9;
+  margin-bottom:7px
+}
+
+.points-number{
+  font-size:32px;
+  font-weight:bold;
+  margin-bottom:5px
+}
+
+.points-description{
+  font-size:12px;
+  opacity:.9;
+  line-height:1.4
+}
 
 .section-card h2{
- color:#087557;font-size:18px;margin-bottom:6px
+  color:#087557;
+  font-size:18px;
+  margin-bottom:6px
 }
+
 .section-description{
- color:#668078;font-size:13px;
- line-height:1.5;margin-bottom:15px
+  color:#668078;
+  font-size:13px;
+  line-height:1.5;
+  margin-bottom:15px
 }
 
-.packs{display:flex;flex-direction:column;gap:10px}
+.packs{
+  display:flex;
+  flex-direction:column;
+  gap:10px
+}
+
 .pack{
- width:100%;border:1px solid #dcefe7;
- background:#F9FEFC;border-radius:13px;padding:14px;
- display:flex;align-items:center;justify-content:space-between;
- text-align:left
-}
-.pack:hover{background:#E0F7EE}
-.pack-info strong{
- display:block;color:#17352C;font-size:15px;margin-bottom:4px
-}
-.pack-info small{color:#668078;font-size:11px}
-.pack-price{
- background:#0B8F6A;color:white;padding:9px 11px;
- border-radius:9px;font-size:12px;font-weight:bold;
- white-space:nowrap
+  width:100%;
+  border:1px solid #dcefe7;
+  background:#F9FEFC;
+  border-radius:13px;
+  padding:14px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  text-align:left
 }
 
-.usage-list{display:flex;flex-direction:column;gap:10px}
+.pack:hover{
+  background:#E0F7EE
+}
+
+.pack-info strong{
+  display:block;
+  color:#17352C;
+  font-size:15px;
+  margin-bottom:4px
+}
+
+.pack-info small{
+  color:#668078;
+  font-size:11px
+}
+
+.pack-price{
+  background:#0B8F6A;
+  color:white;
+  padding:9px 11px;
+  border-radius:9px;
+  font-size:12px;
+  font-weight:bold;
+  white-space:nowrap
+}
+
+.usage-list{
+  display:flex;
+  flex-direction:column;
+  gap:10px
+}
+
 .usage-item{
- display:flex;align-items:center;gap:10px;
- background:#F3FBF7;border-radius:11px;padding:11px
+  display:flex;
+  align-items:center;
+  gap:10px;
+  background:#F3FBF7;
+  border-radius:11px;
+  padding:11px
 }
+
 .usage-icon{
- width:36px;height:36px;border-radius:10px;
- background:#E0F7EE;display:flex;
- align-items:center;justify-content:center;
- font-size:18px;flex-shrink:0
+  width:36px;
+  height:36px;
+  border-radius:10px;
+  background:#E0F7EE;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:18px;
+  flex-shrink:0
 }
+
 .usage-text strong{
- display:block;color:#17352C;font-size:13px;margin-bottom:3px
+  display:block;
+  color:#17352C;
+  font-size:13px;
+  margin-bottom:3px
 }
-.usage-text small{color:#668078;font-size:11px}
+
+.usage-text small{
+  color:#668078;
+  font-size:11px
+}
 
 .modal{
- display:none;position:fixed;inset:0;
- background:rgba(0,0,0,.45);z-index:100;
- align-items:center;justify-content:center;padding:15px
-}
-.modal.show{display:flex}
-.modal-content{
- width:100%;max-width:520px;max-height:90vh;
- overflow-y:auto;background:white;border-radius:18px;
- padding:20px;position:relative
-}
-.close-button{
- position:absolute;right:12px;top:10px;
- width:32px;height:32px;border:none;border-radius:50%;
- background:#E0F7EE;color:#087557;font-size:21px
-}
-.modal-content h2{
- color:#087557;font-size:19px;margin-bottom:15px;padding-right:35px
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.45);
+  z-index:100;
+  align-items:center;
+  justify-content:center;
+  padding:15px
 }
 
-.form-group{margin-bottom:13px}
-.form-group label{
- display:block;color:#17352C;font-size:12px;
- font-weight:bold;margin-bottom:6px
+.modal.show{
+  display:flex
 }
+
+.modal-content{
+  width:100%;
+  max-width:520px;
+  max-height:90vh;
+  overflow-y:auto;
+  background:white;
+  border-radius:18px;
+  padding:20px;
+  position:relative
+}
+
+.close-button{
+  position:absolute;
+  right:12px;
+  top:10px;
+  width:32px;
+  height:32px;
+  border:none;
+  border-radius:50%;
+  background:#E0F7EE;
+  color:#087557;
+  font-size:21px
+}
+
+.modal-content h2{
+  color:#087557;
+  font-size:19px;
+  margin-bottom:15px;
+  padding-right:35px
+}
+
+.form-group{
+  margin-bottom:13px
+}
+
+.form-group label{
+  display:block;
+  color:#17352C;
+  font-size:12px;
+  font-weight:bold;
+  margin-bottom:6px
+}
+
 .form-group input,
 .form-group textarea,
 .form-group select{
- width:100%;border:1px solid #cce5dc;
- border-radius:10px;padding:11px;outline:none;
- font-size:13px;background:white;color:#17352C
+  width:100%;
+  border:1px solid #cce5dc;
+  border-radius:10px;
+  padding:11px;
+  outline:none;
+  font-size:13px;
+  background:white;
+  color:#17352C
 }
-.form-group textarea{min-height:100px;resize:vertical}
+
+.form-group textarea{
+  min-height:100px;
+  resize:vertical
+}
+
 .form-group input:focus,
 .form-group textarea:focus,
-.form-group select:focus{border-color:#0B8F6A}
+.form-group select:focus{
+  border-color:#0B8F6A
+}
 
-.save-button,.continue-payment{
- width:100%;border:none;background:#0B8F6A;
- color:white;padding:12px;border-radius:10px;
- font-weight:bold;margin-top:5px
+.save-button,
+.continue-payment{
+  width:100%;
+  border:none;
+  background:#0B8F6A;
+  color:white;
+  padding:12px;
+  border-radius:10px;
+  font-weight:bold;
+  margin-top:5px
 }
 
 .choice-note{
- background:#F3FBF7;border-radius:10px;
- padding:10px;font-size:11px;color:#668078;
- margin-top:5px
+  background:#F3FBF7;
+  border-radius:10px;
+  padding:10px;
+  font-size:11px;
+  color:#668078;
+  margin-top:5px;
+  line-height:1.5
 }
 
-.payment-info{
- background:#F3FBF7;border-radius:11px;
- padding:12px;margin-bottom:15px
+.choice-group{
+  display:flex;
+  flex-direction:column;
+  gap:8px
 }
-.payment-info p{
- color:#55736A;font-size:12px;line-height:1.5
-}
-.payment-methods{
- display:flex;flex-direction:column;gap:9px
-}
-.payment-method{
- border:1px solid #dcefe7;background:white;
- border-radius:11px;padding:12px;
- display:flex;align-items:center;gap:10px
-}
-.payment-method input{accent-color:#0B8F6A}
-.payment-method label{
- flex:1;color:#17352C;font-size:13px;font-weight:bold
-}
-.payment-method small{
- display:block;color:#668078;font-size:10px;
- font-weight:normal;margin-top:3px
-}
-.continue-payment{margin-top:15px}
 
-/* =========================
-   AUTHENTIFICATION
-========================= */
+.choice-option{
+  border:1px solid #dcefe7;
+  background:#F9FEFC;
+  border-radius:10px;
+  padding:11px;
+  display:flex;
+  align-items:flex-start;
+  gap:9px;
+  font-size:12px;
+  color:#17352C;
+  line-height:1.4
+}
 
-.auth-card{
- background:white;border-radius:18px;padding:22px;
- box-shadow:0 3px 12px rgba(0,0,0,.05)
+.choice-option input{
+  margin-top:2px;
+  accent-color:#0B8F6A
 }
-.auth-tabs{
- display:flex;background:#F3FBF7;border-radius:11px;
- padding:4px;margin-bottom:18px
-}
-.auth-tab{
- flex:1;border:none;background:transparent;
- padding:10px;border-radius:9px;font-weight:bold;
- color:#668078;font-size:13px
-}
-.auth-tab.active{
- background:#0B8F6A;color:white
-}
-.auth-form{display:none}
-.auth-form.active{display:block}
 
-.auth-error{
- background:#FDEDED;color:#C0392B;border-radius:10px;
- padding:10px 12px;font-size:12px;margin-bottom:12px;
- display:none
+.photo-preview{
+  width:100px;
+  height:100px;
+  object-fit:cover;
+  border-radius:50%;
+  display:block;
+  margin:0 auto 10px;
+  background:#E0F7EE;
+  border:4px solid #E0F7EE
 }
-.auth-error.show{display:block}
+
+.status-message{
+  border-radius:10px;
+  padding:10px 12px;
+  font-size:12px;
+  margin-bottom:12px;
+  display:none;
+  line-height:1.5
+}
+
+.status-message.show{
+  display:block
+}
+
+.status-message.success{
+  background:#E7F8EF;
+  color:#167347
+}
+
+.status-message.error{
+  background:#FDEDED;
+  color:#C0392B
+}
+
+.status-message.info{
+  background:#EEF7FF;
+  color:#25638A
+}
 
 .verify-banner{
- background:#FFF6E0;color:#8A6100;border-radius:14px;
- padding:14px;margin-bottom:16px;font-size:13px;
- line-height:1.5
+  background:#FFF6E0;
+  color:#8A6100;
+  border-radius:14px;
+  padding:14px;
+  margin-bottom:16px;
+  font-size:13px;
+  line-height:1.5
 }
+
 .verify-banner button{
- margin-top:8px;border:none;background:#8A6100;
- color:white;padding:8px 12px;border-radius:8px;
- font-size:12px;font-weight:bold
+  margin-top:8px;
+  border:none;
+  background:#8A6100;
+  color:white;
+  padding:8px 12px;
+  border-radius:8px;
+  font-size:12px;
+  font-weight:bold
 }
 
 .pending-badge{
- display:inline-block;background:#FFF6E0;color:#8A6100;
- padding:6px 11px;border-radius:20px;font-size:12px;
- font-weight:bold;margin-top:10px
+  display:inline-block;
+  background:#FFF6E0;
+  color:#8A6100;
+  padding:6px 11px;
+  border-radius:20px;
+  font-size:12px;
+  font-weight:bold;
+  margin-top:10px
+}
+
+.active-badge{
+  display:inline-block;
+  background:#E7F8EF;
+  color:#167347;
+  padding:6px 11px;
+  border-radius:20px;
+  font-size:12px;
+  font-weight:bold;
+  margin-top:10px
+}
+
+.auth-tabs{
+  display:flex;
+  background:#F3FBF7;
+  border-radius:11px;
+  padding:4px;
+  margin-bottom:18px
+}
+
+.auth-tab{
+  flex:1;
+  border:none;
+  background:transparent;
+  padding:10px;
+  border-radius:9px;
+  font-weight:bold;
+  color:#668078;
+  font-size:13px
+}
+
+.auth-tab.active{
+  background:#0B8F6A;
+  color:white
+}
+
+.auth-form{
+  display:none
+}
+
+.auth-form.active{
+  display:block
+}
+
+.auth-error{
+  background:#FDEDED;
+  color:#C0392B;
+  border-radius:10px;
+  padding:10px 12px;
+  font-size:12px;
+  margin-bottom:12px;
+  display:none
+}
+
+.auth-error.show{
+  display:block
+}
+
+.payment-info{
+  background:#F3FBF7;
+  border-radius:11px;
+  padding:12px;
+  margin-bottom:15px
+}
+
+.payment-info p{
+  color:#55736A;
+  font-size:12px;
+  line-height:1.5
+}
+
+.payment-methods{
+  display:flex;
+  flex-direction:column;
+  gap:9px
+}
+
+.payment-method{
+  border:1px solid #dcefe7;
+  background:white;
+  border-radius:11px;
+  padding:12px;
+  display:flex;
+  align-items:center;
+  gap:10px
+}
+
+.payment-method input{
+  accent-color:#0B8F6A
+}
+
+.payment-method label{
+  flex:1;
+  color:#17352C;
+  font-size:13px;
+  font-weight:bold
+}
+
+.payment-method small{
+  display:block;
+  color:#668078;
+  font-size:10px;
+  font-weight:normal;
+  margin-top:3px
+}
+
+.continue-payment{
+  margin-top:15px
 }
 
 .bottom-nav{
- position:fixed;left:0;right:0;bottom:0;height:68px;
- background:white;border-top:1px solid #dcefe7;
- display:flex;z-index:40;
- box-shadow:0 -2px 10px rgba(0,0,0,.06)
+  position:fixed;
+  left:0;
+  right:0;
+  bottom:0;
+  height:68px;
+  background:white;
+  border-top:1px solid #dcefe7;
+  display:flex;
+  z-index:40;
+  box-shadow:0 -2px 10px rgba(0,0,0,.06)
 }
+
 .bottom-nav a{
- flex:1;text-decoration:none;color:#668078;
- display:flex;flex-direction:column;
- align-items:center;justify-content:center;
- gap:3px;font-size:11px;font-weight:bold
+  flex:1;
+  text-decoration:none;
+  color:#668078;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:3px;
+  font-size:11px;
+  font-weight:bold
 }
-.bottom-nav a span{font-size:20px;line-height:1}
-.bottom-nav a.active{color:#0B8F6A}
+
+.bottom-nav a span{
+  font-size:20px;
+  line-height:1
+}
+
+.bottom-nav a.active{
+  color:#0B8F6A
+}
+
+.legal-links{
+  text-align:center;
+  margin-top:14px;
+  font-size:11px
+}
+
+.legal-links a{
+  color:#087557;
+  text-decoration:none
+}
 
 @media(min-width:700px){
- .bottom-nav{
-  max-width:700px;left:50%;transform:translateX(-50%);
-  border-radius:16px 16px 0 0
- }
+  .bottom-nav{
+    max-width:700px;
+    left:50%;
+    transform:translateX(-50%);
+    border-radius:16px 16px 0 0
+  }
 }
 </style>
 </head>
@@ -286,78 +673,142 @@ h1{color:#087557;font-size:25px;margin-bottom:7px}
 <body>
 
 <header>
-<div class="logo">💚 Afrilova</div>
-<div class="header-points">
-⭐ <span id="headerPoints">-</span> points
-</div>
+  <div class="logo">💚 Affrilova</div>
+
+  <div class="header-points">
+    ⭐ <span id="headerPoints">-</span> points
+  </div>
 </header>
 
 <main class="container">
 
-<!-- ========================
-     BLOC AUTHENTIFICATION (visiteur non connecté)
-======================== -->
+<!-- =====================================================
+     AUTHENTIFICATION
+===================================================== -->
 
 <section id="authSection" style="display:none">
 
   <h1>👋 Bienvenue</h1>
 
   <p class="intro">
-  Connectez-vous ou créez un compte pour accéder à votre profil.
+    Connectez-vous ou créez votre compte pour accéder à votre profil.
   </p>
 
   <div class="auth-card">
 
     <div class="auth-tabs">
-      <button type="button" class="auth-tab active" id="tabConnexion" onclick="afficherOnglet('connexion')">
-      Se connecter
+
+      <button
+        type="button"
+        class="auth-tab active"
+        id="tabConnexion"
+        onclick="afficherOnglet('connexion')">
+        Se connecter
       </button>
-      <button type="button" class="auth-tab" id="tabInscription" onclick="afficherOnglet('inscription')">
-      Créer un compte
+
+      <button
+        type="button"
+        class="auth-tab"
+        id="tabInscription"
+        onclick="afficherOnglet('inscription')">
+        Créer un compte
       </button>
+
     </div>
 
     <div class="auth-error" id="authErrorConnexion"></div>
 
-    <form class="auth-form active" id="formConnexion" onsubmit="connexion(event)">
+    <form
+      class="auth-form active"
+      id="formConnexion"
+      onsubmit="connexion(event)">
 
       <div class="form-group">
-        <label for="loginEmail">Adresse email</label>
-        <input type="email" id="loginEmail" required placeholder="vous@exemple.com">
+
+        <label for="loginEmail">
+          Adresse email
+        </label>
+
+        <input
+          type="email"
+          id="loginEmail"
+          required
+          placeholder="vous@exemple.com">
+
       </div>
 
       <div class="form-group">
-        <label for="loginPassword">Mot de passe</label>
-        <input type="password" id="loginPassword" required placeholder="Votre mot de passe">
+
+        <label for="loginPassword">
+          Mot de passe
+        </label>
+
+        <input
+          type="password"
+          id="loginPassword"
+          required
+          placeholder="Votre mot de passe">
+
       </div>
 
-      <button type="submit" class="save-button" id="btnConnexion">
-      Se connecter
+      <button
+        type="submit"
+        class="save-button"
+        id="btnConnexion">
+        Se connecter
       </button>
 
     </form>
 
+
     <div class="auth-error" id="authErrorInscription"></div>
 
-    <form class="auth-form" id="formInscription" onsubmit="inscription(event)">
+    <form
+      class="auth-form"
+      id="formInscription"
+      onsubmit="inscription(event)">
 
       <div class="form-group">
-        <label for="signupEmail">Adresse email</label>
-        <input type="email" id="signupEmail" required placeholder="vous@exemple.com">
+
+        <label for="signupEmail">
+          Adresse email
+        </label>
+
+        <input
+          type="email"
+          id="signupEmail"
+          required
+          placeholder="vous@exemple.com">
+
       </div>
 
       <div class="form-group">
-        <label for="signupPassword">Mot de passe</label>
-        <input type="password" id="signupPassword" required minlength="8" placeholder="8 caractères minimum">
+
+        <label for="signupPassword">
+          Mot de passe
+        </label>
+
+        <input
+          type="password"
+          id="signupPassword"
+          required
+          minlength="8"
+          placeholder="8 caractères minimum">
+
       </div>
 
-      <button type="submit" class="save-button" id="btnInscription">
-      Créer mon compte
+      <button
+        type="submit"
+        class="save-button"
+        id="btnInscription">
+        Créer mon compte
       </button>
 
       <p class="choice-note">
-      En créant un compte, vous confirmez avoir 16 ans ou plus et acceptez
-      de recevoir un email de vérification.
+        En créant un compte, vous confirmez avoir
+        <strong>18 ans ou plus</strong>.
+        Vous devrez également accepter la Politique de confidentialité
+        et les Conditions d'utilisation lors de la création de votre profil.
       </p>
 
     </form>
@@ -367,630 +818,497 @@ h1{color:#087557;font-size:25px;margin-bottom:7px}
 </section>
 
 
-<!-- ========================
-     BLOC PROFIL (utilisateur connecté)
-======================== -->
+<!-- =====================================================
+     PROFIL CONNECTÉ
+===================================================== -->
 
 <div id="profilConnecte" style="display:none">
 
-<h1>👤 Mon profil</h1>
+  <h1>👤 Mon profil</h1>
 
-<p class="intro">
-Gérez vos informations personnelles et votre solde de points.
-</p>
+  <p class="intro">
+    Gérez vos informations personnelles et votre solde de points.
+  </p>
 
-<div class="verify-banner" id="verifyBanner" style="display:none">
-📧 Votre email n'est pas encore vérifié. Consultez votre boîte mail
-pour confirmer votre adresse.
-<br>
-<button type="button" onclick="renvoyerVerification()">
-Renvoyer l'email de vérification
-</button>
-</div>
 
-<section class="profile-card">
+  <!-- VÉRIFICATION EMAIL -->
 
-<div class="profile-top">
+  <div
+    class="verify-banner"
+    id="verifyBanner"
+    style="display:none">
 
-<img
- id="profilePhoto"
- class="profile-photo"
- src="https://via.placeholder.com/200"
- alt="Photo de profil">
+    📧 Votre adresse email n'est pas encore vérifiée.
+    Consultez votre boîte mail pour confirmer votre adresse.
 
-<h2 id="profileName" class="profile-name">
-Mon profil
-</h2>
+    <br>
 
-<p id="profileLocation" class="profile-location">
-Profil pas encore créé
-</p>
+    <button
+      type="button"
+      onclick="renvoyerVerification()">
+      Renvoyer l'email de vérification
+    </button>
 
-<div id="pendingBadge" class="pending-badge" style="display:none">
-⏳ Profil en attente de validation
-</div>
+  </div>
 
-</div>
 
-<div class="profile-description">
+  <!-- MESSAGE DE STATUT -->
 
-<strong>À propos de moi</strong>
+  <div
+    class="status-message"
+    id="profileStatusMessage">
+  </div>
 
-<p id="profileDescription">
-Vous n'avez pas encore créé votre profil de rencontre.
-Cliquez sur "Créer mon profil" pour commencer.
-</p>
 
-</div>
+  <!-- CARTE PROFIL -->
 
-<button
- type="button"
- class="edit-button"
- onclick="ouvrirModificationProfil()">
-✏️ Créer / modifier mon profil
-</button>
+  <section class="profile-card">
 
-<button
- type="button"
- class="logout-button"
- onclick="deconnexion()">
-🚪 Se déconnecter
-</button>
+    <div class="profile-top">
 
-</section>
+      <img
+        id="profilePhoto"
+        class="profile-photo"
+        src="https://via.placeholder.com/200"
+        alt="Photo de profil">
 
-<section class="points-card">
+      <h2
+        id="profileName"
+        class="profile-name">
+        Mon profil
+      </h2>
 
-<div class="points-title">Mon solde</div>
+      <p
+        id="profileLocation"
+        class="profile-location">
+        Profil pas encore créé
+      </p>
 
-<div class="points-number" id="mainPoints">
-0 point
-</div>
+      <div
+        id="pendingBadge"
+        class="pending-badge"
+        style="display:none">
+        ⏳ Profil en attente de validation
+      </div>
 
-<div class="points-description">
-Les points permettent d'envoyer des demandes de discussion
-et d'utiliser l'Aide à la discussion.
-</div>
+      <div
+        id="activeBadge"
+        class="active-badge"
+        style="display:none">
+        ✅ Profil validé
+      </div>
 
-</section>
+    </div>
 
-<section class="section-card">
 
-<h2>⭐ Acheter des points</h2>
+    <div class="profile-description">
 
-<p class="section-description">
-Choisissez le nombre de points que vous souhaitez acheter.
-Les points seront ajoutés à votre compte après confirmation
-réelle du paiement.
-</p>
+      <strong>À propos de moi</strong>
 
-<div class="packs">
+      <p id="profileDescription">
+        Vous n'avez pas encore créé votre profil de rencontre.
+        Cliquez sur « Créer / modifier mon profil » pour commencer.
+      </p>
 
-<button
- type="button"
- class="pack"
- onclick="ouvrirPaiement(5,1000)">
-<div class="pack-info">
-<strong>5 points</strong>
-<small>Pour commencer à utiliser la plateforme</small>
-</div>
-<div class="pack-price">1 000 FCFA</div>
-</button>
+    </div>
 
-<button
- type="button"
- class="pack"
- onclick="ouvrirPaiement(10,2000)">
-<div class="pack-info">
-<strong>10 points</strong>
-<small>Pour plusieurs demandes et aides</small>
-</div>
-<div class="pack-price">2 000 FCFA</div>
-</button>
 
-<button
- type="button"
- class="pack"
- onclick="ouvrirPaiement(20,4000)">
-<div class="pack-info">
-<strong>20 points</strong>
-<small>Pour une utilisation plus régulière</small>
-</div>
-<div class="pack-price">4 000 FCFA</div>
-</button>
+    <div
+      class="profile-info-grid"
+      id="profileInfoGrid"
+      style="display:none">
 
-</div>
-</section>
+      <div class="info-box">
 
-<section class="section-card">
+        <span>Âge</span>
 
-<h2>💡 À quoi servent les points ?</h2>
+        <strong id="profileAge">
+          -
+        </strong>
 
-<p class="section-description">
-Les points sont utilisés uniquement lorsque vous effectuez
-certaines actions sur la plateforme.
-</p>
+      </div>
 
-<div class="usage-list">
 
-<div class="usage-item">
-<div class="usage-icon">💬</div>
-<div class="usage-text">
-<strong>Envoyer une demande de discussion</strong>
-<small>1 point · 200 FCFA</small>
-</div>
-</div>
+      <div class="info-box">
 
-<div class="usage-item">
-<div class="usage-icon">💡</div>
-<div class="usage-text">
-<strong>Aide à la discussion</strong>
-<small>1 point · 200 FCFA par utilisation</small>
-</div>
-</div>
+        <span>Ce que je recherche</span>
 
-</div>
-</section>
+        <strong id="profileSearch">
+          -
+        </strong>
 
-<section class="section-card">
+      </div>
 
-<h2>🔐 Sécurité</h2>
 
-<p class="section-description">
-Vos informations et votre solde sont protégés par notre
-système de compte. Les opérations importantes sont
-vérifiées côté serveur.
-</p>
+      <div class="info-box">
 
-</section>
+        <span>Enfants</span>
+
+        <strong id="profileChildren">
+          -
+        </strong>
+
+      </div>
+
+
+      <div class="info-box">
+
+        <span>Polygamie</span>
+
+        <strong id="profilePolygamy">
+          -
+        </strong>
+
+      </div>
+
+
+      <div
+        class="info-box"
+        style="grid-column:1 / -1">
+
+        <span>Type de relation recherché</span>
+
+        <strong id="profileRelation">
+          -
+        </strong>
+
+      </div>
+
+    </div>
+
+
+    <button
+      type="button"
+      class="edit-button"
+      onclick="ouvrirModificationProfil()">
+      ✏️ Créer / modifier mon profil
+    </button>
+
+
+    <button
+      type="button"
+      class="logout-button"
+      onclick="deconnexion()">
+      🚪 Se déconnecter
+    </button>
+
+  </section>
+
+
+  <!-- ===================================================
+       POINTS
+  ==================================================== -->
+
+  <section class="points-card">
+
+    <div class="points-title">
+      Mon solde
+    </div>
+
+    <div
+      class="points-number"
+      id="mainPoints">
+      0 point
+    </div>
+
+    <div class="points-description">
+      1 point = 200 FCFA.
+      Les points permettent d'envoyer des demandes de discussion
+      et d'utiliser l'Aide à la discussion.
+    </div>
+
+  </section>
+
+
+  <!-- ===================================================
+       ACHAT DE POINTS
+  ==================================================== -->
+
+  <section class="section-card">
+
+    <h2>⭐ Acheter des points</h2>
+
+    <p class="section-description">
+      Les points peuvent être achetés uniquement depuis votre profil.
+      Ils seront ajoutés après confirmation réelle du paiement.
+    </p>
+
+    <div class="packs">
+
+      <button
+        type="button"
+        class="pack"
+        onclick="ouvrirPaiement(5,1000)">
+
+        <div class="pack-info">
+
+          <strong>
+            5 points
+          </strong>
+
+          <small>
+            1 000 FCFA
+          </small>
+
+        </div>
+
+        <div class="pack-price">
+          1 000 FCFA
+        </div>
+
+      </button>
+
+
+      <button
+        type="button"
+        class="pack"
+        onclick="ouvrirPaiement(10,2000)">
+
+        <div class="pack-info">
+
+          <strong>
+            10 points
+          </strong>
+
+          <small>
+            2 000 FCFA
+          </small>
+
+        </div>
+
+        <div class="pack-price">
+          2 000 FCFA
+        </div>
+
+      </button>
+
+
+      <button
+        type="button"
+        class="pack"
+        onclick="ouvrirPaiement(20,4000)">
+
+        <div class="pack-info">
+
+          <strong>
+            20 points
+          </strong>
+
+          <small>
+            4 000 FCFA
+          </small>
+
+        </div>
+
+        <div class="pack-price">
+          4 000 FCFA
+        </div>
+
+      </button>
+
+    </div>
+
+  </section>
+
+
+  <!-- ===================================================
+       UTILISATION DES POINTS
+  ==================================================== -->
+
+  <section class="section-card">
+
+    <h2>💡 À quoi servent les points ?</h2>
+
+    <p class="section-description">
+      Les points sont utilisés pour certaines fonctionnalités
+      de la plateforme.
+    </p>
+
+    <div class="usage-list">
+
+      <div class="usage-item">
+
+        <div class="usage-icon">
+          💬
+        </div>
+
+        <div class="usage-text">
+
+          <strong>
+            Envoyer une demande de discussion
+          </strong>
+
+          <small>
+            1 point · 200 FCFA
+          </small>
+
+        </div>
+
+      </div>
+
+
+      <div class="usage-item">
+
+        <div class="usage-icon">
+          💡
+        </div>
+
+        <div class="usage-text">
+
+          <strong>
+            Aide à la discussion
+          </strong>
+
+          <small>
+            1 point · 200 FCFA par utilisation
+          </small>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- ===================================================
+       SÉCURITÉ
+  ==================================================== -->
+
+  <section class="section-card">
+
+    <h2>🛡️ Sécurité</h2>
+
+    <p class="section-description">
+      Affrilova ne peut pas garantir l'identité ou les intentions
+      des personnes présentes sur la plateforme.
+      Ne transférez jamais d'argent à une personne rencontrée
+      sur Affrilova et ne partagez jamais vos mots de passe,
+      codes de paiement ou documents personnels.
+    </p>
+
+    <p class="section-description">
+      En cas de comportement suspect, utilisez les fonctions
+      de blocage et de signalement.
+    </p>
+
+  </section>
+
+
+  <!-- DOCUMENTS -->
+
+  <div class="legal-links">
+
+    <a href="politique-de-confidentialite.html">
+      Politique de confidentialité
+    </a>
+
+    ·
+
+    <a href="conditions-utilisation.html">
+      Conditions d'utilisation
+    </a>
+
+  </div>
 
 </div>
 
 </main>
 
-<!-- MODALE MODIFICATION PROFIL -->
 
-<div class="modal" id="editProfileModal">
+<!-- =====================================================
+     MODALE CRÉATION / MODIFICATION PROFIL
+===================================================== -->
 
-<div class="modal-content">
+<div
+  class="modal"
+  id="editProfileModal">
 
-<button
- type="button"
- class="close-button"
- onclick="fermerModal('editProfileModal')">
-×
-</button>
+  <div class="modal-content">
 
-<h2>✏️ Modifier mon profil</h2>
+    <button
+      type="button"
+      class="close-button"
+      onclick="fermerModal('editProfileModal')">
+      ×
+    </button>
 
-<p class="section-description">
-🚧 La création complète du profil (avec photo et validation
-automatique) sera activée à la prochaine étape.
-</p>
+    <h2>
+      ✏️ Mon profil Affrilova
+    </h2>
 
-</div>
-</div>
+    <p class="section-description">
+      Votre profil sera soumis à validation avant d'être rendu visible
+      aux autres utilisateurs.
+    </p>
 
-<!-- MODALE PAIEMENT -->
 
-<div class="modal" id="paymentModal">
+    <div
+      class="status-message"
+      id="form
 
-<div class="modal-content">
-
-<button
- type="button"
- class="close-button"
- onclick="fermerModal('paymentModal')">
-×
-</button>
-
-<h2>💳 Acheter des points</h2>
-
-<div class="payment-info">
-<p>
-Vous avez sélectionné
-<strong id="selectedPoints">5 points</strong>
-pour
-<strong id="selectedPrice">1 000 FCFA</strong>.
-</p>
-</div>
-
-<p class="section-description">
-Choisissez votre moyen de paiement.
-Le solde sera crédité uniquement après confirmation réelle
-du paiement.
-</p>
-
-<div class="payment-methods">
-
-<div class="payment-method">
-<input type="radio" name="paymentMethod" value="paydunya">
-<label>
-PayDunya
-<small>Paiement sécurisé</small>
-</label>
-</div>
-
-</div>
-
-<button
- type="button"
- class="continue-payment"
- onclick="continuerPaiement()">
-Continuer vers le paiement
-</button>
-
-</div>
-</div>
-
-<!-- NAVIGATION BAS -->
-
-<nav class="bottom-nav">
-
-<a href="index.html">
-<span>🏠</span>
-Accueil
-</a>
-
-<a href="explorer.html">
-<span>🔎</span>
-Explorer
-</a>
-
-<a href="messagerie.html">
-<span>💬</span>
-Messagerie
-</a>
-
-<a href="profil.html" class="active">
-<span>👤</span>
-Profil
-</a>
-
-</nav>
-
-<!-- SDK APPWRITE (CDN) -->
-<script src="https://cdn.jsdelivr.net/npm/appwrite@20.0.0"></script>
-
-<script>
-
-/*
-==========================================
-CONFIGURATION APPWRITE
-==========================================
+     /*
+==========================================================
+CHARGER LE PROFIL EXISTANT
+==========================================================
 */
 
-const APPWRITE_ENDPOINT = "https://fra.cloud.appwrite.io/v1";
-const APPWRITE_PROJECT_ID = "6aac203e00209ccb3014";
-const APPWRITE_DATABASE_ID = "6aac2a200000e6be5877";
-const TABLE_POINTS = "points";
+async function chargerProfil(){
 
-const client = new Appwrite.Client();
-
-client
-  .setEndpoint(APPWRITE_ENDPOINT)
-  .setProject(APPWRITE_PROJECT_ID);
-
-const account = new Appwrite.Account(client);
-const tablesDB = new Appwrite.TablesDB(client);
-
-
-/*
-==========================================
-VARIABLES
-==========================================
-*/
-
-let nombrePointsSelectionne = 0;
-let prixSelectionne = 0;
-let utilisateurConnecte = null;
-
-
-/*
-==========================================
-GESTION DES ONGLETS CONNEXION / INSCRIPTION
-==========================================
-*/
-
-function afficherOnglet(nom) {
-
-  document.getElementById("tabConnexion").classList.toggle(
-    "active", nom === "connexion"
-  );
-
-  document.getElementById("tabInscription").classList.toggle(
-    "active", nom === "inscription"
-  );
-
-  document.getElementById("formConnexion").classList.toggle(
-    "active", nom === "connexion"
-  );
-
-  document.getElementById("formInscription").classList.toggle(
-    "active", nom === "inscription"
-  );
-
-}
-
-
-/*
-==========================================
-AFFICHER UNE ERREUR D'AUTHENTIFICATION
-==========================================
-*/
-
-function afficherErreurAuth(id, message) {
-
-  const bloc = document.getElementById(id);
-  bloc.textContent = message;
-  bloc.classList.add("show");
-
-}
-
-function cacherErreursAuth() {
-
-  document.getElementById("authErrorConnexion").classList.remove("show");
-  document.getElementById("authErrorInscription").classList.remove("show");
-
-}
-
-
-/*
-==========================================
-CONNEXION
-==========================================
-*/
-
-async function connexion(event) {
-
-  event.preventDefault();
-  cacherErreursAuth();
-
-  const email = document.getElementById("loginEmail").value.trim();
-  const motDePasse = document.getElementById("loginPassword").value;
-
-  const bouton = document.getElementById("btnConnexion");
-  bouton.disabled = true;
-  bouton.textContent = "Connexion...";
-
-  try {
-
-    await account.createEmailPasswordSession({
-      email: email,
-      password: motDePasse
-    });
-
-    await chargerEtatConnexion();
-
-  } catch (erreur) {
-
-    afficherErreurAuth(
-      "authErrorConnexion",
-      "Email ou mot de passe incorrect."
-    );
-
-  } finally {
-
-    bouton.disabled = false;
-    bouton.textContent = "Se connecter";
-
-  }
-
-}
-
-
-/*
-==========================================
-INSCRIPTION
-==========================================
-*/
-
-async function inscription(event) {
-
-  event.preventDefault();
-  cacherErreursAuth();
-
-  const email = document.getElementById("signupEmail").value.trim();
-  const motDePasse = document.getElementById("signupPassword").value;
-
-  const bouton = document.getElementById("btnInscription");
-  bouton.disabled = true;
-  bouton.textContent = "Création...";
-
-  try {
-
-    await account.create({
-      userId: Appwrite.ID.unique(),
-      email: email,
-      password: motDePasse
-    });
-
-    await account.createEmailPasswordSession({
-      email: email,
-      password: motDePasse
-    });
-
-    await envoyerEmailVerification();
-
-    await chargerEtatConnexion();
-
-  } catch (erreur) {
-
-    afficherErreurAuth(
-      "authErrorInscription",
-      erreur.message || "Impossible de créer le compte. Cette adresse est peut-être déjà utilisée."
-    );
-
-  } finally {
-
-    bouton.disabled = false;
-    bouton.textContent = "Créer mon compte";
-
-  }
-
-}
-
-
-/*
-==========================================
-EMAIL DE VÉRIFICATION
-==========================================
-*/
-
-function urlVerification() {
-
-  return window.location.origin + window.location.pathname;
-
-}
-
-async function envoyerEmailVerification() {
-
-  try {
-
-    await account.createEmailVerification({
-      url: urlVerification()
-    });
-
-  } catch (erreur) {
-
-    console.error("Erreur envoi email de vérification :", erreur);
-
-  }
-
-}
-
-async function renvoyerVerification() {
-
-  await envoyerEmailVerification();
-
-  alert("Un nouvel email de vérification vient d'être envoyé.");
-
-}
-
-async function verifierRetourEmail() {
-
-  const parametres = new URLSearchParams(window.location.search);
-  const userId = parametres.get("userId");
-  const secret = parametres.get("secret");
-
-  if (!userId || !secret) {
+  if(!utilisateurConnecte){
     return;
   }
 
-  try {
+  try{
 
-    await account.updateEmailVerification({
-      userId: userId,
-      secret: secret
-    });
+    const reponse =
+      await tablesDB.listRows({
 
-    window.history.replaceState(
-      {}, document.title, window.location.pathname
+        databaseId:
+          APPWRITE_DATABASE_ID,
+
+        tableId:
+          TABLE_PROFILS,
+
+        queries:[
+          Appwrite.Query.equal(
+            "userId",
+            utilisateurConnecte.$id
+          ),
+
+          Appwrite.Query.limit(1)
+        ]
+
+      });
+
+    if(reponse.total === 0){
+
+      profilActuel = null;
+
+      afficherProfilVide();
+
+      return;
+    }
+
+    profilActuel =
+      reponse.rows[0];
+
+    afficherProfil(
+      profilActuel
     );
 
-  } catch (erreur) {
+  }catch(erreur){
 
-    console.error("Erreur vérification email :", erreur);
+    console.error(
+      "Erreur chargement profil :",
+      erreur
+    );
 
-  }
-
-}
-
-
-/*
-==========================================
-DÉCONNEXION
-==========================================
-*/
-
-async function deconnexion() {
-
-  try {
-
-    await account.deleteSession({ sessionId: "current" });
-
-  } catch (erreur) {
-
-    console.error("Erreur déconnexion :", erreur);
-
-  }
-
-  window.location.reload();
-
-}
-
-
-/*
-==========================================
-CHARGER LE SOLDE DE POINTS
-==========================================
-*/
-
-async function chargerSoldePoints(userId) {
-
-  try {
-
-    const reponse = await tablesDB.listRows({
-      databaseId: APPWRITE_DATABASE_ID,
-      tableId: TABLE_POINTS,
-      queries: [
-        Appwrite.Query.equal("userId", userId),
-        Appwrite.Query.limit(1)
-      ]
-    });
-
-    const solde = reponse.total > 0 ? reponse.rows[0].solde : 0;
-
-    afficherSolde(solde || 0);
-
-  } catch (erreur) {
-
-    console.error("Erreur chargement points :", erreur);
-
-    afficherSolde(0);
-
-  }
-
-}
-
-function afficherSolde(points) {
-
-  document.getElementById("headerPoints").textContent = points;
-
-  document.getElementById("mainPoints").textContent =
-    points + (points > 1 ? " points" : " point");
-
-}
-
-
-/*
-==========================================
-ÉTAT DE CONNEXION (AFFICHAGE PRINCIPAL)
-==========================================
-*/
-
-async function chargerEtatConnexion() {
-
-  try {
-
-    utilisateurConnecte = await account.get();
-
-    document.getElementById("authSection").style.display = "none";
-    document.getElementById("profilConnecte").style.display = "block";
-
-    document.getElementById("verifyBanner").style.display =
-      utilisateurConnecte.emailVerification ? "none" : "block";
-
-    await chargerSoldePoints(utilisateurConnecte.$id);
-
-  } catch (erreur) {
-
-    utilisateurConnecte = null;
-
-    document.getElementById("authSection").style.display = "block";
-    document.getElementById("profilConnecte").style.display = "none";
-
-    document.getElementById("headerPoints").textContent = "-";
+    afficherMessageProfil(
+      "Impossible de charger votre profil pour le moment.",
+      "error"
+    );
 
   }
 
@@ -998,77 +1316,1216 @@ async function chargerEtatConnexion() {
 
 
 /*
-==========================================
-MODALES
-==========================================
+==========================================================
+AFFICHER PROFIL VIDE
+==========================================================
 */
 
-function ouvrirModificationProfil() {
-  document.getElementById("editProfileModal").classList.add("show");
+function afficherProfilVide(){
+
+  document.getElementById(
+    "profileName"
+  ).textContent =
+    "Mon profil";
+
+  document.getElementById(
+    "profileLocation"
+  ).textContent =
+    "Profil pas encore créé";
+
+  document.getElementById(
+    "profileDescription"
+  ).textContent =
+    "Vous n'avez pas encore créé votre profil de rencontre. Cliquez sur « Créer / modifier mon profil » pour commencer.";
+
+  document.getElementById(
+    "profileInfoGrid"
+  ).style.display =
+    "none";
+
+  document.getElementById(
+    "pendingBadge"
+  ).style.display =
+    "none";
+
+  document.getElementById(
+    "activeBadge"
+  ).style.display =
+    "none";
+
+  document.getElementById(
+    "profilePhoto"
+  ).src =
+    "https://via.placeholder.com/200";
+
 }
 
-function ouvrirPaiement(nombrePoints, prix) {
 
-  nombrePointsSelectionne = nombrePoints;
-  prixSelectionne = prix;
+/*
+==========================================================
+AFFICHER PROFIL
+==========================================================
+*/
 
-  document.getElementById("selectedPoints").textContent =
-    nombrePoints + " points";
+async function afficherProfil(profil){
 
-  document.getElementById("selectedPrice").textContent =
-    formaterPrix(prix) + " FCFA";
+  document.getElementById(
+    "profileName"
+  ).textContent =
+    profil.nom || "Profil Affrilova";
 
-  document.getElementById("paymentModal").classList.add("show");
+  document.getElementById(
+    "profileAge"
+  ).textContent =
+    profil.age
+      ? profil.age + " ans"
+      : "-";
 
-}
+  document.getElementById(
+    "profileDescription"
+  ).textContent =
+    profil.description ||
+    "Aucune description renseignée.";
 
-function formaterPrix(prix) {
-  return Number(prix).toLocaleString("fr-FR");
-}
+  document.getElementById(
+    "profileSearch"
+  ).textContent =
+    profil.recherche ||
+    "-";
 
-function continuerPaiement() {
+  document.getElementById(
+    "profileChildren"
+  ).textContent =
+    convertirEnfants(
+      profil.accepteEnfants
+    );
 
-  const methode = document.querySelector(
-    'input[name="paymentMethod"]:checked'
+  document.getElementById(
+    "profilePolygamy"
+  ).textContent =
+    convertirPolygamie(
+      profil.acceptePolygamie
+    );
+
+  document.getElementById(
+    "profileRelation"
+  ).textContent =
+    convertirRelation(
+      profil.typeRelation
+    );
+
+  document.getElementById(
+    "profileInfoGrid"
+  ).style.display =
+    "grid";
+
+
+  /*
+   * STATUT DU PROFIL
+   */
+
+  document.getElementById(
+    "pendingBadge"
+  ).style.display =
+    profil.statut === "en_attente"
+      ? "inline-block"
+      : "none";
+
+  document.getElementById(
+    "activeBadge"
+  ).style.display =
+    profil.statut === "actif"
+      ? "inline-block"
+      : "none";
+
+
+  /*
+   * PHOTO
+   */
+
+  if(profil.photoPrincipale){
+
+    try{
+
+      const url =
+        storage.getFileView({
+          bucketId:
+            BUCKET_PHOTOS,
+
+          fileId:
+            profil.photoPrincipale
+        });
+
+      document.getElementById(
+        "profilePhoto"
+      ).src =
+        url;
+
+      document.getElementById(
+        "photoPreview"
+      ).src =
+        url;
+
+    }catch(erreur){
+
+      console.error(
+        "Erreur affichage photo :",
+        erreur
+      );
+
+    }
+
+  }
+
+
+  /*
+   * PAYS + VILLE
+   */
+
+  await afficherLocalisationProfil(
+    profil.paysId,
+    profil.villeId
   );
 
-  if (!methode) {
-    alert("Veuillez sélectionner un moyen de paiement.");
+}
+
+
+/*
+==========================================================
+CONVERSIONS POUR L'AFFICHAGE
+==========================================================
+*/
+
+function convertirEnfants(valeur){
+
+  if(valeur === true){
+    return "Oui";
+  }
+
+  if(valeur === false){
+    return "Non";
+  }
+
+  if(valeur === "oui"){
+    return "Oui";
+  }
+
+  if(valeur === "non"){
+    return "Non";
+  }
+
+  return "-";
+
+}
+
+
+function convertirPolygamie(valeur){
+
+  if(
+    valeur === "oui" ||
+    valeur === true
+  ){
+    return "Oui";
+  }
+
+  if(
+    valeur === "non" ||
+    valeur === false
+  ){
+    return "Non";
+  }
+
+  if(
+    valeur === "indifferent" ||
+    valeur === "indifférent"
+  ){
+    return "Indifférent";
+  }
+
+  return "-";
+
+}
+
+
+function convertirRelation(valeur){
+
+  if(valeur === "mariage"){
+    return "Relation pouvant mener au mariage";
+  }
+
+  if(valeur === "romantique"){
+    return "Relation romantique sans se précipiter";
+  }
+
+  if(valeur === "projet"){
+    return "Relation avec un projet de vie ensemble";
+  }
+
+  return valeur || "-";
+
+}
+
+
+/*
+==========================================================
+AFFICHER PAYS + VILLE DU PROFIL
+==========================================================
+*/
+
+async function afficherLocalisationProfil(
+  paysId,
+  villeId
+){
+
+  if(!paysId){
+
+    document.getElementById(
+      "profileLocation"
+    ).textContent =
+      "Localisation non renseignée";
+
     return;
   }
+
+  try{
+
+    const pays =
+      await tablesDB.getRow({
+
+        databaseId:
+          APPWRITE_DATABASE_ID,
+
+        tableId:
+          TABLE_PAYS,
+
+        rowId:
+          paysId
+
+      });
+
+    let texte =
+      pays.nom || "";
+
+    if(villeId){
+
+      try{
+
+        const ville =
+          await tablesDB.getRow({
+
+            databaseId:
+              APPWRITE_DATABASE_ID,
+
+            tableId:
+              TABLE_VILLES,
+
+            rowId:
+              villeId
+
+          });
+
+        if(ville.nom){
+
+          texte =
+            ville.nom +
+            " · " +
+            texte;
+
+        }
+
+      }catch(erreurVille){
+
+        console.error(
+          "Erreur chargement ville :",
+          erreurVille
+        );
+
+      }
+
+    }
+
+    document.getElementById(
+      "profileLocation"
+    ).textContent =
+      texte;
+
+  }catch(erreur){
+
+    console.error(
+      "Erreur chargement pays :",
+      erreur
+    );
+
+    document.getElementById(
+      "profileLocation"
+    ).textContent =
+      "Localisation non disponible";
+
+  }
+
+}
+
+
+/*
+==========================================================
+OUVRIR LE FORMULAIRE PROFIL
+==========================================================
+*/
+
+async function ouvrirModificationProfil(){
+
+  if(!utilisateurConnecte){
+    return;
+  }
+
+  afficherMessageFormulaire(
+    "",
+    "info"
+  );
+
+  document.getElementById(
+    "formProfileMessage"
+  ).className =
+    "status-message";
+
+
+  /*
+   * Charger les pays si nécessaire.
+   */
+
+  await chargerPays();
+
+
+  /*
+   * Réinitialiser le formulaire.
+   */
+
+  document
+    .getElementById("profileForm")
+    .reset();
+
+  document.getElementById(
+    "villeId"
+  ).innerHTML =
+    '<option value="">Sélectionnez d’abord un pays</option>';
+
+  document.getElementById(
+    "villeId"
+  ).disabled =
+    true;
+
+
+  /*
+   * Valeurs existantes.
+   */
+
+  if(profilActuel){
+
+    document.getElementById(
+      "nom"
+    ).value =
+      profilActuel.nom || "";
+
+    document.getElementById(
+      "age"
+    ).value =
+      profilActuel.age || "";
+
+    document.getElementById(
+      "description"
+    ).value =
+      profilActuel.description || "";
+
+    document.getElementById(
+      "recherche"
+    ).value =
+      profilActuel.recherche || "";
+
+
+    if(profilActuel.paysId){
+
+      document.getElementById(
+        "paysId"
+      ).value =
+        profilActuel.paysId;
+
+      await chargerVilles(
+        profilActuel.paysId
+      );
+
+      document.getElementById(
+        "villeId"
+      ).value =
+        profilActuel.villeId || "";
+
+    }
+
+
+    /*
+     * Enfants.
+     */
+
+    const enfants =
+      profilActuel.accepteEnfants;
+
+    if(enfants !== undefined){
+
+      const radio =
+        document.querySelector(
+          'input[name="accepteEnfants"][value="' +
+          (
+            enfants === true
+              ? "oui"
+              : enfants === false
+                ? "non"
+                : enfants
+          ) +
+          '"]'
+        );
+
+      if(radio){
+        radio.checked = true;
+      }
+
+    }
+
+
+    /*
+     * Polygamie.
+     */
+
+    const polygamie =
+      profilActuel.acceptePolygamie;
+
+    if(polygamie){
+
+      const radio =
+        document.querySelector(
+          'input[name="acceptePolygamie"][value="' +
+          polygamie +
+          '"]'
+        );
+
+      if(radio){
+        radio.checked = true;
+      }
+
+    }
+
+
+    /*
+     * Type de relation.
+     */
+
+    if(profilActuel.typeRelation){
+
+      const radio =
+        document.querySelector(
+          'input[name="typeRelation"][value="' +
+          profilActuel.typeRelation +
+          '"]'
+        );
+
+      if(radio){
+        radio.checked = true;
+      }
+
+    }
+
+
+    /*
+     * Photo existante.
+     */
+
+    if(profilActuel.photoPrincipale){
+
+      try{
+
+        const url =
+          storage.getFileView({
+
+            bucketId:
+              BUCKET_PHOTOS,
+
+            fileId:
+              profilActuel.photoPrincipale
+
+          });
+
+        document.getElementById(
+          "photoPreview"
+        ).src =
+          url;
+
+      }catch(erreur){
+
+        console.error(
+          "Erreur aperçu photo :",
+          erreur
+        );
+
+      }
+
+    }
+
+  }
+
+
+  document
+    .getElementById("editProfileModal")
+    .classList
+    .add("show");
+
+}
+
+
+/*
+==========================================================
+APERÇU PHOTO
+==========================================================
+*/
+
+document
+  .getElementById("photoPrincipale")
+  .addEventListener(
+    "change",
+    function(){
+
+      const fichier =
+        this.files[0];
+
+      if(!fichier){
+        return;
+      }
+
+      const typesAutorises = [
+        "image/jpeg",
+        "image/png",
+        "image/webp"
+      ];
+
+      if(
+        !typesAutorises.includes(
+          fichier.type
+        )
+      ){
+
+        alert(
+          "Format non accepté. Utilisez JPG, PNG ou WebP."
+        );
+
+        this.value = "";
+
+        return;
+      }
+
+
+      /*
+       * Limite cohérente avec le bucket prévu :
+       * 500 Ko.
+       */
+
+      if(
+        fichier.size >
+        500 * 1024
+      ){
+
+        alert(
+          "La photo ne doit pas dépasser 500 Ko."
+        );
+
+        this.value = "";
+
+        return;
+      }
+
+      const lecteur =
+        new FileReader();
+
+      lecteur.onload =
+        function(event){
+
+          document.getElementById(
+            "photoPreview"
+          ).src =
+            event.target.result;
+
+        };
+
+      lecteur.readAsDataURL(
+        fichier
+      );
+
+    }
+  );
+
+
+/*
+==========================================================
+ENREGISTRER LE PROFIL
+==========================================================
+*/
+
+async function enregistrerProfil(event){
+
+  event.preventDefault();
+
+  if(!utilisateurConnecte){
+
+    afficherMessageFormulaire(
+      "Vous devez être connecté pour créer votre profil.",
+      "error"
+    );
+
+    return;
+  }
+
+
+  /*
+   * Récupération des champs.
+   */
+
+  const nom =
+    document
+      .getElementById("nom")
+      .value
+      .trim();
+
+  const age =
+    Number(
+      document
+        .getElementById("age")
+        .value
+    );
+
+  const paysId =
+    document
+      .getElementById("paysId")
+      .value;
+
+  const villeId =
+    document
+      .getElementById("villeId")
+      .value;
+
+  const description =
+    document
+      .getElementById("description")
+      .value
+      .trim();
+
+  const recherche =
+    document
+      .getElementById("recherche")
+      .value
+      .trim();
+
+
+  const accepteEnfants =
+    document.querySelector(
+      'input[name="accepteEnfants"]:checked'
+    );
+
+
+  const acceptePolygamie =
+    document.querySelector(
+      'input[name="acceptePolygamie"]:checked'
+    );
+
+
+  const typeRelation =
+    document.querySelector(
+      'input[name="typeRelation"]:checked'
+    );
+
+
+  const acceptationLegale =
+    document.getElementById(
+      "acceptationLegale"
+    ).checked;
+
+
+  /*
+   * Validation âge.
+   */
+
+  if(age < 18 || age > 100){
+
+    afficherMessageFormulaire(
+      "Vous devez avoir au moins 18 ans pour utiliser Affrilova.",
+      "error"
+    );
+
+    return;
+  }
+
+
+  if(!nom ||
+     !paysId ||
+     !villeId ||
+     !description ||
+     !recherche ||
+     !accepteEnfants ||
+     !acceptePolygamie ||
+     !typeRelation){
+
+    afficherMessageFormulaire(
+      "Veuillez remplir tous les champs obligatoires.",
+      "error"
+    );
+
+    return;
+  }
+
+
+  if(!acceptationLegale){
+
+    afficherMessageFormulaire(
+      "Vous devez accepter la Politique de confidentialité et les Conditions d'utilisation.",
+      "error"
+    );
+
+    return;
+  }
+
+
+  /*
+   * Photo.
+   */
+
+  const fichier =
+    document.getElementById(
+      "photoPrincipale"
+    ).files[0];
+
+
+  /*
+   * Une nouvelle photo est obligatoire
+   * uniquement lors de la première création.
+   */
+
+  if(
+    !fichier &&
+    !profilActuel?.photoPrincipale
+  ){
+
+    afficherMessageFormulaire(
+      "Une photo principale est obligatoire.",
+      "error"
+    );
+
+    return;
+  }
+
+
+  const bouton =
+    document.getElementById(
+      "btnEnregistrerProfil"
+    );
+
+  bouton.disabled = true;
+
+  bouton.textContent =
+    "Enregistrement...";
+
+
+  try{
+
+    let photoId =
+      profilActuel?.photoPrincipale || "";
+
+
+    /*
+     * UPLOAD PHOTO APPWRITE STORAGE
+     */
+
+    if(fichier){
+
+      const upload =
+        await storage.createFile({
+
+          bucketId:
+            BUCKET_PHOTOS,
+
+          fileId:
+            Appwrite.ID.unique(),
+
+          file:
+            fichier
+
+        });
+
+      photoId =
+        upload.$id;
+
+    }
+
+
+    /*
+     * DONNÉES PROFIL
+     *
+     * IMPORTANT :
+     * On ne met jamais le mot de passe ici.
+     */
+
+    const donneesProfil = {
+
+      userId:
+        utilisateurConnecte.$id,
+
+      nom:
+        nom,
+
+      age:
+        age,
+
+      paysId:
+        paysId,
+
+      villeId:
+        villeId,
+
+      description:
+        description,
+
+      recherche:
+        recherche,
+
+      photoPrincipale:
+        photoId,
+
+      statut:
+        "en_attente",
+
+      accepteEnfants:
+        accepteEnfants.value === "oui",
+
+      acceptePolygamie:
+        acceptePolygamie.value,
+
+      typeRelation:
+        typeRelation.value,
+
+      dateCreation:
+        profilActuel?.dateCreation ||
+        new Date().toISOString(),
+
+      dateValidation:
+        null
+
+    };
+
+
+    /*
+     * CRÉATION OU MISE À JOUR
+     */
+
+    if(profilActuel){
+
+      await tablesDB.updateRow({
+
+        databaseId:
+          APPWRITE_DATABASE_ID,
+
+        tableId:
+          TABLE_PROFILS,
+
+        rowId:
+          profilActuel.$id,
+
+        data:
+          donneesProfil
+
+      });
+
+    }else{
+
+      await tablesDB.createRow({
+
+        databaseId:
+          APPWRITE_DATABASE_ID,
+
+        tableId:
+          TABLE_PROFILS,
+
+        rowId:
+          Appwrite.ID.unique(),
+
+        data:
+          donneesProfil
+
+      });
+
+    }
+
+
+    /*
+     * Recharge le profil.
+     */
+
+    await chargerProfil();
+
+
+    fermerModal(
+      "editProfileModal"
+    );
+
+
+    afficherMessageProfil(
+      "Votre profil a été enregistré et envoyé à la validation. Il ne sera visible aux autres utilisateurs qu'après validation.",
+      "success"
+    );
+
+
+  }catch(erreur){
+
+    console.error(
+      "Erreur enregistrement profil :",
+      erreur
+    );
+
+    afficherMessageFormulaire(
+      erreur.message ||
+      "Impossible d'enregistrer votre profil.",
+      "error"
+    );
+
+  }finally{
+
+    bouton.disabled = false;
+
+    bouton.textContent =
+      "💾 Enregistrer et soumettre à validation";
+
+  }
+
+}
+
+
+/*
+==========================================================
+PAIEMENT
+==========================================================
+*/
+
+function ouvrirPaiement(
+  nombrePoints,
+  prix
+){
+
+  nombrePointsSelectionne =
+    nombrePoints;
+
+  prixSelectionne =
+    prix;
+
+  document.getElementById(
+    "selectedPoints"
+  ).textContent =
+    nombrePoints +
+    (
+      nombrePoints > 1
+        ? " points"
+        : " point"
+    );
+
+  document.getElementById(
+    "selectedPrice"
+  ).textContent =
+    formaterPrix(prix) +
+    " FCFA";
+
+  document
+    .getElementById("paymentModal")
+    .classList
+    .add("show");
+
+}
+
+
+function formaterPrix(prix){
+
+  return Number(prix)
+    .toLocaleString("fr-FR");
+
+}
+
+
+function continuerPaiement(){
+
+  const methode =
+    document.querySelector(
+      'input[name="paymentMethod"]:checked'
+    );
+
+  if(!methode){
+
+    alert(
+      "Veuillez sélectionner un moyen de paiement."
+    );
+
+    return;
+  }
+
+
+  /*
+   * IMPORTANT :
+   * Aucun crédit local n'est effectué ici.
+   *
+   * Le paiement réel devra passer par
+   * PayDunya + confirmation serveur/webhook.
+   */
 
   alert(
-    "Le paiement réel sera connecté avec PayDunya à une prochaine étape."
+    "L'intégration PayDunya sera effectuée avec la partie serveur. Aucun point n'est crédité à ce stade."
   );
 
 }
 
-function fermerModal(id) {
-  const modal = document.getElementById(id);
-  if (modal) modal.classList.remove("show");
+
+/*
+==========================================================
+FERMETURE DES MODALES
+==========================================================
+*/
+
+function fermerModal(id){
+
+  const modal =
+    document.getElementById(id);
+
+  if(modal){
+
+    modal.classList.remove("show");
+
+  }
+
 }
 
-document.addEventListener("click", function (event) {
-  if (event.target.classList.contains("modal")) {
-    event.target.classList.remove("show");
+
+document.addEventListener(
+  "click",
+  function(event){
+
+    if(
+      event.target.classList
+        .contains("modal")
+    ){
+
+      event.target
+        .classList
+        .remove("show");
+
+    }
+
   }
-});
+);
 
 
 /*
-==========================================
-INITIALISATION
-==========================================
+==========================================================
+ÉTAT DE CONNEXION
+==========================================================
 */
 
-document.addEventListener("DOMContentLoaded", async function () {
+async function chargerEtatConnexion(){
 
-  await verifierRetourEmail();
-  await chargerEtatConnexion();
+  try{
 
-});
+    utilisateurConnecte =
+      await account.get();
+
+
+    /*
+     * Affichage connecté.
+     */
+
+    document.getElementById(
+      "authSection"
+    ).style.display =
+      "none";
+
+    document.getElementById(
+      "profilConnecte"
+    ).style.display =
+      "block";
+
+
+    /*
+     * Vérification email.
+     */
+
+    document.getElementById(
+      "verifyBanner"
+    ).style.display =
+      utilisateurConnecte.emailVerification
+        ? "none"
+        : "block";
+
+
+    /*
+     * Solde.
+     */
+
+    await chargerSoldePoints(
+      utilisateurConnecte.$id
+    );
+
+
+    /*
+     * Profil.
+     */
+
+    await chargerProfil();
+
+
+  }catch(erreur){
+
+    utilisateurConnecte =
+      null;
+
+    profilActuel =
+      null;
+
+
+    document.getElementById(
+      "authSection"
+    ).style.display =
+      "block";
+
+    document.getElementById(
+      "profilConnecte"
+    ).style.display =
+      "none";
+
+    document.getElementById(
+      "headerPoints"
+    ).textContent =
+      "-";
+
+  }
+
+}
+
+
+/*
+==========================================================
+INITIALISATION
+==========================================================
+*/
+
+document.addEventListener(
+  "DOMContentLoaded",
+  async function(){
+
+    await verifierRetourEmail();
+
+    await chargerEtatConnexion();
+
+  }
+);
 
 </script>
 
 </body>
-</html>
+     </html>
