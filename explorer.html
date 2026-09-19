@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Explorer - Afrilove</title>
+  <title>Explorer - Afrilova</title>
 
   <style>
     * {
@@ -264,7 +264,7 @@
 <body>
 
   <header>
-    <div class="logo">💚 Afrilove</div>
+    <div class="logo">💚 Afrilova</div>
 
     <div class="points">
       ⭐ <span id="pointsBalance">3</span> points
@@ -359,6 +359,9 @@
   </nav>
 
 
+  <!-- SDK APPWRITE (CDN) -->
+  <script src="https://cdn.jsdelivr.net/npm/appwrite@20.0.0"></script>
+
   <script>
 
     /*
@@ -376,6 +379,25 @@
     const APPWRITE_DATABASE_ID =
       "6aac2a200000e6be5877";
 
+    const APPWRITE_BUCKET_PHOTOS =
+      "6aad2a754e0e095d6a9a";
+
+    const TABLE_PAYS = "pays";
+    const TABLE_VILLES = "villes";
+    const TABLE_PROFILS = "6aac2b35002a0debbb85";
+
+    const PHOTO_PLACEHOLDER =
+      "https://via.placeholder.com/600x500/E0F7EE/087557?text=Afrilova";
+
+    const client = new Appwrite.Client();
+
+    client
+      .setEndpoint(APPWRITE_ENDPOINT)
+      .setProject(APPWRITE_PROJECT_ID);
+
+    const tablesDB = new Appwrite.TablesDB(client);
+    const storage = new Appwrite.Storage(client);
+
 
     /*
     ==========================================
@@ -385,6 +407,26 @@
 
     let paysDisponibles = [];
     let villesDisponibles = [];
+
+
+    /*
+    ==========================================
+    OBTENIR L'URL D'UNE PHOTO
+    ==========================================
+    */
+
+    function urlPhoto(photoId) {
+
+      if (!photoId) {
+        return PHOTO_PLACEHOLDER;
+      }
+
+      return storage.getFileView({
+        bucketId: APPWRITE_BUCKET_PHOTOS,
+        fileId: photoId
+      });
+
+    }
 
 
     /*
@@ -400,28 +442,81 @@
 
       if (!select) return;
 
-      select.innerHTML =
-        `<option value="">Tous les pays</option>`;
+      try {
 
-      /*
-      L'intégration complète Appwrite sera ajoutée
-      avec les permissions de la table pays.
+        const reponse = await tablesDB.listRows({
+          databaseId: APPWRITE_DATABASE_ID,
+          tableId: TABLE_PAYS,
+          queries: [
+            Appwrite.Query.limit(50)
+          ]
+        });
 
-      Pour le moment, le select reste prêt
-      à recevoir les pays depuis Appwrite.
-      */
+        paysDisponibles = reponse.rows;
 
-      console.log("Chargement des pays...");
+        let optionsHTML =
+          `<option value="">Tous les pays</option>`;
+
+        paysDisponibles.forEach(function (unPays) {
+
+          optionsHTML +=
+            `<option value="${unPays.$id}">${unPays.nom}</option>`;
+
+        });
+
+        select.innerHTML = optionsHTML;
+
+      } catch (erreur) {
+
+        console.error(
+          "Erreur chargement pays :",
+          erreur
+        );
+
+      }
+
     }
 
 
     /*
     ==========================================
-    CHARGER LES VILLES
+    CHARGER TOUTES LES VILLES (POUR RECHERCHE ET AFFICHAGE)
     ==========================================
     */
 
-    async function chargerVilles(paysId) {
+    async function chargerToutesLesVilles() {
+
+      try {
+
+        const reponse = await tablesDB.listRows({
+          databaseId: APPWRITE_DATABASE_ID,
+          tableId: TABLE_VILLES,
+          queries: [
+            Appwrite.Query.limit(200)
+          ]
+        });
+
+        villesDisponibles = reponse.rows;
+
+      } catch (erreur) {
+
+        console.error(
+          "Erreur chargement villes :",
+          erreur
+        );
+
+      }
+
+    }
+
+
+    /*
+    ==========================================
+    CHARGER LES VILLES D'UN PAYS (DANS LE SELECT)
+    ==========================================
+    */
+
+    function chargerVilles(paysId) {
 
       const citySelect =
         document.getElementById("citySelect");
@@ -437,17 +532,46 @@
         return;
       }
 
-      /*
-      Plus tard :
-
-      récupérer les villes liées au pays
-      depuis la table villes Appwrite.
-      */
-
-      console.log(
-        "Pays sélectionné :",
-        paysId
+      const villesDuPays = villesDisponibles.filter(
+        function (uneVille) {
+          return uneVille.paysId === paysId;
+        }
       );
+
+      villesDuPays.forEach(function (uneVille) {
+
+        citySelect.innerHTML +=
+          `<option value="${uneVille.$id}">${uneVille.nom}</option>`;
+
+      });
+
+    }
+
+
+    /*
+    ==========================================
+    NOMS PAYS / VILLE (POUR AFFICHAGE)
+    ==========================================
+    */
+
+    function nomPays(paysId) {
+
+      const trouve = paysDisponibles.find(
+        function (p) { return p.$id === paysId; }
+      );
+
+      return trouve ? trouve.nom : "";
+
+    }
+
+    function nomVille(villeId) {
+
+      const trouve = villesDisponibles.find(
+        function (v) { return v.$id === villeId; }
+      );
+
+      return trouve ? trouve.nom : "";
+
     }
 
 
@@ -484,23 +608,51 @@
       villeId = ""
     ) {
 
-      /*
-      Plus tard :
+      const requetes = [
+        Appwrite.Query.equal("statut", "approuve"),
+        Appwrite.Query.limit(20)
+      ];
 
-      récupérer uniquement les profils
-      ayant le statut "approuve".
+      if (paysId) {
+        requetes.push(Appwrite.Query.equal("paysId", paysId));
+      }
 
-      Les profils seront filtrés par pays
-      et ville lorsque nécessaire.
-      */
+      if (villeId) {
+        requetes.push(Appwrite.Query.equal("villeId", villeId));
+      }
 
-      console.log(
-        "Recherche profils :",
-        paysId,
-        villeId
-      );
+      try {
 
-      afficherProfils([]);
+        const reponse = await tablesDB.listRows({
+          databaseId: APPWRITE_DATABASE_ID,
+          tableId: TABLE_PROFILS,
+          queries: requetes
+        });
+
+        const profilsAvecNoms = reponse.rows.map(
+          function (profil) {
+
+            return Object.assign({}, profil, {
+              paysNom: nomPays(profil.paysId),
+              villeNom: nomVille(profil.villeId)
+            });
+
+          }
+        );
+
+        afficherProfils(profilsAvecNoms);
+
+      } catch (erreur) {
+
+        console.error(
+          "Erreur chargement profils :",
+          erreur
+        );
+
+        afficherProfils([]);
+
+      }
+
     }
 
 
@@ -548,7 +700,7 @@
 
             <img
               class="profile-photo"
-              src="${profil.photoPrincipale || 'https://via.placeholder.com/600x500'}"
+              src="${urlPhoto(profil.photoPrincipale)}"
               alt="Photo de ${profil.nom || 'profil'}"
             >
 
@@ -581,7 +733,7 @@
 
               <a
                 class="profile-button"
-                href="profil.html?id=${encodeURIComponent(profil.$id || profil.id || "")}"
+                href="profil.html?id=${encodeURIComponent(profil.$id || "")}"
               >
                 Voir le profil
               </a>
@@ -603,12 +755,14 @@
 
     document.addEventListener(
       "DOMContentLoaded",
-      function() {
+      async function() {
 
-        chargerPays();
+        await chargerPays();
+        await chargerToutesLesVilles();
+        await chargerProfils();
 
         console.log(
-          "Explorer Afrilove initialisé."
+          "Explorer Afrilova initialisé."
         );
 
       }
