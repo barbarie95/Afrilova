@@ -514,6 +514,9 @@ header{
 </nav>
 
 
+<!-- SDK APPWRITE (CDN) -->
+<script src="https://cdn.jsdelivr.net/npm/appwrite@20.0.0"></script>
+
 <script>
 
 /*
@@ -522,9 +525,18 @@ CONFIGURATION APPWRITE
 ==========================================
 */
 
-const APPWRITE_ENDPOINT = "";
-const APPWRITE_PROJECT_ID = "";
-const APPWRITE_DATABASE_ID = "";
+const APPWRITE_ENDPOINT = "https://fra.cloud.appwrite.io/v1";
+const APPWRITE_PROJECT_ID = "6aac203e00209ccb3014";
+const APPWRITE_DATABASE_ID = "6aac2a200000e6be5877";
+const TABLE_PROFILS = "6aac2b35002a0debbb85";
+
+const client = new Appwrite.Client();
+
+client
+  .setEndpoint(APPWRITE_ENDPOINT)
+  .setProject(APPWRITE_PROJECT_ID);
+
+const tablesDB = new Appwrite.TablesDB(client);
 
 
 /*
@@ -558,25 +570,38 @@ function ouvrirBonus(){
 PROFILS APPWRITE
 ==========================================
 
-Plus tard :
-
-Appwrite
-   ↓
-profils approuvés
-   ↓
-Accueil
-   ↓
-affichage des profils
-
-La recherche reste exclusivement
-dans Explorer.
+Étape de test : on récupère les profils
+approuvés et on les affiche dans la
+console, avant de construire l'affichage
+visuel complet à l'étape suivante.
 */
 
 async function chargerProfils(){
 
-  console.log(
-    "Les profils approuvés seront chargés depuis Appwrite."
-  );
+  try {
+
+    const reponse = await tablesDB.listRows({
+      databaseId: APPWRITE_DATABASE_ID,
+      tableId: TABLE_PROFILS,
+      queries: [
+        Appwrite.Query.equal("statut", "approuve")
+      ]
+    });
+
+    console.log(
+      "Profils approuvés trouvés :",
+      reponse.total,
+      reponse.rows
+    );
+
+  } catch (erreur) {
+
+    console.error(
+      "Erreur chargement profils :",
+      erreur
+    );
+
+  }
 
 }
 
