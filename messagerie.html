@@ -263,7 +263,6 @@ placeholder="Ex. Elle aime voyager, que puis-je lui répondre ?"></textarea>
 <a href="messagerie.html" class="active">💬<br>Messagerie</a>
 <a href="profil.html">👤<br>Profil</a>
 </nav>
-
 <!-- SDK APPWRITE (CDN) -->
 <script src="https://cdn.jsdelivr.net/npm/appwrite@20.0.0"></script>
 
@@ -276,6 +275,7 @@ const APPWRITE_PROJECT_ID = "6aac203e00209ccb3014";
 const APPWRITE_DATABASE_ID = "6aac2a200000e6be5877";
 const APPWRITE_BUCKET_PHOTOS = "6aad2a754e0e095d6a9a";
 const ADMIN_TEAM_ID = "6aacffe749b1978e61bf";
+const FUNCTION_ID = "6aaf8d3fdb99e41f0aaf";
 
 const TABLE_PROFILS = "6aac2b35002a0debbb85";
 const TABLE_PAYS = "pays";
@@ -293,6 +293,7 @@ client.setEndpoint(APPWRITE_ENDPOINT).setProject(APPWRITE_PROJECT_ID);
 const account = new Appwrite.Account(client);
 const tablesDB = new Appwrite.TablesDB(client);
 const storage = new Appwrite.Storage(client);
+const functions = new Appwrite.Functions(client);
 
 let utilisateurConnecte = null;
 let paysDisponibles = [];
@@ -309,6 +310,33 @@ let messagesActuels = [];
 function permLireUtilisateur(id) { return 'read("user:' + id + '")'; }
 function permModifierUtilisateur(id) { return 'update("user:' + id + '")'; }
 function permLireEquipe(id) { return 'read("team:' + id + '")'; }
+
+
+/* ========================================== APPEL À LA FONCTION BACKEND ========================================== */
+
+async function appelerFonction(donnees) {
+
+  const execution = await functions.createExecution({
+    functionId: FUNCTION_ID,
+    body: JSON.stringify(donnees),
+    method: "POST"
+  });
+
+  let resultat;
+
+  try {
+    resultat = JSON.parse(execution.responseBody);
+  } catch (e) {
+    throw new Error("Réponse invalide du serveur.");
+  }
+
+  if (!resultat.ok) {
+    throw new Error(resultat.message || "Une erreur est survenue.");
+  }
+
+  return resultat;
+
+}
 
 
 /* ========================================== PAYS / VILLES / PROFILS ========================================== */
@@ -536,52 +564,18 @@ async function refuserDemande(demandeId, boutonElement) {
   }
 
 }
-/* ========================================== CONVERSATIONS ========================================== */
+
+
+/* ========================================== CONVERSATIONS (via la fonction backend) ========================================== */
 
 async function creerOuRecupererConversation(peerId) {
 
-  const moi = utilisateurConnecte.$id;
-
-  const q1 = await tablesDB.listRows({
-    databaseId: APPWRITE_DATABASE_ID, tableId: TABLE_CONVERSATIONS,
-    queries: [
-      Appwrite.Query.equal("utilisateur1Id", moi),
-      Appwrite.Query.equal("utilisateur2Id", peerId),
-      Appwrite.Query.limit(1)
-    ]
+  const resultat = await appelerFonction({
+    action: "creerConversation",
+    peerId: peerId
   });
 
-  if (q1.total > 0) return q1.rows[0];
-
-  const q2 = await tablesDB.listRows({
-    databaseId: APPWRITE_DATABASE_ID, tableId: TABLE_CONVERSATIONS,
-    queries: [
-      Appwrite.Query.equal("utilisateur1Id", peerId),
-      Appwrite.Query.equal("utilisateur2Id", moi),
-      Appwrite.Query.limit(1)
-    ]
-  });
-
-  if (q2.total > 0) return q2.rows[0];
-
-  const nouvelle = await tablesDB.createRow({
-    databaseId: APPWRITE_DATABASE_ID, tableId: TABLE_CONVERSATIONS, rowId: Appwrite.ID.unique(),
-    data: {
-      utilisateur1Id: moi,
-      utilisateur2Id: peerId,
-      dateCreation: new Date().toISOString(),
-      statut: "active"
-    },
-    permissions: [
-      permLireUtilisateur(moi),
-      permLireUtilisateur(peerId),
-      permModifierUtilisateur(moi),
-      permModifierUtilisateur(peerId),
-      permLireEquipe(ADMIN_TEAM_ID)
-    ]
-  });
-
-  return nouvelle;
+  return resultat.conversation;
 
 }
 
@@ -745,19 +739,11 @@ async function envoyerMessage() {
 
   try {
 
-    await tablesDB.createRow({
-      databaseId: APPWRITE_DATABASE_ID, tableId: TABLE_MESSAGES, rowId: Appwrite.ID.unique(),
-      data: {
-        conversationId: conversationActuelle,
-        expediteurId: utilisateurConnecte.$id,
-        contenu: texte,
-        dateEnvoi: new Date().toISOString()
-      },
-      permissions: [
-        permLireUtilisateur(utilisateurConnecte.$id),
-        permLireUtilisateur(peerActuel),
-        permLireEquipe(ADMIN_TEAM_ID)
-      ]
+    await appelerFonction({
+      action: "envoyerMessage",
+      conversationId: conversationActuelle,
+      peerId: peerActuel,
+      contenu: texte
     });
 
     await chargerMessages();
@@ -770,7 +756,7 @@ async function envoyerMessage() {
 }
 
 
-/* ========================================== PHOTOS DANS LE CHAT ========================================== */
+/* ========================================== PHOTOS DANS LE CHAT (via la fonction backend) ========================================== */
 
 function compresserImage(fichier, tailleMaxOctets, largeurMax) {
 
@@ -876,24 +862,15 @@ async function selectionnerPhotos(event) {
       const fichierUploade = await storage.createFile({
         bucketId: APPWRITE_BUCKET_PHOTOS, fileId: Appwrite.ID.unique(), file: fichierFinal,
         permissions: [
-          permLireUtilisateur(utilisateurConnecte.$id),
-          permLireUtilisateur(peerActuel)
+          permLireUtilisateur(utilisateurConnecte.$id)
         ]
       });
 
-      await tablesDB.createRow({
-        databaseId: APPWRITE_DATABASE_ID, tableId: TABLE_MESSAGES, rowId: Appwrite.ID.unique(),
-        data: {
-          conversationId: conversationActuelle,
-          expediteurId: utilisateurConnecte.$id,
-          photoId: fichierUploade.$id,
-          dateEnvoi: new Date().toISOString()
-        },
-        permissions: [
-          permLireUtilisateur(utilisateurConnecte.$id),
-          permLireUtilisateur(peerActuel),
-          permLireEquipe(ADMIN_TEAM_ID)
-        ]
+      await appelerFonction({
+        action: "envoyerMessage",
+        conversationId: conversationActuelle,
+        peerId: peerActuel,
+        photoId: fichierUploade.$id
       });
 
     } catch (erreur) {
@@ -937,7 +914,6 @@ function demanderAide() {
 
 }
 
-
 /* ========================================== SIGNALEMENT ========================================== */
 
 function ouvrirSignalement() {
@@ -961,8 +937,7 @@ async function signaler() {
         dateCreation: new Date().toISOString()
       },
       permissions: [
-        permLireUtilisateur(utilisateurConnecte.$id),
-        permLireEquipe(ADMIN_TEAM_ID)
+        permLireUtilisateur(utilisateurConnecte.$id)
       ]
     });
 
@@ -1000,8 +975,7 @@ async function confirmerBlocage() {
         dateCreation: new Date().toISOString()
       },
       permissions: [
-        permLireUtilisateur(utilisateurConnecte.$id),
-        permLireEquipe(ADMIN_TEAM_ID)
+        permLireUtilisateur(utilisateurConnecte.$id)
       ]
     });
 
