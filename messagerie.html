@@ -164,11 +164,18 @@ h1{text-align:center;color:#087557}
 <div id="contenuMessagerie" style="display:none">
 
 <h1>💬 Messagerie</h1>
-<p class="intro">Échangez simplement avec les personnes avec qui vous avez accepté de discuter.</p>
+<p class="intro">
+Échangez simplement avec les personnes avec qui vous avez accepté de discuter.
+</p>
 
 <div class="tabs">
-<button id="tabDemandes" class="active" onclick="afficherOnglet('demandes')">📩 Demandes</button>
-<button id="tabDiscussions" onclick="afficherOnglet('discussions')">💬 Mes discussions</button>
+<button id="tabDemandes" class="active" onclick="afficherOnglet('demandes')">
+📩 Demandes
+</button>
+
+<button id="tabDiscussions" onclick="afficherOnglet('discussions')">
+💬 Mes discussions
+</button>
 </div>
 
 <section id="demandes">
@@ -185,90 +192,213 @@ h1{text-align:center;color:#087557}
 
 <!-- CHAT -->
 <div id="chatArea">
+
 <div class="chat-head">
+
 <button onclick="fermerChat()">‹</button>
-<div class="chat-name"><strong id="nomChat">—</strong><br><small id="lieuChat"></small></div>
+
+<div class="chat-name">
+<strong id="nomChat">—</strong><br>
+<small id="lieuChat"></small>
+</div>
+
 <div class="chat-tools">
 <button onclick="ouvrirSignalement()">🚨</button>
 <button onclick="ouvrirBlocage()">🚫</button>
 </div>
+
 </div>
 
 <div class="messages" id="messages"></div>
 
 <div class="chat-extra">
-<button class="chat-btn" onclick="ouvrirAide()">💡 Aide à la discussion</button>
-<div class="photos">📷 2 photos maximum par conversation</div>
-<input type="file" id="photos" accept="image/jpeg,image/png,image/webp" multiple onchange="selectionnerPhotos(event)">
+
+<button class="chat-btn" onclick="ouvrirAide()">
+💡 Aide à la discussion
+</button>
+
+<div class="photos">
+📷 2 photos maximum par conversation
+</div>
+
+<input
+ type="file"
+ id="photos"
+ accept="image/jpeg,image/png,image/webp"
+ multiple
+ onchange="selectionnerPhotos(event)"
+>
+
 <div class="preview" id="preview"></div>
+
 </div>
 
 <div class="chat-input">
-<input id="messageInput" placeholder="Écrire un message..." onkeydown="if(event.key==='Enter')envoyerMessage()">
+
+<input
+ id="messageInput"
+ placeholder="Écrire un message..."
+ onkeydown="if(event.key==='Enter')envoyerMessage()"
+>
+
 <button onclick="envoyerMessage()">➤</button>
+
 </div>
+
 </div>
 
 <!-- AIDE -->
 <div class="modal" id="aideModal">
-<div class="modal-box">
-<h2>💡 Aide à la discussion</h2>
-<p>Décris ce que tu veux répondre. L'aide coûtera <strong>1 point</strong> une fois disponible.</p>
 
-<textarea id="questionAide"
-placeholder="Ex. Elle aime voyager, que puis-je lui répondre ?"></textarea>
+<div class="modal-box">
+
+<h2>💡 Aide à la discussion</h2>
+
+<p>
+Décris ce que tu veux répondre.
+L'aide coûtera <strong>1 point</strong> une fois disponible.
+</p>
+
+<textarea
+ id="questionAide"
+ placeholder="Ex. Elle aime voyager, que puis-je lui répondre ?"
+></textarea>
 
 <div class="modal-actions">
-<button class="secondary" onclick="fermerModal('aideModal')">Fermer</button>
-<button class="primary" onclick="demanderAide()">Voir</button>
+
+<button
+ class="secondary"
+ onclick="fermerModal('aideModal')"
+>
+Fermer
+</button>
+
+<button
+ class="primary"
+ onclick="demanderAide()"
+>
+Voir
+</button>
+
 </div>
 
 <div id="helpResults"></div>
+
 </div>
 </div>
 
 <!-- SIGNALER -->
 <div class="modal" id="signalementModal">
+
 <div class="modal-box">
+
 <h2>🚨 Signaler</h2>
-<select id="motif" style="width:100%;padding:12px;border-radius:10px">
+
+<select
+ id="motif"
+ style="width:100%;padding:12px;border-radius:10px"
+>
+
 <option value="faux_profil">Faux profil</option>
-<option value="harcelement">Harcèlement ou comportement déplacé</option>
-<option value="comportement_inapproprie">Contenu ou comportement inapproprié</option>
-<option value="profil_suspect">Profil ou comportement suspect</option>
-<option value="autre">Autre raison</option>
+<option value="harcelement">
+Harcèlement ou comportement déplacé
+</option>
+<option value="comportement_inapproprie">
+Contenu ou comportement inapproprié
+</option>
+<option value="profil_suspect">
+Profil ou comportement suspect
+</option>
+<option value="autre">
+Autre raison
+</option>
+
 </select>
+
 <div class="modal-actions">
-<button class="secondary" onclick="fermerModal('signalementModal')">Annuler</button>
-<button class="primary" id="btnSignaler" onclick="signaler()">Signaler</button>
+
+<button
+ class="secondary"
+ onclick="fermerModal('signalementModal')"
+>
+Annuler
+</button>
+
+<button
+ class="primary"
+ id="btnSignaler"
+ onclick="signaler()"
+>
+Signaler
+</button>
+
 </div>
+
 </div>
 </div>
 
 <!-- BLOQUER -->
 <div class="modal" id="blocageModal">
+
 <div class="modal-box">
+
 <h2>🚫 Bloquer</h2>
-<p>Voulez-vous vraiment bloquer cette personne ? Vous ne verrez plus votre conversation avec elle.</p>
+
+<p>
+Voulez-vous vraiment bloquer cette personne ?
+Vous ne verrez plus votre conversation avec elle.
+</p>
+
 <div class="modal-actions">
-<button class="secondary" onclick="fermerModal('blocageModal')">Annuler</button>
-<button class="primary" id="btnBloquer" onclick="confirmerBlocage()">Bloquer</button>
+
+<button
+ class="secondary"
+ onclick="fermerModal('blocageModal')"
+>
+Annuler
+</button>
+
+<button
+ class="primary"
+ id="btnBloquer"
+ onclick="confirmerBlocage()"
+>
+Bloquer
+</button>
+
 </div>
+
 </div>
 </div>
 
 <nav class="bottom-nav">
-<a href="index.html">🏠<br>Accueil</a>
-<a href="explorer.html">🔎<br>Explorer</a>
-<a href="messagerie.html" class="active">💬<br>Messagerie</a>
-<a href="profil.html">👤<br>Profil</a>
+
+<a href="index.html">
+🏠<br>Accueil
+</a>
+
+<a href="explorer.html">
+🔎<br>Explorer
+</a>
+
+<a href="messagerie.html" class="active">
+💬<br>Messagerie
+</a>
+
+<a href="profil.html">
+👤<br>Profil
+</a>
+
 </nav>
-<!-- SDK APPWRITE (CDN) -->
+
+<!-- SDK APPWRITE -->
 <script src="https://cdn.jsdelivr.net/npm/appwrite@20.0.0"></script>
 
 <script>
 
-/* ========================================== CONFIGURATION ========================================== */
+/* ==========================================
+   CONFIGURATION
+========================================== */
 
 const APPWRITE_ENDPOINT = "https://fra.cloud.appwrite.io/v1";
 const APPWRITE_PROJECT_ID = "6aac203e00209ccb3014";
@@ -287,13 +417,22 @@ const TABLE_MESSAGES = "messages";
 const TABLE_SIGNALEMENTS = "signalements";
 const TABLE_BLOCAGES = "blocages";
 
+
+/* ==========================================
+   APPWRITE
+========================================== */
+
 const client = new Appwrite.Client();
-client.setEndpoint(APPWRITE_ENDPOINT).setProject(APPWRITE_PROJECT_ID);
+
+client
+  .setEndpoint(APPWRITE_ENDPOINT)
+  .setProject(APPWRITE_PROJECT_ID);
 
 const account = new Appwrite.Account(client);
 const tablesDB = new Appwrite.TablesDB(client);
 const storage = new Appwrite.Storage(client);
 const functions = new Appwrite.Functions(client);
+
 
 let utilisateurConnecte = null;
 let paysDisponibles = [];
@@ -305,14 +444,26 @@ let peerActuel = null;
 let messagesActuels = [];
 
 
-/* ========================================== PERMISSIONS (texte brut) ========================================== */
+/* ==========================================
+   PERMISSIONS
+========================================== */
 
-function permLireUtilisateur(id) { return 'read("user:' + id + '")'; }
-function permModifierUtilisateur(id) { return 'update("user:' + id + '")'; }
-function permLireEquipe(id) { return 'read("team:' + id + '")'; }
+function permLireUtilisateur(id) {
+  return 'read("user:' + id + '")';
+}
+
+function permModifierUtilisateur(id) {
+  return 'update("user:' + id + '")';
+}
+
+function permLireEquipe(id) {
+  return 'read("team:' + id + '")';
+}
 
 
-/* ========================================== APPEL À LA FONCTION BACKEND ========================================== */
+/* ==========================================
+   APPEL FONCTION BACKEND
+========================================== */
 
 async function appelerFonction(donnees) {
 
@@ -331,79 +482,144 @@ async function appelerFonction(donnees) {
   }
 
   if (!resultat.ok) {
-    throw new Error(resultat.message || "Une erreur est survenue.");
+    throw new Error(
+      resultat.message || "Une erreur est survenue."
+    );
   }
 
   return resultat;
-
 }
 
 
-/* ========================================== PAYS / VILLES / PROFILS ========================================== */
+/* ==========================================
+   PAYS / VILLES / PROFILS
+========================================== */
 
 async function chargerPaysEtVilles() {
+
   try {
+
     const reponsePays = await tablesDB.listRows({
-      databaseId: APPWRITE_DATABASE_ID, tableId: TABLE_PAYS,
-      queries: [Appwrite.Query.limit(50)]
+      databaseId: APPWRITE_DATABASE_ID,
+      tableId: TABLE_PAYS,
+      queries: [
+        Appwrite.Query.limit(50)
+      ]
     });
+
     paysDisponibles = reponsePays.rows;
 
+
     const reponseVilles = await tablesDB.listRows({
-      databaseId: APPWRITE_DATABASE_ID, tableId: TABLE_VILLES,
-      queries: [Appwrite.Query.limit(200)]
+      databaseId: APPWRITE_DATABASE_ID,
+      tableId: TABLE_VILLES,
+      queries: [
+        Appwrite.Query.limit(200)
+      ]
     });
+
     villesDisponibles = reponseVilles.rows;
+
   } catch (erreur) {
-    console.error("Erreur chargement pays/villes :", erreur);
+
+    console.error(
+      "Erreur chargement pays/villes :",
+      erreur
+    );
+
   }
+
 }
 
+
 function nomPays(paysId) {
-  const p = paysDisponibles.find(x => x.$id === paysId);
+
+  const p = paysDisponibles.find(
+    x => x.$id === paysId
+  );
+
   return p ? p.nom : "";
 }
 
+
 function nomVille(villeId) {
-  const v = villesDisponibles.find(x => x.$id === villeId);
+
+  const v = villesDisponibles.find(
+    x => x.$id === villeId
+  );
+
   return v ? v.nom : "";
 }
 
+
 async function chargerProfilParUserId(userId) {
 
-  if (profilsCache[userId]) return profilsCache[userId];
+  if (profilsCache[userId]) {
+    return profilsCache[userId];
+  }
 
   try {
+
     const reponse = await tablesDB.listRows({
-      databaseId: APPWRITE_DATABASE_ID, tableId: TABLE_PROFILS,
-      queries: [Appwrite.Query.equal("userId", userId), Appwrite.Query.limit(1)]
+      databaseId: APPWRITE_DATABASE_ID,
+      tableId: TABLE_PROFILS,
+      queries: [
+        Appwrite.Query.equal("userId", userId),
+        Appwrite.Query.limit(1)
+      ]
     });
 
-    const profil = reponse.total > 0 ? reponse.rows[0] : null;
+    const profil =
+      reponse.total > 0
+        ? reponse.rows[0]
+        : null;
+
     profilsCache[userId] = profil;
+
     return profil;
 
   } catch (erreur) {
-    console.error("Erreur chargement profil :", erreur);
+
+    console.error(
+      "Erreur chargement profil :",
+      erreur
+    );
+
     return null;
   }
+
 }
+
 
 function urlPhoto(photoId) {
-  if (!photoId) return "https://via.placeholder.com/200/E0F7EE/087557?text=Afrilova";
-  return storage.getFileView({ bucketId: APPWRITE_BUCKET_PHOTOS, fileId: photoId });
+
+  if (!photoId) {
+    return "https://via.placeholder.com/200/E0F7EE/087557?text=Afrilova";
+  }
+
+  return storage.getFileView({
+    bucketId: APPWRITE_BUCKET_PHOTOS,
+    fileId: photoId
+  });
+
 }
 
 
-/* ========================================== ÉTAT DE CONNEXION ========================================== */
+/* ==========================================
+   ÉTAT DE CONNEXION
+========================================== */
 
 async function chargerEtatConnexion() {
 
   try {
+
     utilisateurConnecte = await account.get();
 
-    document.getElementById("notConnecte").style.display = "none";
-    document.getElementById("contenuMessagerie").style.display = "block";
+    document.getElementById("notConnecte").style.display =
+      "none";
+
+    document.getElementById("contenuMessagerie").style.display =
+      "block";
 
     await chargerSoldePoints();
     await chargerBlocagesEmis();
@@ -412,199 +628,508 @@ async function chargerEtatConnexion() {
 
   } catch (erreur) {
 
-    document.getElementById("notConnecte").style.display = "block";
-    document.getElementById("contenuMessagerie").style.display = "none";
+    console.error(
+      "Erreur état connexion :",
+      erreur
+    );
+
+    document.getElementById("notConnecte").style.display =
+      "block";
+
+    document.getElementById("contenuMessagerie").style.display =
+      "none";
 
   }
 
 }
+
 
 async function chargerSoldePoints() {
+
   try {
+
     const reponse = await tablesDB.listRows({
-      databaseId: APPWRITE_DATABASE_ID, tableId: TABLE_POINTS,
-      queries: [Appwrite.Query.equal("userId", utilisateurConnecte.$id), Appwrite.Query.limit(1)]
+      databaseId: APPWRITE_DATABASE_ID,
+      tableId: TABLE_POINTS,
+      queries: [
+        Appwrite.Query.equal(
+          "userId",
+          utilisateurConnecte.$id
+        ),
+        Appwrite.Query.limit(1)
+      ]
     });
-    const solde = reponse.total > 0 ? reponse.rows[0].solde : 0;
-    document.getElementById("points").textContent = solde || 0;
+
+    const solde =
+      reponse.total > 0
+        ? reponse.rows[0].solde
+        : 0;
+
+    document.getElementById("points").textContent =
+      solde || 0;
+
   } catch (erreur) {
+
     document.getElementById("points").textContent = 0;
+
   }
+
 }
 
 
-/* ========================================== ONGLETS ========================================== */
+/* ==========================================
+   ONGLETS
+========================================== */
 
 function afficherOnglet(onglet) {
-  document.getElementById("demandes").style.display = onglet === "demandes" ? "block" : "none";
-  document.getElementById("discussions").style.display = onglet === "discussions" ? "block" : "none";
-  document.getElementById("tabDemandes").classList.toggle("active", onglet === "demandes");
-  document.getElementById("tabDiscussions").classList.toggle("active", onglet === "discussions");
+
+  document.getElementById("demandes").style.display =
+    onglet === "demandes"
+      ? "block"
+      : "none";
+
+  document.getElementById("discussions").style.display =
+    onglet === "discussions"
+      ? "block"
+      : "none";
+
+  document.getElementById("tabDemandes")
+    .classList.toggle(
+      "active",
+      onglet === "demandes"
+    );
+
+  document.getElementById("tabDiscussions")
+    .classList.toggle(
+      "active",
+      onglet === "discussions"
+    );
+
 }
 
 
-/* ========================================== BLOCAGES ÉMIS ========================================== */
+/* ==========================================
+   BLOCAGES ÉMIS
+========================================== */
 
 async function chargerBlocagesEmis() {
+
   try {
+
     const reponse = await tablesDB.listRows({
-      databaseId: APPWRITE_DATABASE_ID, tableId: TABLE_BLOCAGES,
-      queries: [Appwrite.Query.equal("bloqueurId", utilisateurConnecte.$id), Appwrite.Query.limit(100)]
+      databaseId: APPWRITE_DATABASE_ID,
+      tableId: TABLE_BLOCAGES,
+      queries: [
+        Appwrite.Query.equal(
+          "bloqueurId",
+          utilisateurConnecte.$id
+        ),
+        Appwrite.Query.limit(100)
+      ]
     });
-    blocagesEmis = reponse.rows.map(b => b.bloqueId);
+
+    blocagesEmis =
+      reponse.rows.map(
+        b => b.bloqueId
+      );
+
   } catch (erreur) {
+
     blocagesEmis = [];
+
   }
+
 }
 
 
-/* ========================================== DEMANDES ========================================== */
+/* ==========================================
+   DEMANDES
+   VERSION DE TEST
+========================================== */
 
 async function chargerDemandes() {
 
-  const section = document.getElementById("demandes");
+  const section =
+    document.getElementById("demandes");
 
   try {
 
+    console.log(
+      "ID utilisateur connecté :",
+      utilisateurConnecte.$id
+    );
+
+
     const reponse = await tablesDB.listRows({
-      databaseId: APPWRITE_DATABASE_ID, tableId: TABLE_DEMANDES,
+      databaseId: APPWRITE_DATABASE_ID,
+      tableId: TABLE_DEMANDES,
       queries: [
-        Appwrite.Query.equal("destinataireId", utilisateurConnecte.$id),
-        Appwrite.Query.equal("statut", "en_attente"),
+        Appwrite.Query.equal(
+          "destinataireId",
+          utilisateurConnecte.$id
+        ),
         Appwrite.Query.limit(50)
       ]
     });
 
-    if (reponse.total === 0) {
-      section.innerHTML = `<div class="empty">Aucune nouvelle demande pour le moment.</div>`;
+
+    console.log(
+      "Demandes trouvées :",
+      reponse.total
+    );
+
+    console.log(
+      "Demandes :",
+      reponse.rows
+    );
+
+
+    const demandesEnAttente =
+      reponse.rows.filter(function(demande) {
+
+        return demande.statut === "en_attente";
+
+      });
+
+
+    console.log(
+      "Demandes en attente :",
+      demandesEnAttente.length
+    );
+
+
+    if (demandesEnAttente.length === 0) {
+
+      section.innerHTML = `
+        <div class="empty">
+          Aucune nouvelle demande pour le moment.
+        </div>
+      `;
+
       return;
     }
 
+
     let html = "";
 
-    for (const demande of reponse.rows) {
 
-      const profil = await chargerProfilParUserId(demande.expediteurId);
-      const nom = profil ? profil.nom : "Utilisateur";
-      const age = profil && profil.age ? ", " + profil.age + " ans" : "";
-      const lieu = profil ? nomVille(profil.villeId) + ", " + nomPays(profil.paysId) : "";
-      const photo = profil ? urlPhoto(profil.photoPrincipale) : urlPhoto(null);
+    for (const demande of demandesEnAttente) {
+
+      const profil =
+        await chargerProfilParUserId(
+          demande.expediteurId
+        );
+
+
+      const nom =
+        profil
+          ? profil.nom
+          : "Utilisateur";
+
+
+      const age =
+        profil && profil.age
+          ? ", " + profil.age + " ans"
+          : "";
+
+
+      const lieu =
+        profil
+          ? nomVille(profil.villeId)
+            + ", "
+            + nomPays(profil.paysId)
+          : "";
+
+
+      const photo =
+        profil
+          ? urlPhoto(profil.photoPrincipale)
+          : urlPhoto(null);
+
 
       html += `
-        <div class="card" id="demande-${demande.$id}">
+        <div
+          class="card"
+          id="demande-${demande.$id}"
+        >
+
           <div class="person">
-            <img class="avatar" src="${photo}" alt="${nom}">
+
+            <img
+              class="avatar"
+              src="${photo}"
+              alt="${nom}"
+            >
+
             <div class="info">
+
               <strong>${nom}</strong>${age}<br>
+
               ${lieu}
+
             </div>
+
           </div>
+
+
           <div class="actions">
-            <button class="accept" onclick="accepterDemande('${demande.$id}','${demande.expediteurId}',this)">✓ Accepter</button>
-            <button class="refuse" onclick="refuserDemande('${demande.$id}',this)">✕ Refuser</button>
+
+            <button
+              class="accept"
+              onclick="accepterDemande(
+                '${demande.$id}',
+                '${demande.expediteurId}',
+                this
+              )"
+            >
+              ✓ Accepter
+            </button>
+
+
+            <button
+              class="refuse"
+              onclick="refuserDemande(
+                '${demande.$id}',
+                this
+              )"
+            >
+              ✕ Refuser
+            </button>
+
           </div>
+
         </div>
       `;
 
     }
 
+
     section.innerHTML = html;
 
+
   } catch (erreur) {
-    console.error("Erreur chargement demandes :", erreur);
-    section.innerHTML = `<div class="empty">Impossible de charger les demandes.</div>`;
+
+    console.error(
+      "Erreur chargement demandes :",
+      erreur
+    );
+
+    section.innerHTML = `
+      <div class="empty">
+        Impossible de charger les demandes.
+      </div>
+    `;
+
   }
 
 }
 
-async function accepterDemande(demandeId, expediteurId, boutonElement) {
 
-  const carte = boutonElement.closest(".card");
-  carte.querySelectorAll("button").forEach(b => b.disabled = true);
+/* ==========================================
+   ACCEPTATION DEMANDE
+========================================== */
+
+async function accepterDemande(
+  demandeId,
+  expediteurId,
+  boutonElement
+) {
+
+  const carte =
+    boutonElement.closest(".card");
+
+  carte
+    .querySelectorAll("button")
+    .forEach(
+      b => b.disabled = true
+    );
+
 
   try {
 
     await tablesDB.updateRow({
-      databaseId: APPWRITE_DATABASE_ID, tableId: TABLE_DEMANDES, rowId: demandeId,
-      data: { statut: "accepte", dateReponse: new Date().toISOString() }
+      databaseId: APPWRITE_DATABASE_ID,
+      tableId: TABLE_DEMANDES,
+      rowId: demandeId,
+      data: {
+        statut: "accepte",
+        dateReponse:
+          new Date().toISOString()
+      }
     });
 
-    await creerOuRecupererConversation(expediteurId);
+
+    await creerOuRecupererConversation(
+      expediteurId
+    );
+
 
     carte.remove();
+
     await chargerDiscussions();
-    alert("Demande acceptée. La conversation est disponible dans « Mes discussions ».");
+
+
+    alert(
+      "Demande acceptée. La conversation est disponible dans « Mes discussions »."
+    );
+
 
   } catch (erreur) {
-    console.error("Erreur acceptation demande :", erreur);
-    alert("Impossible d'accepter cette demande pour le moment : " + erreur.message);
-    carte.querySelectorAll("button").forEach(b => b.disabled = false);
+
+    console.error(
+      "Erreur acceptation demande :",
+      erreur
+    );
+
+    alert(
+      "Impossible d'accepter cette demande pour le moment : "
+      + erreur.message
+    );
+
+    carte
+      .querySelectorAll("button")
+      .forEach(
+        b => b.disabled = false
+      );
+
   }
 
 }
 
-async function refuserDemande(demandeId, boutonElement) {
 
-  const carte = boutonElement.closest(".card");
-  carte.querySelectorAll("button").forEach(b => b.disabled = true);
+async function refuserDemande(
+  demandeId,
+  boutonElement
+) {
+
+  const carte =
+    boutonElement.closest(".card");
+
+  carte
+    .querySelectorAll("button")
+    .forEach(
+      b => b.disabled = true
+    );
+
 
   try {
 
     await tablesDB.updateRow({
-      databaseId: APPWRITE_DATABASE_ID, tableId: TABLE_DEMANDES, rowId: demandeId,
-      data: { statut: "refuse", dateReponse: new Date().toISOString() }
+      databaseId: APPWRITE_DATABASE_ID,
+      tableId: TABLE_DEMANDES,
+      rowId: demandeId,
+      data: {
+        statut: "refuse",
+        dateReponse:
+          new Date().toISOString()
+      }
     });
+
 
     carte.remove();
 
+
   } catch (erreur) {
-    console.error("Erreur refus demande :", erreur);
-    alert("Impossible de refuser cette demande pour le moment.");
-    carte.querySelectorAll("button").forEach(b => b.disabled = false);
+
+    console.error(
+      "Erreur refus demande :",
+      erreur
+    );
+
+    alert(
+      "Impossible de refuser cette demande pour le moment."
+    );
+
+    carte
+      .querySelectorAll("button")
+      .forEach(
+        b => b.disabled = false
+      );
+
   }
 
 }
 
 
-/* ========================================== CONVERSATIONS (via la fonction backend) ========================================== */
-
+/* ==========================================
+   CONVERSATIONS
+========================================== */
 async function creerOuRecupererConversation(peerId) {
 
-  const resultat = await appelerFonction({
-    action: "creerConversation",
-    peerId: peerId
-  });
+  const resultat =
+    await appelerFonction({
+      action: "creerConversation",
+      peerId: peerId
+    });
 
   return resultat.conversation;
 
 }
 
+
+/* ==========================================
+   CHARGEMENT DES DISCUSSIONS
+========================================== */
+
 async function chargerDiscussions() {
 
-  const section = document.getElementById("discussions");
-  const moi = utilisateurConnecte.$id;
+  const section =
+    document.getElementById("discussions");
+
+  const moi =
+    utilisateurConnecte.$id;
 
   try {
 
-    const q1 = await tablesDB.listRows({
-      databaseId: APPWRITE_DATABASE_ID, tableId: TABLE_CONVERSATIONS,
-      queries: [Appwrite.Query.equal("utilisateur1Id", moi), Appwrite.Query.limit(100)]
-    });
+    const q1 =
+      await tablesDB.listRows({
+        databaseId: APPWRITE_DATABASE_ID,
+        tableId: TABLE_CONVERSATIONS,
+        queries: [
+          Appwrite.Query.equal(
+            "utilisateur1Id",
+            moi
+          ),
+          Appwrite.Query.limit(100)
+        ]
+      });
 
-    const q2 = await tablesDB.listRows({
-      databaseId: APPWRITE_DATABASE_ID, tableId: TABLE_CONVERSATIONS,
-      queries: [Appwrite.Query.equal("utilisateur2Id", moi), Appwrite.Query.limit(100)]
-    });
+    const q2 =
+      await tablesDB.listRows({
+        databaseId: APPWRITE_DATABASE_ID,
+        tableId: TABLE_CONVERSATIONS,
+        queries: [
+          Appwrite.Query.equal(
+            "utilisateur2Id",
+            moi
+          ),
+          Appwrite.Query.limit(100)
+        ]
+      });
 
-    let conversations = q1.rows.concat(q2.rows);
+    let conversations =
+      q1.rows.concat(q2.rows);
 
-    conversations = conversations.filter(function (conv) {
-      const peerId = conv.utilisateur1Id === moi ? conv.utilisateur2Id : conv.utilisateur1Id;
-      return !blocagesEmis.includes(peerId);
-    });
+    conversations =
+      conversations.filter(function(conv) {
+
+        const peerId =
+          conv.utilisateur1Id === moi
+            ? conv.utilisateur2Id
+            : conv.utilisateur1Id;
+
+        return !blocagesEmis.includes(peerId);
+
+      });
 
     if (conversations.length === 0) {
-      section.innerHTML = `<div class="empty">Vous n'avez pas encore de discussion.</div>`;
+
+      section.innerHTML = `
+        <div class="empty">
+          Vous n'avez pas encore de discussion.
+        </div>
+      `;
+
       return;
     }
 
@@ -612,23 +1137,67 @@ async function chargerDiscussions() {
 
     for (const conv of conversations) {
 
-      const peerId = conv.utilisateur1Id === moi ? conv.utilisateur2Id : conv.utilisateur1Id;
-      const profil = await chargerProfilParUserId(peerId);
-      const nom = profil ? profil.nom : "Utilisateur";
-      const age = profil && profil.age ? ", " + profil.age + " ans" : "";
-      const lieu = profil ? nomVille(profil.villeId) + ", " + nomPays(profil.paysId) : "";
-      const photo = profil ? urlPhoto(profil.photoPrincipale) : urlPhoto(null);
+      const peerId =
+        conv.utilisateur1Id === moi
+          ? conv.utilisateur2Id
+          : conv.utilisateur1Id;
+
+      const profil =
+        await chargerProfilParUserId(peerId);
+
+      const nom =
+        profil
+          ? profil.nom
+          : "Utilisateur";
+
+      const age =
+        profil && profil.age
+          ? ", " + profil.age + " ans"
+          : "";
+
+      const lieu =
+        profil
+          ? nomVille(profil.villeId)
+            + ", "
+            + nomPays(profil.paysId)
+          : "";
+
+      const photo =
+        profil
+          ? urlPhoto(profil.photoPrincipale)
+          : urlPhoto(null);
 
       html += `
-        <div class="card" onclick="ouvrirConversation('${conv.$id}','${peerId}')">
+        <div
+          class="card"
+          onclick="ouvrirConversation(
+            '${conv.$id}',
+            '${peerId}'
+          )"
+        >
+
           <div class="person">
-            <img class="avatar" src="${photo}" alt="${nom}">
+
+            <img
+              class="avatar"
+              src="${photo}"
+              alt="${nom}"
+            >
+
             <div class="info">
+
               <strong>${nom}</strong>${age}<br>
+
               ${lieu}
+
             </div>
+
           </div>
-          <p>Appuyez pour ouvrir la conversation.</p>
+
+          <p>
+            Appuyez pour ouvrir la conversation.
+          </p>
+
         </div>
       `;
 
@@ -637,384 +1206,882 @@ async function chargerDiscussions() {
     section.innerHTML = html;
 
   } catch (erreur) {
-    console.error("Erreur chargement discussions :", erreur);
-    section.innerHTML = `<div class="empty">Impossible de charger vos discussions.</div>`;
+
+    console.error(
+      "Erreur chargement discussions :",
+      erreur
+    );
+
+    section.innerHTML = `
+      <div class="empty">
+        Impossible de charger vos discussions.
+      </div>
+    `;
+
   }
 
 }
 
 
-/* ========================================== CHAT ========================================== */
+/* ==========================================
+   CHAT
+========================================== */
 
-async function ouvrirConversation(conversationId, peerId) {
+async function ouvrirConversation(
+  conversationId,
+  peerId
+) {
 
-  conversationActuelle = conversationId;
-  peerActuel = peerId;
+  conversationActuelle =
+    conversationId;
 
-  const profil = await chargerProfilParUserId(peerId);
+  peerActuel =
+    peerId;
 
-  document.getElementById("nomChat").textContent = profil ? profil.nom : "Utilisateur";
-  document.getElementById("lieuChat").textContent = profil ? nomVille(profil.villeId) : "";
+  const profil =
+    await chargerProfilParUserId(peerId);
 
-  document.getElementById("preview").innerHTML = "";
-  document.getElementById("photos").value = "";
+  document.getElementById("nomChat").textContent =
+    profil
+      ? profil.nom
+      : "Utilisateur";
 
-  document.getElementById("chatArea").style.display = "block";
+  document.getElementById("lieuChat").textContent =
+    profil
+      ? nomVille(profil.villeId)
+      : "";
+
+  document.getElementById("preview").innerHTML =
+    "";
+
+  document.getElementById("photos").value =
+    "";
+
+  document.getElementById("chatArea").style.display =
+    "block";
 
   await chargerMessages();
 
 }
 
+
 function fermerChat() {
-  document.getElementById("chatArea").style.display = "none";
+
+  document.getElementById("chatArea").style.display =
+    "none";
+
   conversationActuelle = null;
   peerActuel = null;
   messagesActuels = [];
+
 }
+
 
 async function chargerMessages() {
 
-  const zone = document.getElementById("messages");
-  zone.innerHTML = `<div class="empty">Chargement...</div>`;
+  const zone =
+    document.getElementById("messages");
+
+  zone.innerHTML =
+    `<div class="empty">Chargement...</div>`;
 
   try {
 
-    const reponse = await tablesDB.listRows({
-      databaseId: APPWRITE_DATABASE_ID, tableId: TABLE_MESSAGES,
-      queries: [
-        Appwrite.Query.equal("conversationId", conversationActuelle),
-        Appwrite.Query.orderAsc("dateEnvoi"),
-        Appwrite.Query.limit(200)
-      ]
-    });
+    const reponse =
+      await tablesDB.listRows({
+        databaseId: APPWRITE_DATABASE_ID,
+        tableId: TABLE_MESSAGES,
+        queries: [
 
-    messagesActuels = reponse.rows;
+          Appwrite.Query.equal(
+            "conversationId",
+            conversationActuelle
+          ),
+
+          Appwrite.Query.orderAsc(
+            "dateEnvoi"
+          ),
+
+          Appwrite.Query.limit(200)
+
+        ]
+      });
+
+    messagesActuels =
+      reponse.rows;
+
     afficherMessages();
 
   } catch (erreur) {
-    console.error("Erreur chargement messages :", erreur);
-    zone.innerHTML = `<div class="empty">Impossible de charger les messages.</div>`;
+
+    console.error(
+      "Erreur chargement messages :",
+      erreur
+    );
+
+    zone.innerHTML =
+      `<div class="empty">
+        Impossible de charger les messages.
+      </div>`;
+
   }
 
 }
+
 
 function afficherMessages() {
 
-  const zone = document.getElementById("messages");
-  const moi = utilisateurConnecte.$id;
+  const zone =
+    document.getElementById("messages");
+
+  const moi =
+    utilisateurConnecte.$id;
 
   if (messagesActuels.length === 0) {
-    zone.innerHTML = `<div class="empty">Dites bonjour 👋</div>`;
+
+    zone.innerHTML =
+      `<div class="empty">
+        Dites bonjour 👋
+      </div>`;
+
     return;
+
   }
 
-  zone.innerHTML = messagesActuels.map(function (m) {
+  zone.innerHTML =
+    messagesActuels
+      .map(function(m) {
 
-    const classe = m.expediteurId === moi ? "sent" : "received";
-    let contenuHTML = "";
+        const classe =
+          m.expediteurId === moi
+            ? "sent"
+            : "received";
 
-    if (m.photoId) {
-      contenuHTML += `<img src="${urlPhoto(m.photoId)}" alt="Photo">`;
-    }
+        let contenuHTML = "";
 
-    if (m.contenu) {
-      contenuHTML += `<div>${m.contenu}</div>`;
-    }
+        if (m.photoId) {
 
-    return `<div class="msg ${classe}">${contenuHTML}</div>`;
+          contenuHTML +=
+            `<img
+              src="${urlPhoto(m.photoId)}"
+              alt="Photo"
+            >`;
 
-  }).join("");
+        }
 
-  zone.scrollTop = zone.scrollHeight;
+        if (m.contenu) {
+
+          contenuHTML +=
+            `<div>${m.contenu}</div>`;
+
+        }
+
+        return `
+          <div class="msg ${classe}">
+            ${contenuHTML}
+          </div>
+        `;
+
+      })
+      .join("");
+
+  zone.scrollTop =
+    zone.scrollHeight;
 
 }
 
+
+/* ==========================================
+   ENVOYER MESSAGE
+========================================== */
+
 async function envoyerMessage() {
 
-  const input = document.getElementById("messageInput");
-  const texte = input.value.trim();
-  if (!texte || !conversationActuelle) return;
+  const input =
+    document.getElementById("messageInput");
+
+  const texte =
+    input.value.trim();
+
+  if (
+    !texte ||
+    !conversationActuelle
+  ) {
+    return;
+  }
 
   input.value = "";
 
   try {
 
     await appelerFonction({
+
       action: "envoyerMessage",
-      conversationId: conversationActuelle,
-      peerId: peerActuel,
-      contenu: texte
+
+      conversationId:
+        conversationActuelle,
+
+      peerId:
+        peerActuel,
+
+      contenu:
+        texte
+
     });
 
     await chargerMessages();
 
   } catch (erreur) {
-    console.error("Erreur envoi message :", erreur);
-    alert("Le message n'a pas pu être envoyé : " + erreur.message);
+
+    console.error(
+      "Erreur envoi message :",
+      erreur
+    );
+
+    alert(
+      "Le message n'a pas pu être envoyé : "
+      + erreur.message
+    );
+
   }
 
 }
 
 
-/* ========================================== PHOTOS DANS LE CHAT (via la fonction backend) ========================================== */
+/* ==========================================
+   PHOTOS DANS LE CHAT
+========================================== */
 
-function compresserImage(fichier, tailleMaxOctets, largeurMax) {
+function compresserImage(
+  fichier,
+  tailleMaxOctets,
+  largeurMax
+) {
 
-  tailleMaxOctets = tailleMaxOctets || 500000;
-  largeurMax = largeurMax || 1024;
+  tailleMaxOctets =
+    tailleMaxOctets || 500000;
 
-  return new Promise(function (resolve, reject) {
+  largeurMax =
+    largeurMax || 1024;
 
-    const lecteur = new FileReader();
+  return new Promise(
+    function(resolve, reject) {
 
-    lecteur.onload = function (e) {
+      const lecteur =
+        new FileReader();
 
-      const image = new Image();
+      lecteur.onload =
+        function(e) {
 
-      image.onload = function () {
+          const image =
+            new Image();
 
-        let largeur = image.width;
-        let hauteur = image.height;
+          image.onload =
+            function() {
 
-        if (largeur > largeurMax) {
-          hauteur = Math.round((hauteur * largeurMax) / largeur);
-          largeur = largeurMax;
-        }
+              let largeur =
+                image.width;
 
-        const canvas = document.createElement("canvas");
-        canvas.width = largeur;
-        canvas.height = hauteur;
+              let hauteur =
+                image.height;
 
-        const contexte = canvas.getContext("2d");
-        contexte.drawImage(image, 0, 0, largeur, hauteur);
+              if (
+                largeur >
+                largeurMax
+              ) {
 
-        essayerQualite(canvas, 0.85);
+                hauteur =
+                  Math.round(
+                    (hauteur * largeurMax)
+                    / largeur
+                  );
 
-      };
+                largeur =
+                  largeurMax;
 
-      image.onerror = reject;
-      image.src = e.target.result;
+              }
 
-    };
+              const canvas =
+                document.createElement(
+                  "canvas"
+                );
 
-    lecteur.onerror = reject;
-    lecteur.readAsDataURL(fichier);
+              canvas.width =
+                largeur;
 
-    function essayerQualite(canvas, qualite) {
-      canvas.toBlob(function (blob) {
-        if (!blob) { reject(new Error("Compression impossible.")); return; }
-        if (blob.size <= tailleMaxOctets || qualite <= 0.4) {
-          resolve(new File([blob], "photo.jpg", { type: "image/jpeg" }));
-        } else {
-          essayerQualite(canvas, qualite - 0.1);
-        }
-      }, "image/jpeg", qualite);
+              canvas.height =
+                hauteur;
+
+              const contexte =
+                canvas.getContext("2d");
+
+              contexte.drawImage(
+                image,
+                0,
+                0,
+                largeur,
+                hauteur
+              );
+
+              essayerQualite(
+                canvas,
+                0.85
+              );
+
+            };
+
+          image.onerror =
+            reject;
+
+          image.src =
+            e.target.result;
+
+        };
+
+      lecteur.onerror =
+        reject;
+
+      lecteur.readAsDataURL(
+        fichier
+      );
+
+      function essayerQualite(
+        canvas,
+        qualite
+      ) {
+
+        canvas.toBlob(
+          function(blob) {
+
+            if (!blob) {
+
+              reject(
+                new Error(
+                  "Compression impossible."
+                )
+              );
+
+              return;
+
+            }
+
+            if (
+              blob.size <=
+              tailleMaxOctets
+              ||
+              qualite <= 0.4
+            ) {
+
+              resolve(
+                new File(
+                  [blob],
+                  "photo.jpg",
+                  {
+                    type:
+                      "image/jpeg"
+                  }
+                )
+              );
+
+            } else {
+
+              essayerQualite(
+                canvas,
+                qualite - 0.1
+              );
+
+            }
+
+          },
+          "image/jpeg",
+          qualite
+        );
+
+      }
+
     }
-
-  });
+  );
 
 }
+
 
 async function selectionnerPhotos(event) {
 
-  const fichiers = [...event.target.files];
-  if (fichiers.length === 0) return;
+  const fichiers =
+    [...event.target.files];
 
-  const photosExistantes = messagesActuels.filter(m => m.photoId).length;
-  const placesRestantes = 2 - photosExistantes;
-
-  if (placesRestantes <= 0) {
-    alert("2 photos maximum par conversation. Aucune place disponible.");
-    event.target.value = "";
+  if (
+    fichiers.length === 0
+  ) {
     return;
   }
 
-  const fichiersAEnvoyer = fichiers.slice(0, placesRestantes);
+  const photosExistantes =
+    messagesActuels.filter(
+      m => m.photoId
+    ).length;
 
-  if (fichiers.length > placesRestantes) {
-    alert("2 photos maximum par conversation. Seules les " + placesRestantes + " premières seront envoyées.");
+  const placesRestantes =
+    2 - photosExistantes;
+
+  if (
+    placesRestantes <= 0
+  ) {
+
+    alert(
+      "2 photos maximum par conversation. Aucune place disponible."
+    );
+
+    event.target.value =
+      "";
+
+    return;
+
   }
 
-  const preview = document.getElementById("preview");
-  preview.innerHTML = "";
+  const fichiersAEnvoyer =
+    fichiers.slice(
+      0,
+      placesRestantes
+    );
 
-  for (const fichier of fichiersAEnvoyer) {
+  if (
+    fichiers.length >
+    placesRestantes
+  ) {
 
-    const typesAutorises = ["image/jpeg", "image/png", "image/webp"];
+    alert(
+      "2 photos maximum par conversation. Seules les "
+      + placesRestantes
+      + " premières seront envoyées."
+    );
 
-    if (!typesAutorises.includes(fichier.type)) {
-      alert("Format non autorisé. Utilisez JPG, PNG ou WEBP.");
+  }
+
+  const preview =
+    document.getElementById(
+      "preview"
+    );
+
+  preview.innerHTML =
+    "";
+
+  for (
+    const fichier
+    of fichiersAEnvoyer
+  ) {
+
+    const typesAutorises = [
+      "image/jpeg",
+      "image/png",
+      "image/webp"
+    ];
+
+    if (
+      !typesAutorises.includes(
+        fichier.type
+      )
+    ) {
+
+      alert(
+        "Format non autorisé. Utilisez JPG, PNG ou WEBP."
+      );
+
       continue;
+
     }
 
     try {
 
-      let fichierFinal = fichier;
+      let fichierFinal =
+        fichier;
 
-      if (fichier.size > 500000) {
-        fichierFinal = await compresserImage(fichier);
+      if (
+        fichier.size >
+        500000
+      ) {
+
+        fichierFinal =
+          await compresserImage(
+            fichier
+          );
+
       }
 
-      const apercu = document.createElement("img");
-      apercu.src = URL.createObjectURL(fichierFinal);
-      preview.appendChild(apercu);
+      const apercu =
+        document.createElement(
+          "img"
+        );
 
-      const fichierUploade = await storage.createFile({
-        bucketId: APPWRITE_BUCKET_PHOTOS, fileId: Appwrite.ID.unique(), file: fichierFinal,
-        permissions: [
-          permLireUtilisateur(utilisateurConnecte.$id)
-        ]
-      });
+      apercu.src =
+        URL.createObjectURL(
+          fichierFinal
+        );
+
+      preview.appendChild(
+        apercu
+      );
+
+      const fichierUploade =
+        await storage.createFile({
+
+          bucketId:
+            APPWRITE_BUCKET_PHOTOS,
+
+          fileId:
+            Appwrite.ID.unique(),
+
+          file:
+            fichierFinal,
+
+          permissions: [
+            permLireUtilisateur(
+              utilisateurConnecte.$id
+            )
+          ]
+
+        });
 
       await appelerFonction({
-        action: "envoyerMessage",
-        conversationId: conversationActuelle,
-        peerId: peerActuel,
-        photoId: fichierUploade.$id
+
+        action:
+          "envoyerMessage",
+
+        conversationId:
+          conversationActuelle,
+
+        peerId:
+          peerActuel,
+
+        photoId:
+          fichierUploade.$id
+
       });
 
     } catch (erreur) {
-      console.error("Erreur envoi photo :", erreur);
-      alert("Une photo n'a pas pu être envoyée : " + erreur.message);
+
+      console.error(
+        "Erreur envoi photo :",
+        erreur
+      );
+
+      alert(
+        "Une photo n'a pas pu être envoyée : "
+        + erreur.message
+      );
+
     }
 
   }
 
-  event.target.value = "";
+  event.target.value =
+    "";
+
   await chargerMessages();
 
 }
 
 
-/* ========================================== AIDE À LA DISCUSSION ========================================== */
+/* ==========================================
+   AIDE À LA DISCUSSION
+========================================== */
 
 function ouvrirAide() {
-  document.getElementById("aideModal").style.display = "flex";
-  document.getElementById("helpResults").innerHTML = "";
-  document.getElementById("questionAide").focus();
+
+  document.getElementById(
+    "aideModal"
+  ).style.display =
+    "flex";
+
+  document.getElementById(
+    "helpResults"
+  ).innerHTML =
+    "";
+
+  document.getElementById(
+    "questionAide"
+  ).focus();
+
 }
+
 
 function demanderAide() {
 
-  const question = document.getElementById("questionAide").value.trim();
+  const question =
+    document.getElementById(
+      "questionAide"
+    ).value.trim();
 
   if (!question) {
-    alert("Écris d'abord ta question.");
+
+    alert(
+      "Écris d'abord ta question."
+    );
+
     return;
+
   }
 
-  document.getElementById("helpResults").innerHTML = `
+  document.getElementById(
+    "helpResults"
+  ).innerHTML = `
     <div class="suggestion">
-      💡 Cette fonctionnalité n'est pas encore connectée : elle nécessite un
-      traitement sécurisé côté serveur (la clé de l'IA ne peut jamais être
-      placée dans le site). Elle sera activée prochainement. En attendant,
-      vous pouvez écrire votre message directement.
+      💡 Cette fonctionnalité n'est pas encore connectée :
+      elle nécessite un traitement sécurisé côté serveur
+      (la clé de l'IA ne peut jamais être placée dans le site).
+      Elle sera activée prochainement.
+      En attendant, vous pouvez écrire votre message directement.
     </div>
   `;
 
 }
 
-/* ========================================== SIGNALEMENT ========================================== */
+
+/* ==========================================
+   SIGNALEMENT
+========================================== */
 
 function ouvrirSignalement() {
-  document.getElementById("signalementModal").style.display = "flex";
+
+  document.getElementById(
+    "signalementModal"
+  ).style.display =
+    "flex";
+
 }
+
 
 async function signaler() {
 
-  const bouton = document.getElementById("btnSignaler");
-  bouton.disabled = true;
+  const bouton =
+    document.getElementById(
+      "btnSignaler"
+    );
+
+  bouton.disabled =
+    true;
 
   try {
 
     await tablesDB.createRow({
-      databaseId: APPWRITE_DATABASE_ID, tableId: TABLE_SIGNALEMENTS, rowId: Appwrite.ID.unique(),
+
+      databaseId:
+        APPWRITE_DATABASE_ID,
+
+      tableId:
+        TABLE_SIGNALEMENTS,
+
+      rowId:
+        Appwrite.ID.unique(),
+
       data: {
-        signaleurId: utilisateurConnecte.$id,
-        signaleId: peerActuel,
-        conversationId: conversationActuelle,
-        motif: document.getElementById("motif").value,
-        dateCreation: new Date().toISOString()
+
+        signaleurId:
+          utilisateurConnecte.$id,
+
+        signaleId:
+          peerActuel,
+
+        conversationId:
+          conversationActuelle,
+
+        motif:
+          document.getElementById(
+            "motif"
+          ).value,
+
+        dateCreation:
+          new Date().toISOString()
+
       },
+
       permissions: [
-        permLireUtilisateur(utilisateurConnecte.$id)
+        permLireUtilisateur(
+          utilisateurConnecte.$id
+        )
       ]
+
     });
 
-    alert("Votre signalement a bien été enregistré. Notre équipe va l'examiner.");
-    fermerModal("signalementModal");
+    alert(
+      "Votre signalement a bien été enregistré. Notre équipe va l'examiner."
+    );
+
+    fermerModal(
+      "signalementModal"
+    );
 
   } catch (erreur) {
-    console.error("Erreur signalement :", erreur);
-    alert("Le signalement n'a pas pu être enregistré : " + erreur.message);
+
+    console.error(
+      "Erreur signalement :",
+      erreur
+    );
+
+    alert(
+      "Le signalement n'a pas pu être enregistré : "
+      + erreur.message
+    );
+
   } finally {
-    bouton.disabled = false;
+
+    bouton.disabled =
+      false;
+
   }
 
 }
 
 
-/* ========================================== BLOCAGE ========================================== */
+/* ==========================================
+   BLOCAGE
+========================================== */
 
 function ouvrirBlocage() {
-  document.getElementById("blocageModal").style.display = "flex";
+
+  document.getElementById(
+    "blocageModal"
+  ).style.display =
+    "flex";
+
 }
+
 
 async function confirmerBlocage() {
 
-  const bouton = document.getElementById("btnBloquer");
-  bouton.disabled = true;
+  const bouton =
+    document.getElementById(
+      "btnBloquer"
+    );
+
+  bouton.disabled =
+    true;
 
   try {
 
     await tablesDB.createRow({
-      databaseId: APPWRITE_DATABASE_ID, tableId: TABLE_BLOCAGES, rowId: Appwrite.ID.unique(),
+
+      databaseId:
+        APPWRITE_DATABASE_ID,
+
+      tableId:
+        TABLE_BLOCAGES,
+
+      rowId:
+        Appwrite.ID.unique(),
+
       data: {
-        bloqueurId: utilisateurConnecte.$id,
-        bloqueId: peerActuel,
-        dateCreation: new Date().toISOString()
+
+        bloqueurId:
+          utilisateurConnecte.$id,
+
+        bloqueId:
+          peerActuel,
+
+        dateCreation:
+          new Date().toISOString()
+
       },
+
       permissions: [
-        permLireUtilisateur(utilisateurConnecte.$id)
+        permLireUtilisateur(
+          utilisateurConnecte.$id
+        )
       ]
+
     });
 
-    blocagesEmis.push(peerActuel);
+    blocagesEmis.push(
+      peerActuel
+    );
 
-    alert("Cette personne a été bloquée.");
-    fermerModal("blocageModal");
+    alert(
+      "Cette personne a été bloquée."
+    );
+
+    fermerModal(
+      "blocageModal"
+    );
+
     fermerChat();
+
     await chargerDiscussions();
 
   } catch (erreur) {
-    console.error("Erreur blocage :", erreur);
-    alert("Le blocage n'a pas pu être enregistré : " + erreur.message);
+
+    console.error(
+      "Erreur blocage :",
+      erreur
+    );
+
+    alert(
+      "Le blocage n'a pas pu être enregistré : "
+      + erreur.message
+    );
+
   } finally {
-    bouton.disabled = false;
+
+    bouton.disabled =
+      false;
+
   }
 
 }
 
 
-/* ========================================== MODALES ========================================== */
+/* ==========================================
+   MODALES
+========================================== */
 
 function fermerModal(id) {
-  document.getElementById(id).style.display = "none";
+
+  document.getElementById(
+    id
+  ).style.display =
+    "none";
+
 }
 
-document.querySelectorAll(".modal").forEach(modal => {
-  modal.addEventListener("click", e => {
-    if (e.target === modal) modal.style.display = "none";
-  });
-});
+
+document
+  .querySelectorAll(".modal")
+  .forEach(
+    modal => {
+
+      modal.addEventListener(
+        "click",
+        e => {
+
+          if (
+            e.target === modal
+          ) {
+
+            modal.style.display =
+              "none";
+
+          }
+
+        }
+      );
+
+    }
+  );
 
 
-/* ========================================== INITIALISATION ========================================== */
+/* ==========================================
+   INITIALISATION
+========================================== */
 
-document.addEventListener("DOMContentLoaded", async function () {
-  await chargerPaysEtVilles();
-  await chargerEtatConnexion();
-});
+document.addEventListener(
+  "DOMContentLoaded",
+  async function() {
+
+    await chargerPaysEtVilles();
+
+    await chargerEtatConnexion();
+
+  }
+);
 
 </script>
 
