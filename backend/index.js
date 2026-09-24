@@ -108,7 +108,49 @@ export default async ({ req, res, log, error }) => {
       return res.json({ ok: true, message });
 
     }
+if (action === "creditPointInscription") {
 
+      const TABLE_PROFILS = "6aac2b35002a0debbb85";
+      const TABLE_POINTS = "points";
+
+      // 1. Le profil de l'utilisateur doit exister
+      const profils = await tablesDB.listRows({
+        databaseId: DATABASE_ID,
+        tableId: TABLE_PROFILS,
+        queries: [Query.equal("userId", userId), Query.limit(1)]
+      });
+
+      if (profils.total === 0) {
+        return res.json({ ok: false, message: "Créez d'abord votre profil." }, 400);
+      }
+
+      // 2. Un seul point par compte : l'identifiant de la ligne = userId
+      //    (un deuxième essai est refusé par Appwrite : conflit 409)
+      try {
+        await tablesDB.createRow({
+          databaseId: DATABASE_ID,
+          tableId: TABLE_POINTS,
+          rowId: userId,
+          data: {
+            userId: userId,
+            solde: 1,
+            dateModification: new Date().toISOString()
+          },
+          permissions: [
+            Permission.read(Role.user(userId)),
+            Permission.read(Role.team(ADMIN_TEAM_ID))
+          ]
+        });
+      } catch (e) {
+        if (e.code === 409) {
+          return res.json({ ok: true, dejaCredite: true });
+        }
+        throw e;
+      }
+
+      return res.json({ ok: true, dejaCredite: false, solde: 1 });
+
+}
     return res.json({ ok: false, message: "Action inconnue." }, 400);
 
   } catch (e) {
