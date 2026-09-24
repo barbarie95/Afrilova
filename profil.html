@@ -1307,7 +1307,7 @@ async function enregistrerProfil(event) {
     } else {
 
       donnees.userId = utilisateurConnecte.$id;
-      donnees.statut = "en_attente";
+      donnees.statut = "approuve";
       donnees.dateCreation = new Date().toISOString();
 
       await tablesDB.createRow({
