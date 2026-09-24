@@ -915,8 +915,7 @@ async function inscription(event) {
 
   try {
     await account.create({ userId: Appwrite.ID.unique(), email, password: motDePasse });
-    await account.createEmailPasswordSession({ email, password: motDePasse });
-    await envoyerEmailVerification();
+    await account.createEmailPasswordSession({ email, password: motDePasse })
     await chargerEtatConnexion();
   } catch (erreur) {
     afficherErreurAuth("authErrorInscription", erreur.message || "Impossible de créer le compte.");
@@ -1427,9 +1426,6 @@ async function chargerEtatConnexion() {
     document.getElementById("authSection").style.display = "none";
     document.getElementById("resetSection").style.display = "none";
     document.getElementById("profilConnecte").style.display = "block";
-
-    document.getElementById("verifyBanner").style.display =
-      utilisateurConnecte.emailVerification ? "none" : "block";
 
     await chargerSoldePoints(utilisateurConnecte.$id);
     await chargerProfilUtilisateur();
