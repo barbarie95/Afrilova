@@ -830,6 +830,8 @@ client.setEndpoint(APPWRITE_ENDPOINT).setProject(APPWRITE_PROJECT_ID);
 const account = new Appwrite.Account(client);
 const tablesDB = new Appwrite.TablesDB(client);
 const storage = new Appwrite.Storage(client);
+const functions = new Appwrite.Functions(client);
+const FUNCTION_ID = "6aaf8d3fdb99e41f0aaf";
 
 let utilisateurConnecte = null;
 let profilActuel = null;
@@ -1316,10 +1318,21 @@ async function enregistrerProfil(event) {
         data: donnees
       });
 
+      try {
+        await functions.createExecution({
+          functionId: FUNCTION_ID,
+          body: JSON.stringify({ action: "creditPointInscription" }),
+          method: "POST"
+        });
+      } catch (erreurPoint) {
+        console.error("Erreur crédit point :", erreurPoint);
+      }
+
     }
 
     photoFichierSelectionne = null;
     await chargerProfilUtilisateur();
+    await chargerSoldePoints(utilisateurConnecte.$id);
     fermerModal("editProfileModal");
     alert("Votre profil a été enregistré. Il sera visible après validation.");
 
