@@ -149,7 +149,96 @@ if (action === "creditPointInscription") {
       }
 
       return res.json({ ok: true, dejaCredite: false, solde: 1 });
+    if (action === "envoyerDemande") {
 
+      const TABLE_DEMANDES = "demandes";
+      const TABLE_POINTS = "points";
+
+      const { peerId } = payload;
+
+      if (!peerId) {
+        return res.json({ ok: false, message: "Destinataire manquant." }, 400);
+      }
+
+      if (peerId === userId) {
+        return res.json({ ok: false, message: "Vous ne pouvez pas vous envoyer une demande à vous-même." }, 400);
+      }
+
+      // 1. Vérifier qu'aucune demande en attente n'existe déjà entre les deux, dans un sens ou l'autre
+      const existante1 = await tablesDB.listRows({
+        databaseId: DATABASE_ID,
+        tableId: TABLE_DEMANDES,
+        queries: [
+          Query.equal("expediteurId", userId),
+          Query.equal("destinataireId", peerId),
+          Query.equal("statut", "en_attente"),
+          Query.limit(1)
+        ]
+      });
+      if (existante1.total > 0) {
+        return res.json({ ok: false, message: "Une demande est déjà en attente avec cette personne." }, 400);
+      }
+
+      const existante2 = await tablesDB.listRows({
+        databaseId: DATABASE_ID,
+        tableId: TABLE_DEMANDES,
+        queries: [
+          Query.equal("expediteurId", peerId),
+          Query.equal("destinataireId", userId),
+          Query.equal("statut", "en_attente"),
+          Query.limit(1)
+        ]
+      });
+      if (existante2.total > 0) {
+        return res.json({ ok: false, message: "Cette personne vous a déjà envoyé une demande. Consultez vos demandes." }, 400);
+      }
+
+      // 2. Vérifier le solde de points
+      const soldeRows = await tablesDB.listRows({
+        databaseId: DATABASE_ID,
+        tableId: TABLE_POINTS,
+        queries: [Query.equal("userId", userId), Query.limit(1)]
+      });
+
+      const solde = soldeRows.total > 0 ? soldeRows.rows[0].solde : 0;
+
+      if (solde < 1) {
+        return res.json({ ok: false, message: "Solde insuffisant. Achetez des points pour envoyer une demande." }, 400);
+      }
+
+      // 3. Retirer 1 point
+      await tablesDB.updateRow({
+        databaseId: DATABASE_ID,
+        tableId: TABLE_POINTS,
+        rowId: soldeRows.rows[0].$id,
+        data: {
+          solde: solde - 1,
+          dateModification: new Date().toISOString()
+        }
+      });
+
+      // 4. Créer la demande
+      const demande = await tablesDB.createRow({
+        databaseId: DATABASE_ID,
+        tableId: TABLE_DEMANDES,
+        rowId: ID.unique(),
+        data: {
+          expediteurId: userId,
+          destinataireId: peerId,
+          statut: "en_attente",
+          pointsDepenses: 1,
+          dateCreation: new Date().toISOString()
+        },
+        permissions: [
+          Permission.read(Role.user(userId)),
+          Permission.read(Role.user(peerId)),
+          Permission.update(Role.user(peerId))
+        ]
+      });
+
+      return res.json({ ok: true, demande });
+
+    }
 }
     return res.json({ ok: false, message: "Action inconnue." }, 400);
 
