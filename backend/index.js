@@ -108,7 +108,8 @@ export default async ({ req, res, log, error }) => {
       return res.json({ ok: true, message });
 
     }
-if (action === "creditPointInscription") {
+
+    if (action === "creditPointInscription") {
 
       const TABLE_PROFILS = "6aac2b35002a0debbb85";
       const TABLE_POINTS = "points";
@@ -149,6 +150,9 @@ if (action === "creditPointInscription") {
       }
 
       return res.json({ ok: true, dejaCredite: false, solde: 1 });
+
+    } // <-- fermeture ajoutée : fin du bloc creditPointInscription
+
     if (action === "envoyerDemande") {
 
       const TABLE_DEMANDES = "demandes";
@@ -239,7 +243,7 @@ if (action === "creditPointInscription") {
       return res.json({ ok: true, demande });
 
     }
-}
+
     return res.json({ ok: false, message: "Action inconnue." }, 400);
 
   } catch (e) {
