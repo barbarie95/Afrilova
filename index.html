@@ -306,7 +306,7 @@ header{
   </div>
 
   <div class="points">
-    ⭐ <span id="points">3</span> points
+    ⭐ <span id="points">-</span> points
   </div>
 
 </header>
@@ -326,7 +326,7 @@ header{
       Une personne, une rencontre, peut-être une belle histoire à écrire.
     </p>
 
-    <a href="voir-profil.html?id=${encodeURIComponent(profil.$id || "")}" class="profile-link">
+    <a href="explorer.html" class="hero-button">
       💚 Découvrir des profils
     </a>
 
@@ -504,6 +504,8 @@ const APPWRITE_PROJECT_ID = "6aac203e00209ccb3014";
 const APPWRITE_DATABASE_ID = "6aac2a200000e6be5877";
 const APPWRITE_BUCKET_PHOTOS = "6aad2a754e0e095d6a9a";
 const TABLE_PROFILS = "6aac2b35002a0debbb85";
+const TABLE_POINTS = "points";
+const TABLE_BLOCAGES = "blocages";
 
 const PHOTO_PLACEHOLDER =
   "https://via.placeholder.com/700x500/E0F7EE/087557?text=Afrilova";
@@ -514,19 +516,122 @@ client
   .setEndpoint(APPWRITE_ENDPOINT)
   .setProject(APPWRITE_PROJECT_ID);
 
+const account = new Appwrite.Account(client);
 const tablesDB = new Appwrite.TablesDB(client);
 const storage = new Appwrite.Storage(client);
+
+let utilisateurConnecte = null;
+let blocagesEmis = [];
+
+const LABELS_TYPE_RELATION = {
+  mariage: "💍 Mariage",
+  amoureuse: "🌹 Sans précipitation",
+  projet: "💕 Projet de vie à deux"
+};
 
 
 /*
 ==========================================
-SOLDE TEMPORAIRE
+SÉCURITÉ : AFFICHER LE TEXTE SANS L'INTERPRÉTER COMME DU CODE
 ==========================================
 */
 
-let points = 3;
+function echapperHTML(texte){
 
-document.getElementById("points").textContent = points;
+  return String(texte === null || texte === undefined ? "" : texte)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+
+}
+
+
+/*
+==========================================
+SOLDE DE POINTS (VRAI SOLDE)
+==========================================
+*/
+
+async function chargerSolde(){
+
+  const element = document.getElementById("points");
+
+  try {
+
+    utilisateurConnecte = await account.get();
+
+  } catch (erreur) {
+
+    utilisateurConnecte = null;
+    element.textContent = "-";
+    return;
+
+  }
+
+  try {
+
+    const reponse = await tablesDB.listRows({
+      databaseId: APPWRITE_DATABASE_ID,
+      tableId: TABLE_POINTS,
+      queries: [
+        Appwrite.Query.equal("userId", utilisateurConnecte.$id),
+        Appwrite.Query.limit(1)
+      ]
+    });
+
+    element.textContent =
+      reponse.total > 0
+        ? (reponse.rows[0].solde || 0)
+        : 0;
+
+  } catch (erreur) {
+
+    console.error("Erreur chargement points :", erreur);
+    element.textContent = 0;
+
+  }
+
+}
+
+
+/*
+==========================================
+PERSONNES BLOQUÉES
+==========================================
+*/
+
+async function chargerBlocages(){
+
+  if (!utilisateurConnecte){
+    blocagesEmis = [];
+    return;
+  }
+
+  try {
+
+    const reponse = await tablesDB.listRows({
+      databaseId: APPWRITE_DATABASE_ID,
+      tableId: TABLE_BLOCAGES,
+      queries: [
+        Appwrite.Query.equal("bloqueurId", utilisateurConnecte.$id),
+        Appwrite.Query.limit(100)
+      ]
+    });
+
+    blocagesEmis = reponse.rows.map(function(b){
+      return b.bloqueId;
+    });
+
+  } catch (erreur) {
+
+    console.error("Erreur chargement blocages :", erreur);
+    blocagesEmis = [];
+
+  }
+
+}
 
 
 /*
@@ -572,11 +677,21 @@ CRÉER UNE CARTE DE PROFIL
 
 function creerCarteProfil(profil){
 
-  const nom = profil.nom || "Profil";
-  const age = profil.age ? ", " + profil.age + " ans" : "";
-  const description = profil.description || "";
-  const recherche = profil.recherche
-    ? "🔎 Recherche : " + profil.recherche
+  const nom = echapperHTML(profil.nom || "Profil");
+
+  const age = profil.age
+    ? ", " + echapperHTML(profil.age) + " ans"
+    : "";
+
+  const description = echapperHTML(profil.description || "");
+
+  const texteRecherche =
+    LABELS_TYPE_RELATION[profil.typeRelation] ||
+    profil.recherche ||
+    "";
+
+  const recherche = texteRecherche
+    ? "🔎 Recherche : " + echapperHTML(texteRecherche)
     : "";
 
   return `
@@ -601,7 +716,7 @@ function creerCarteProfil(profil){
           ${recherche ? "<br>" + recherche : ""}
         </p>
 
-        <a href="explorer.html" class="profile-link">
+        <a href="voir-profil.html?id=${encodeURIComponent(profil.$id || "")}" class="profile-link">
           👀 Voir le profil
         </a>
 
@@ -654,7 +769,11 @@ async function chargerProfils(){
       ]
     });
 
-    if (reponse.total === 0){
+    const profilsVisibles = reponse.rows.filter(function(profil){
+      return !blocagesEmis.includes(profil.userId);
+    });
+
+    if (profilsVisibles.length === 0){
 
       conteneur.innerHTML = messageVide();
 
@@ -662,7 +781,7 @@ async function chargerProfils(){
 
     }
 
-    conteneur.innerHTML = reponse.rows
+    conteneur.innerHTML = profilsVisibles
       .map(creerCarteProfil)
       .join("");
 
@@ -688,9 +807,11 @@ INITIALISATION
 
 document.addEventListener(
   "DOMContentLoaded",
-  function(){
+  async function(){
 
-    chargerProfils();
+    await chargerSolde();
+    await chargerBlocages();
+    await chargerProfils();
 
   }
 );
