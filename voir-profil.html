@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Profil - Afrilova</title>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+ font-family:Arial,sans-serif;background:#F3FBF7;
+ color:#17352C;padding-bottom:85px
+}
+button{font-family:inherit;cursor:pointer}
+
+header{
+ background:linear-gradient(135deg,#0B8F6A,#3DBB91);
+ color:white;padding:18px 16px;
+ display:flex;align-items:center;justify-content:space-between;
+ box-shadow:0 3px 10px rgba(0,0,0,.08)
+}
+.logo{font-size:20px;font-weight:bold}
+.header-points{
+ background:rgba(255,255,255,.18);
+ padding:8px 12px;border-radius:20px;
+ font-size:13px;font-weight:bold
+}
+
+.container{
+ width:100%;max-width:700px;margin:auto;
+ padding:18px 14px 30px
+}
+.back-link{
+ display:inline-block;color:#087557;text-decoration:none;
+ font-size:14px;font-weight:bold;margin-bottom:14px
+}
+
+.card{
+ background:white;border-radius:18px;overflow:hidden;
+ box-shadow:0 3px 12px rgba(0,0,0,.06);margin-bottom:16px
+}
+.photo{
+ width:100%;height:340px;object-fit:cover;
+ display:block;background:#E0F7EE
+}
+.card-content{padding:18px}
+.name{font-size:22px;color:#17352C;margin-bottom:5px}
+.location{color:#668078;font-size:14px;margin-bottom:14px}
+
+.info-grid{
+ display:grid;grid-template-columns:1fr 1fr;
+ gap:9px;margin-bottom:14px
+}
+.info-box{background:#F3FBF7;border-radius:11px;padding:11px}
+.info-box span{
+ display:block;color:#668078;font-size:11px;margin-bottom:4px
+}
+.info-box strong{color:#087557;font-size:13px}
+
+.description{
+ background:#F3FBF7;border-radius:12px;padding:13px
+}
+.description strong{
+ display:block;color:#087557;font-size:13px;margin-bottom:6px
+}
+.description p{
+ color:#55736A;font-size:14px;line-height:1.5;
+ white-space:pre-wrap;word-wrap:break-word
+}
+
+.action-card{
+ background:white;border-radius:18px;padding:18px;
+ box-shadow:0 3px 12px rgba(0,0,0,.06);text-align:center
+}
+.btn-principal{
+ display:block;width:100%;border:none;background:#0B8F6A;
+ color:white;padding:14px;border-radius:12px;
+ font-weight:bold;font-size:14px;text-decoration:none
+}
+.btn-principal:disabled{opacity:.6}
+.action-note{
+ color:#55736A;font-size:13px;line-height:1.5;margin-bottom:12px
+}
+.action-hint{
+ color:#668078;font-size:11px;margin-top:10px;line-height:1.4
+}
+.success-note{
+ background:#E6F7EF;color:#0B8F6A;border-radius:10px;
+ padding:12px;font-size:13px;font-weight:bold
+}
+
+.state-message{
+ background:white;border-radius:18px;padding:35px 20px;
+ text-align:center;color:#668078;font-size:14px;line-height:1.5;
+ box-shadow:0 3px 12px rgba(0,0,0,.05)
+}
+
+.bottom-nav{
+ position:fixed;left:0;right:0;bottom:0;height:68px;
+ background:white;border-top:1px solid #dcefe7;
+ display:flex;z-index:40;
+ box-shadow:0 -2px 10px rgba(0,0,0,.06)
+}
+.bottom-nav a{
+ flex:1;text-decoration:none;color:#668078;
+ display:flex;flex-direction:column;
+ align-items:center;justify-content:center;
+ gap:3px;font-size:11px;font-weight:bold
+}
+.bottom-nav a span{font-size:20px;line-height:1}
+.bottom-nav a.active{color:#0B8F6A}
+
+@media(min-width:700px){
+ .bottom-nav{
+  max-width:700px;left:50%;transform:translateX(-50%);
+  border-radius:16px 16px 0 0
+ }
+ .photo{height:400px}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<div class="logo">💚 Afrilova</div>
+<div class="header-points">
+⭐ <span id="headerPoints">-</span> points
+</div>
+</header>
+
+<main class="container">
+
+<a href="explorer.html" class="back-link">← Retour à Explorer</a>
+
+<div id="etatMessage" class="state-message">Chargement du profil...</div>
+
+<div id="contenuProfil" style="display:none">
+
+<div class="card">
+
+<img id="photo" class="photo" src="" alt="Photo de profil">
+
+<div class="card-content">
+
+<h1 id="nom" class="name"></h1>
+<p id="lieu" class="location"></p>
+
+<div class="info-grid">
+
+<div class="info-box">
+<span>Âge</span>
+<strong id="age">—</strong>
+</div>
+
+<div class="info-box">
+<span>Type de relation</span>
+<strong id="typeRelation">—</strong>
+</div>
+
+<div class="info-box">
+<span>Polygamie</span>
+<strong id="polygamie">—</strong>
+</div>
+
+<div class="info-box">
+<span>Partenaire avec enfants</span>
+<strong id="enfants">—</strong>
+</div>
+
+</div>
+
+<div class="description">
+<strong>À propos</strong>
+<p id="description"></p>
+</div>
+
+</div>
+</div>
+
+<div class="action-card" id="zoneAction"></div>
+
+</div>
+
+</main>
+
+<nav class="bottom-nav">
+<a href="index.html"><span>🏠</span>Accueil</a>
+<a href="explorer.html" class="active"><span>🔎</span>Explorer</a>
+<a href="messagerie.html"><span>💬</span>Messagerie</a>
+<a href="profil.html"><span>👤</span>Profil</a>
+</nav>
+
+
+<!-- SDK APPWRITE (CDN) -->
+<script src="https://cdn.jsdelivr.net/npm/appwrite@20.0.0"></script>
+
+<script>
+
+/* ========================================== CONFIGURATION ========================================== */
+
+const APPWRITE_ENDPOINT = "https://fra.cloud.appwrite.io/v1";
+const APPWRITE_PROJECT_ID = "6aac203e00209ccb3014";
+const APPWRITE_DATABASE_ID = "6aac2a200000e6be5877";
+const APPWRITE_BUCKET_PHOTOS = "6aad2a754e0e095d6a9a";
+const FUNCTION_ID = "6aaf8d3fdb99e41f0aaf";
+
+const TABLE_PROFILS = "6aac2b35002a0debbb85";
+const TABLE_PAYS = "pays";
+const TABLE_VILLES = "villes";
+const TABLE_POINTS = "points";
+const TABLE_DEMANDES = "demandes";
+const TABLE_CONVERSATIONS = "conversations";
+
+const client = new Appwrite.Client();
+client.setEndpoint(APPWRITE_ENDPOINT).setProject(APPWRITE_PROJECT_ID);
+
+const account = new Appwrite.Account(client);
+const tablesDB = new Appwrite.TablesDB(client);
+const storage = new Appwrite.Storage(client);
+const functions = new Appwrite.Functions(client);
+
+let utilisateurConnecte = null;
+let profil = null;
+let paysDisponibles = [];
+let villesDisponibles = [];
+let soldeActuel = 0;
+
+const LABELS_TYPE_RELATION = {
+  mariage: "💍 Mariage",
+  amoureuse: "🌹 Sans précipitation",
+  projet: "💕 Projet de vie à deux"
+};
+
+const LABELS_POLYGAMIE = {
+  oui: "Accepte",
+  non: "N'accepte pas",
+  indifferent: "Indifférent"
+};
+
+
+/* ========================================== OUTILS ========================================== */
+
+function afficherEtat(texte) {
+  const bloc = document.getElementById("etatMessage");
+  bloc.textContent = texte;
+  bloc.style.display = "block";
+  document.getElementById("contenuProfil").style.display = "none";
+}
+
+function urlPhoto(photoId) {
+  if (!photoId) return "https://via.placeholder.com/600x500/E0F7EE/087557?text=Afrilova";
+  return storage.getFileView({ bucketId: APPWRITE_BUCKET_PHOTOS, fileId: photoId });
+}
+
+function nomPays(paysId) {
+  const trouve = paysDisponibles.find(p => p.$id === paysId);
+  return trouve ? trouve.nom : "";
+}
+
+function nomVille(villeId) {
+  const trouve = villesDisponibles.find(v => v.$id === villeId);
+  return trouve ? trouve.nom : "";
+}
+
+async function appelerFonction(donnees) {
+
+  const execution = await functions.createExecution({
+    functionId: FUNCTION_ID,
+    body: JSON.stringify(donnees),
+    method: "POST"
+  });
+
+  let resultat;
+
+  try {
+    resultat = JSON.parse(execution.responseBody);
+  } catch (e) {
+    throw new Error("Réponse invalide du serveur.");
+  }
+
+  if (!resultat.ok) {
+    throw new Error(resultat.message || "Une erreur est survenue.");
+  }
+
+  return resultat;
+}
+
+
+/* ========================================== CHARGEMENT ========================================== */
+
+async function chargerPaysEtVilles() {
+  try {
+    const p = await tablesDB.listRows({
+      databaseId: APPWRITE_DATABASE_ID,
+      tableId: TABLE_PAYS,
+      queries: [Appwrite.Query.limit(50)]
+    });
+    paysDisponibles = p.rows;
+
+    const v = await tablesDB.listRows({
+      databaseId: APPWRITE_DATABASE_ID,
+      tableId: TABLE_VILLES,
+      queries: [Appwrite.Query.limit(200)]
+    });
+    villesDisponibles = v.rows;
+  } catch (erreur) {
+    console.error("Erreur chargement pays/villes :", erreur);
+  }
+}
+
+async function chargerSolde() {
+  try {
+    const reponse = await tablesDB.listRows({
+      databaseId: APPWRITE_DATABASE_ID,
+      tableId: TABLE_POINTS,
+      queries: [
+        Appwrite.Query.equal("userId", utilisateurConnecte.$id),
+        Appwrite.Query.limit(1)
+      ]
+    });
+    soldeActuel = reponse.total > 0 ? (reponse.rows[0].solde || 0) : 0;
+  } catch (erreur) {
+    console.error("Erreur chargement points :", erreur);
+    soldeActuel = 0;
+  }
+  document.getElementById("headerPoints").textContent = soldeActuel;
+}
+
+
+/* ========================================== AFFICHAGE DU PROFIL ========================================== */
+
+function afficherProfil() {
+
+  /* textContent partout : le contenu saisi par les utilisateurs n'est jamais interprété comme du HTML */
+
+  document.getElementById("photo").src = urlPhoto(profil.photoPrincipale);
+  document.getElementById("photo").alt = "Photo de " + (profil.nom || "profil");
+
+  document.getElementById("nom").textContent = profil.nom || "Profil";
+
+  const ville = nomVille(profil.villeId);
+  const pays = nomPays(profil.paysId);
+  document.getElementById("lieu").textContent =
+    "📍 " + ville + (ville && pays ? ", " : "") + pays;
+
+  document.getElementById("age").textContent =
+    profil.age ? profil.age + " ans" : "—";
+
+  document.getElementById("typeRelation").textContent =
+    LABELS_TYPE_RELATION[profil.typeRelation] || "—";
+
+  document.getElementById("polygamie").textContent =
+    LABELS_POLYGAMIE[profil.polygamie] || "—";
+
+  document.getElementById("enfants").textContent =
+    profil.aDesEnfants === true ? "Accepte"
+    : (profil.aDesEnfants === false ? "N'accepte pas" : "—");
+
+  document.getElementById("description").textContent =
+    profil.description || "";
+
+  document.getElementById("etatMessage").style.display = "none";
+  document.getElementById("contenuProfil").style.display = "block";
+}
+
+
+/* ========================================== ZONE D'ACTION ========================================== */
+
+const zoneAction = document.getElementById("zoneAction");
+
+function viderZone() {
+  zoneAction.innerHTML = "";
+}
+
+function ajouterNote(texte) {
+  const p = document.createElement("p");
+  p.className = "action-note";
+  p.textContent = texte;
+  zoneAction.appendChild(p);
+}
+
+function ajouterSucces(texte) {
+  const div = document.createElement("div");
+  div.className = "success-note";
+  div.textContent = texte;
+  zoneAction.appendChild(div);
+}
+
+function ajouterLien(texte, href) {
+  const a = document.createElement("a");
+  a.className = "btn-principal";
+  a.href = href;
+  a.textContent = texte;
+  zoneAction.appendChild(a);
+}
+
+function ajouterBoutonDemande() {
+  const bouton = document.createElement("button");
+  bouton.type = "button";
+  bouton.id = "btnDemande";
+  bouton.className = "btn-principal";
+  bouton.textContent = "💬 Envoyer une demande de discussion";
+  bouton.addEventListener("click", envoyerDemande);
+  zoneAction.appendChild(bouton);
+
+  const hint = document.createElement("p");
+  hint.className = "action-hint";
+  hint.textContent = "1 point sera utilisé. Vous avez " + soldeActuel + (soldeActuel > 1 ? " points." : " point.");
+  zoneAction.appendChild(hint);
+}
+
+/* Retourne : "conversation" | "demande_envoyee" | "demande_recue" | "libre" */
+async function determinerEtat(moi, autre) {
+
+  try {
+
+    const c1 = await tablesDB.listRows({
+      databaseId: APPWRITE_DATABASE_ID,
+      tableId: TABLE_CONVERSATIONS,
+      queries: [
+        Appwrite.Query.equal("utilisateur1Id", moi),
+        Appwrite.Query.equal("utilisateur2Id", autre),
+        Appwrite.Query.limit(1)
+      ]
+    });
+    if (c1.total > 0) return "conversation";
+
+    const c2 = await tablesDB.listRows({
+      databaseId: APPWRITE_DATABASE_ID,
+      tableId: TABLE_CONVERSATIONS,
+      queries: [
+        Appwrite.Query.equal("utilisateur1Id", autre),
+        Appwrite.Query.equal("utilisateur2Id", moi),
+        Appwrite.Query.limit(1)
+      ]
+    });
+    if (c2.total > 0) return "conversation";
+
+    const d1 = await tablesDB.listRows({
+      databaseId: APPWRITE_DATABASE_ID,
+      tableId: TABLE_DEMANDES,
+      queries: [
+        Appwrite.Query.equal("expediteurId", moi),
+        Appwrite.Query.equal("destinataireId", autre),
+        Appwrite.Query.equal("statut", "en_attente"),
+        Appwrite.Query.limit(1)
+      ]
+    });
+    if (d1.total > 0) return "demande_envoyee";
+
+    const d2 = await tablesDB.listRows({
+      databaseId: APPWRITE_DATABASE_ID,
+      tableId: TABLE_DEMANDES,
+      queries: [
+        Appwrite.Query.equal("expediteurId", autre),
+        Appwrite.Query.equal("destinataireId", moi),
+        Appwrite.Query.equal("statut", "en_attente"),
+        Appwrite.Query.limit(1)
+      ]
+    });
+    if (d2.total > 0) return "demande_recue";
+
+  } catch (erreur) {
+    console.error("Erreur vérification état :", erreur);
+  }
+
+  return "libre";
+}
+
+async function preparerZoneAction() {
+
+  viderZone();
+
+  if (!utilisateurConnecte) {
+    ajouterNote("Connectez-vous pour envoyer une demande de discussion.");
+    ajouterLien("Aller à mon profil", "profil.html");
+    return;
+  }
+
+  if (profil.userId === utilisateurConnecte.$id) {
+    ajouterNote("C'est votre propre profil.");
+    ajouterLien("✏️ Modifier mon profil", "profil.html");
+    return;
+  }
+
+  const etat = await determinerEtat(utilisateurConnecte.$id, profil.userId);
+
+  if (etat === "conversation") {
+    ajouterNote("Vous avez déjà une discussion avec cette personne.");
+    ajouterLien("💬 Ouvrir la messagerie", "messagerie.html");
+    return;
+  }
+
+  if (etat === "demande_envoyee") {
+    ajouterSucces("✅ Demande envoyée. En attente de sa réponse.");
+    return;
+  }
+
+  if (etat === "demande_recue") {
+    ajouterNote("Cette personne vous a déjà envoyé une demande.");
+    ajouterLien("📩 Voir mes demandes", "messagerie.html");
+    return;
+  }
+
+  if (soldeActuel < 1) {
+    ajouterNote("Il vous faut 1 point pour envoyer une demande de discussion.");
+    ajouterLien("⭐ Acheter des points", "profil.html");
+    return;
+  }
+
+  ajouterBoutonDemande();
+}
+
+
+/* ========================================== ENVOYER LA DEMANDE ========================================== */
+
+async function envoyerDemande() {
+
+  if (!utilisateurConnecte || !profil) return;
+
+  const confirme = confirm(
+    "Envoyer une demande de discussion à " + (profil.nom || "cette personne") +
+    " ?\n\n1 point sera utilisé."
+  );
+
+  if (!confirme) return;
+
+  const bouton = document.getElementById("btnDemande");
+  if (bouton) {
+    bouton.disabled = true;
+    bouton.textContent = "Envoi en cours...";
+  }
+
+  try {
+
+    await appelerFonction({
+      action: "envoyerDemande",
+      peerId: profil.userId
+    });
+
+    soldeActuel = Math.max(0, soldeActuel - 1);
+    document.getElementById("headerPoints").textContent = soldeActuel;
+
+    viderZone();
+    ajouterSucces("✅ Demande envoyée ! Vous serez prévenu(e) dans votre messagerie dès qu'elle sera acceptée.");
+
+  } catch (erreur) {
+
+    console.error("Erreur envoi demande :", erreur);
+
+    alert("La demande n'a pas pu être envoyée : " + erreur.message);
+
+    await chargerSolde();
+    await preparerZoneAction();
+
+  }
+
+}
+
+
+/* ========================================== INITIALISATION ========================================== */
+
+document.addEventListener("DOMContentLoaded", async function () {
+
+  const parametres = new URLSearchParams(window.location.search);
+  const profilRowId = parametres.get("id");
+
+  if (!profilRowId) {
+    afficherEtat("Profil introuvable.");
+    return;
+  }
+
+  await chargerPaysEtVilles();
+
+  try {
+    utilisateurConnecte = await account.get();
+  } catch (erreur) {
+    utilisateurConnecte = null;
+  }
+
+  try {
+    profil = await tablesDB.getRow({
+      databaseId: APPWRITE_DATABASE_ID,
+      tableId: TABLE_PROFILS,
+      rowId: profilRowId
+    });
+  } catch (erreur) {
+    console.error("Erreur chargement profil :", erreur);
+    afficherEtat("Ce profil est introuvable.");
+    return;
+  }
+
+  const estMonProfil = utilisateurConnecte && profil.userId === utilisateurConnecte.$id;
+
+  if (profil.statut !== "approuve" && !estMonProfil) {
+    afficherEtat("Ce profil n'est pas disponible.");
+    return;
+  }
+
+  afficherProfil();
+
+  if (utilisateurConnecte) {
+    await chargerSolde();
+  }
+
+  await preparerZoneAction();
+
+});
+
+</script>
+
+</body>
+  </html>
