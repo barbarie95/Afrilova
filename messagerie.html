@@ -109,6 +109,10 @@ h1{text-align:center;color:#087557}
  border:0;border-radius:50%;width:42px;
  background:#0B8F6A;color:white
 }
+/* AJOUT : style du bouton photo dans la barre de saisie */
+.chat-input .attach{
+ background:#E0F7EE;color:#087557;font-size:18px
+}
 .chat-extra{padding:8px 15px;background:white}
 .chat-btn{
  background:#E0F7EE;color:#087557;width:100%
@@ -221,11 +225,13 @@ h1{text-align:center;color:#087557}
 📷 2 photos maximum par conversation
 </div>
 
+<!-- AJOUT : champ de fichier caché, il est déclenché par le bouton 📷 de la barre de saisie -->
 <input
  type="file"
  id="photos"
  accept="image/jpeg,image/png,image/webp"
  multiple
+ style="display:none"
  onchange="selectionnerPhotos(event)"
 >
 
@@ -234,6 +240,13 @@ h1{text-align:center;color:#087557}
 </div>
 
 <div class="chat-input">
+
+<!-- AJOUT : bouton photo visible dans la barre de saisie -->
+<button
+ class="attach"
+ aria-label="Envoyer une photo"
+ onclick="document.getElementById('photos').click()"
+>📷</button>
 
 <input
  id="messageInput"
@@ -389,9 +402,8 @@ Bloquer
 👤<br>Profil
 </a>
 
-</nav>
-
-<!-- SDK APPWRITE -->
+ </nav>
+ <!-- SDK APPWRITE -->
 <script src="https://cdn.jsdelivr.net/npm/appwrite@20.0.0"></script>
 
 <script>
@@ -620,6 +632,13 @@ async function chargerEtatConnexion() {
 
     document.getElementById("contenuMessagerie").style.display =
       "block";
+
+    // AJOUT : expiration des demandes sans réponse après 7 jours (point recrédité)
+    try {
+      await appelerFonction({ action: "expirerDemandes" });
+    } catch (e) {
+      console.error("Erreur expiration demandes :", e);
+    }
 
     await chargerSoldePoints();
     await chargerBlocagesEmis();
@@ -997,6 +1016,7 @@ async function accepterDemande(
 }
 
 
+/* MODIFIÉ : le refus passe par le serveur, qui recrédite le point à l'expéditeur */
 async function refuserDemande(
   demandeId,
   boutonElement
@@ -1014,15 +1034,9 @@ async function refuserDemande(
 
   try {
 
-    await tablesDB.updateRow({
-      databaseId: APPWRITE_DATABASE_ID,
-      tableId: TABLE_DEMANDES,
-      rowId: demandeId,
-      data: {
-        statut: "refuse",
-        dateReponse:
-          new Date().toISOString()
-      }
+    await appelerFonction({
+      action: "refuserDemande",
+      demandeId: demandeId
     });
 
 
@@ -1221,8 +1235,6 @@ async function chargerDiscussions() {
   }
 
 }
-
-
 /* ==========================================
    CHAT
 ========================================== */
