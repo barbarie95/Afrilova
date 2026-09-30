@@ -243,7 +243,113 @@ export default async ({ req, res, log, error }) => {
       return res.json({ ok: true, demande });
 
     }
+// ===== AJOUT : refus d'une demande + expiration après 7 jours =====
 
+    const T_DEMANDES = "demandes";
+    const T_POINTS = "points";
+    const DELAI_REPONSE_JOURS = 7;
+
+    // Rend des points à l'expéditeur (uniquement côté serveur)
+    // Si la ligne de points n'existe pas, on ne fait rien
+    const recrediterPoint = async (expediteurId, nombre) => {
+      const lignes = await tablesDB.listRows({
+        databaseId: DATABASE_ID,
+        tableId: T_POINTS,
+        queries: [Query.equal("userId", expediteurId), Query.limit(1)]
+      });
+      if (lignes.total === 0) return;
+      await tablesDB.updateRow({
+        databaseId: DATABASE_ID,
+        tableId: T_POINTS,
+        rowId: lignes.rows[0].$id,
+        data: {
+          solde: lignes.rows[0].solde + nombre,
+          dateModification: new Date().toISOString()
+        }
+      });
+    };
+
+    if (action === "refuserDemande") {
+
+      const { demandeId } = payload;
+      if (!demandeId) {
+        return res.json({ ok: false, message: "Demande manquante." }, 400);
+      }
+
+      const demande = await tablesDB.getRow({
+        databaseId: DATABASE_ID,
+        tableId: T_DEMANDES,
+        rowId: demandeId
+      });
+
+      // Seul le destinataire peut refuser
+      if (demande.destinataireId !== userId) {
+        return res.json({ ok: false, message: "Action non autorisée." }, 403);
+      }
+
+      if (demande.statut !== "en_attente") {
+        return res.json({ ok: false, message: "Cette demande a déjà été traitée." }, 400);
+      }
+
+      await tablesDB.updateRow({
+        databaseId: DATABASE_ID,
+        tableId: T_DEMANDES,
+        rowId: demandeId,
+        data: {
+          statut: "refuse",
+          dateReponse: new Date().toISOString()
+        }
+      });
+
+      await recrediterPoint(demande.expediteurId, demande.pointsDepenses || 1);
+
+      return res.json({ ok: true });
+
+    }
+
+    if (action === "expirerDemandes") {
+
+      const limite = new Date(
+        Date.now() - DELAI_REPONSE_JOURS * 24 * 60 * 60 * 1000
+      ).toISOString();
+
+      let expirees = 0;
+
+      // Demandes reçues et demandes envoyées par l'utilisateur
+      for (const champ of ["destinataireId", "expediteurId"]) {
+
+        const liste = await tablesDB.listRows({
+          databaseId: DATABASE_ID,
+          tableId: T_DEMANDES,
+          queries: [
+            Query.equal(champ, userId),
+            Query.equal("statut", "en_attente"),
+            Query.lessThan("dateCreation", limite),
+            Query.limit(50)
+          ]
+        });
+
+        for (const d of liste.rows) {
+          await tablesDB.updateRow({
+            databaseId: DATABASE_ID,
+            tableId: T_DEMANDES,
+            rowId: d.$id,
+            data: {
+              statut: "refuse",
+              dateReponse: new Date().toISOString()
+            }
+          });
+          await recrediterPoint(d.expediteurId, d.pointsDepenses || 1);
+          expirees++;
+        }
+
+      }
+
+      return res.json({ ok: true, expirees });
+
+    }
+
+    // ===== FIN DE L'AJOUT =====
     return res.json({ ok: false, message: "Action inconnue." }, 400);
 
   } catch (e) {
