@@ -267,7 +267,8 @@
     <div class="logo">💚 Afrilova</div>
 
     <div class="points">
-      ⭐ <span id="pointsBalance">3</span> points
+      <!-- MODIFIÉ : le solde réel est chargé par le script (avant : 3 écrit en dur) -->
+      ⭐ <span id="pointsBalance">-</span> points
     </div>
   </header>
 
@@ -357,8 +358,6 @@
     </a>
 
   </nav>
-
-
   <!-- SDK APPWRITE (CDN) -->
   <script src="https://cdn.jsdelivr.net/npm/appwrite@20.0.0"></script>
 
@@ -386,6 +385,10 @@
     const TABLE_VILLES = "villes";
     const TABLE_PROFILS = "6aac2b35002a0debbb85";
 
+    // AJOUT : tables nécessaires au solde de points et au filtrage des blocages
+    const TABLE_POINTS = "points";
+    const TABLE_BLOCAGES = "blocages";
+
     const PHOTO_PLACEHOLDER =
       "https://via.placeholder.com/600x500/E0F7EE/087557?text=Afrilova";
 
@@ -398,6 +401,9 @@
     const tablesDB = new Appwrite.TablesDB(client);
     const storage = new Appwrite.Storage(client);
 
+    // AJOUT : pour connaître l'utilisateur connecté
+    const account = new Appwrite.Account(client);
+
 
     /*
     ==========================================
@@ -407,6 +413,34 @@
 
     let paysDisponibles = [];
     let villesDisponibles = [];
+
+    // AJOUT : utilisateur connecté et personnes qu'il a bloquées
+    let utilisateurConnecte = null;
+    let blocagesEmis = [];
+
+
+    /*
+    ==========================================
+    AJOUT : PROTECTION DU TEXTE AFFICHÉ
+    Empêche qu'un texte saisi dans un profil
+    soit interprété comme du code HTML.
+    ==========================================
+    */
+
+    function echapperHTML(valeur) {
+
+      return String(
+        valeur === null || valeur === undefined
+          ? ""
+          : valeur
+      )
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+
+    }
 
 
     /*
@@ -577,6 +611,122 @@
 
     /*
     ==========================================
+    AJOUT : SOLDE DE POINTS RÉEL
+    ==========================================
+    */
+
+    async function chargerSoldePoints() {
+
+      const badge =
+        document.getElementById("pointsBalance");
+
+      if (!badge) return;
+
+      try {
+
+        const reponse = await tablesDB.listRows({
+          databaseId: APPWRITE_DATABASE_ID,
+          tableId: TABLE_POINTS,
+          queries: [
+            Appwrite.Query.equal(
+              "userId",
+              utilisateurConnecte.$id
+            ),
+            Appwrite.Query.limit(1)
+          ]
+        });
+
+        badge.textContent =
+          reponse.total > 0
+            ? (reponse.rows[0].solde || 0)
+            : 0;
+
+      } catch (erreur) {
+
+        console.error(
+          "Erreur chargement solde :",
+          erreur
+        );
+
+        badge.textContent = 0;
+
+      }
+
+    }
+
+
+    /*
+    ==========================================
+    AJOUT : PERSONNES BLOQUÉES PAR L'UTILISATEUR
+    ==========================================
+    */
+
+    async function chargerBlocagesEmis() {
+
+      try {
+
+        const reponse = await tablesDB.listRows({
+          databaseId: APPWRITE_DATABASE_ID,
+          tableId: TABLE_BLOCAGES,
+          queries: [
+            Appwrite.Query.equal(
+              "bloqueurId",
+              utilisateurConnecte.$id
+            ),
+            Appwrite.Query.limit(100)
+          ]
+        });
+
+        blocagesEmis =
+          reponse.rows.map(
+            function (b) { return b.bloqueId; }
+          );
+
+      } catch (erreur) {
+
+        blocagesEmis = [];
+
+      }
+
+    }
+
+
+    /*
+    ==========================================
+    AJOUT : UTILISATEUR CONNECTÉ
+    Si personne n'est connecté : pas de filtrage
+    et le solde affiché est 0.
+    ==========================================
+    */
+
+    async function chargerUtilisateur() {
+
+      try {
+
+        utilisateurConnecte = await account.get();
+
+        await chargerSoldePoints();
+        await chargerBlocagesEmis();
+
+      } catch (erreur) {
+
+        utilisateurConnecte = null;
+        blocagesEmis = [];
+
+        const badge =
+          document.getElementById("pointsBalance");
+
+        if (badge) {
+          badge.textContent = 0;
+        }
+
+      }
+
+    }
+
+
+    /*
+    ==========================================
     RECHERCHE
     ==========================================
     */
@@ -629,7 +779,27 @@
           queries: requetes
         });
 
-        const profilsAvecNoms = reponse.rows.map(
+        // MODIFIÉ : on retire son propre profil et les profils bloqués
+        const profilsVisibles = reponse.rows.filter(
+          function (profil) {
+
+            if (
+              utilisateurConnecte &&
+              profil.userId === utilisateurConnecte.$id
+            ) {
+              return false;
+            }
+
+            if (blocagesEmis.includes(profil.userId)) {
+              return false;
+            }
+
+            return true;
+
+          }
+        );
+
+        const profilsAvecNoms = profilsVisibles.map(
           function (profil) {
 
             return Object.assign({}, profil, {
@@ -693,6 +863,7 @@
       }
 
 
+      // MODIFIÉ : tous les textes de profil passent par echapperHTML()
       section.innerHTML =
         liste.map((profil) => `
 
@@ -701,31 +872,31 @@
             <img
               class="profile-photo"
               src="${urlPhoto(profil.photoPrincipale)}"
-              alt="Photo de ${profil.nom || 'profil'}"
+              alt="Photo de ${echapperHTML(profil.nom || 'profil')}"
             >
 
             <div class="profile-content">
 
               <h3 class="profile-name">
-                ${profil.nom || "Profil"}
-                ${profil.age ? ` · ${profil.age} ans` : ""}
+                ${echapperHTML(profil.nom || "Profil")}
+                ${profil.age ? ` · ${echapperHTML(profil.age)} ans` : ""}
               </h3>
 
               <div class="profile-location">
-                📍 ${profil.villeNom || ""}
+                📍 ${echapperHTML(profil.villeNom || "")}
                 ${profil.villeNom && profil.paysNom ? ", " : ""}
-                ${profil.paysNom || ""}
+                ${echapperHTML(profil.paysNom || "")}
               </div>
 
               <p class="profile-description">
-                ${profil.description || ""}
+                ${echapperHTML(profil.description || "")}
               </p>
 
               ${
                 profil.recherche
                 ? `
                   <div class="research-box">
-                    ❤️ Recherche : ${profil.recherche}
+                    ❤️ Recherche : ${echapperHTML(profil.recherche)}
                   </div>
                 `
                 : ""
@@ -759,6 +930,10 @@
 
         await chargerPays();
         await chargerToutesLesVilles();
+
+        // AJOUT : solde réel et blocages, avant l'affichage des profils
+        await chargerUtilisateur();
+
         await chargerProfils();
 
         console.log(
