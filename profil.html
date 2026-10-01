@@ -319,6 +319,50 @@ h1{color:#087557;font-size:25px;margin-bottom:7px}
  font-weight:bold;margin-top:10px
 }
 
+/* AJOUT : masque du visage */
+.mask-button{
+ width:100%;border:none;background:#E0F7EE;color:#087557;
+ padding:11px;border-radius:10px;font-weight:bold;
+ margin-top:8px;font-size:13px
+}
+.mask-status{
+ display:none;background:#E6F7EF;color:#0B8F6A;
+ border-radius:10px;padding:10px 12px;
+ font-size:12px;line-height:1.5;margin-top:8px
+}
+.mask-status.show{display:block}
+.mask-status button{
+ background:none;border:none;color:#0B8F6A;
+ font-weight:bold;text-decoration:underline;
+ font-size:12px;padding:0
+}
+.mask-canvas-wrap{
+ background:#F3FBF7;border-radius:12px;
+ padding:6px;margin-bottom:12px;text-align:center
+}
+#maskCanvas{
+ max-width:100%;max-height:55vh;border-radius:8px;
+ touch-action:none;cursor:grab
+}
+.emoji-choices{
+ display:flex;gap:10px;justify-content:center;margin-bottom:12px
+}
+.emoji-choice{
+ width:54px;height:54px;border-radius:14px;
+ border:2px solid #dcefe7;background:white;
+ font-size:28px;line-height:1
+}
+.emoji-choice.active{border-color:#0B8F6A;background:#E0F7EE}
+.form-group input[type=range]{padding:0;border:none}
+.mask-actions{display:flex;gap:8px;margin-top:12px}
+.mask-actions button{
+ flex:1;border:none;border-radius:10px;
+ padding:12px;font-weight:bold
+}
+.mask-cancel{background:#eee;color:#555}
+.mask-validate{background:#0B8F6A;color:white}
+.mask-validate:disabled{opacity:.6}
+
 .bottom-nav{
  position:fixed;left:0;right:0;bottom:0;height:68px;
  background:white;border-top:1px solid #dcefe7;
@@ -616,13 +660,15 @@ de points dont vous avez besoin (1 point = 200 FCFA à l'unité).
 <strong style="font-size:13px;color:#17352C">Choisir mon propre montant</strong>
 
 <div class="custom-amount-row">
+<!-- MODIFIÉ : ajout de onchange pour corriger la valeur seulement quand la saisie est terminée -->
 <input
   type="number"
   id="customPointsInput"
   min="1"
   max="500"
   value="1"
-  oninput="mettreAJourPrixPersonnalise()">
+  oninput="mettreAJourPrixPersonnalise()"
+  onchange="corrigerChampPersonnalise()">
 <span class="custom-amount-price" id="customPointsPrice">200 FCFA</span>
 </div>
 
@@ -678,7 +724,6 @@ en cas de problème.
 <div class="modal-content">
 
 <button type="button" class="close-button" onclick="fermerModal('editProfileModal')">×</button>
-
 <h2>✏️ Modifier mon profil</h2>
 
 <form id="profileForm" onsubmit="enregistrerProfil(event)">
@@ -688,6 +733,16 @@ en cas de problème.
 <img id="photoPreview" class="photo-preview" src="https://via.placeholder.com/200/E0F7EE/087557?text=Photo">
 <input type="file" id="editPhoto" accept="image/jpeg,image/png,image/webp" onchange="gererPhotoSelectionnee(event)">
 <div class="choice-note">JPG, PNG ou WEBP — compression automatique appliquée si nécessaire.</div>
+
+<!-- AJOUT : masque du visage (le bouton apparaît après le choix d'une photo) -->
+<button type="button" class="mask-button" id="btnMasquer" style="display:none" onclick="ouvrirEditeurMasque()">
+🎭 Masquer mon visage
+</button>
+<div class="mask-status" id="maskStatus">
+🎭 Visage masqué. Votre vraie photo restera privée : elle ne sera visible
+que par la personne avec qui vous commencerez une discussion.
+<button type="button" onclick="retirerMasque()">Retirer le masque</button>
+</div>
 </div>
 
 <div class="form-group">
@@ -760,6 +815,42 @@ Votre profil sera examiné avant d'être visible publiquement
 </form>
 </div>
 </div>
+ <!-- AJOUT : MODALE MASQUER MON VISAGE (placée après la modale profil pour s'afficher par-dessus) -->
+
+<div class="modal" id="maskModal">
+<div class="modal-content">
+
+<button type="button" class="close-button" onclick="annulerMasque()">×</button>
+
+<h2>🎭 Masquer mon visage</h2>
+
+<p class="section-description">
+Choisissez un emoji, puis touchez ou glissez-le avec le doigt
+sur votre visage. Réglez sa taille avec le curseur.
+</p>
+
+<div class="mask-canvas-wrap">
+<canvas id="maskCanvas"></canvas>
+</div>
+
+<div class="emoji-choices">
+<button type="button" class="emoji-choice active" data-emoji="😎" onclick="choisirEmoji('😎')">😎</button>
+<button type="button" class="emoji-choice" data-emoji="🌸" onclick="choisirEmoji('🌸')">🌸</button>
+<button type="button" class="emoji-choice" data-emoji="🎭" onclick="choisirEmoji('🎭')">🎭</button>
+</div>
+
+<div class="form-group">
+<label for="maskSize">Taille de l'emoji</label>
+<input type="range" id="maskSize" min="10" max="100" value="40" oninput="changerTailleEmoji(this.value)">
+</div>
+
+<div class="mask-actions">
+<button type="button" class="mask-cancel" onclick="annulerMasque()">Annuler</button>
+<button type="button" class="mask-validate" id="btnValiderMasque" onclick="validerMasque()">✅ Valider</button>
+</div>
+
+</div>
+</div>
 
 
 <!-- MODALE PAIEMENT -->
@@ -796,15 +887,12 @@ Continuer vers le paiement
 
 
 <!-- NAVIGATION -->
-
-<nav class="bottom-nav">
+ <nav class="bottom-nav">
 <a href="index.html"><span>🏠</span>Accueil</a>
 <a href="explorer.html"><span>🔎</span>Explorer</a>
 <a href="messagerie.html"><span>💬</span>Messagerie</a>
 <a href="profil.html" class="active"><span>👤</span>Profil</a>
-</nav>
-
-
+ </nav>
 <!-- SDK APPWRITE (CDN) -->
 <script src="https://cdn.jsdelivr.net/npm/appwrite@20.0.0"></script>
 
@@ -841,11 +929,41 @@ let photoFichierSelectionne = null;
 let nombrePointsSelectionne = 0;
 let prixSelectionne = 0;
 
+// AJOUT : état du masque de visage
+let masqueActif = false;
+let photoMasqueeFichier = null;
+let photoOriginaleFichier = null;
+let maskImage = null;
+let maskEmoji = "😎";
+let maskX = 0;
+let maskY = 0;
+let maskTaille = 0;
+let maskDrag = false;
+
 const LABELS_TYPE_RELATION = {
   mariage: "💍 Mariage",
   amoureuse: "🌹 Sans précipitation",
   projet: "💕 Projet de vie à deux"
 };
+
+
+/* ========================================== AJOUT : PERMISSIONS DES FICHIERS ========================================== */
+
+function permLirePublic() {
+  return 'read("any")';
+}
+
+function permLireUtilisateur(id) {
+  return 'read("user:' + id + '")';
+}
+
+function permModifierUtilisateur(id) {
+  return 'update("user:' + id + '")';
+}
+
+function permSupprimerUtilisateur(id) {
+  return 'delete("user:' + id + '")';
+}
 
 
 /* ========================================== ONGLETS AUTH ========================================== */
@@ -1138,6 +1256,10 @@ async function gererPhotoSelectionnee(event) {
     photoFichierSelectionne = fichierFinal;
     document.getElementById("photoPreview").src = URL.createObjectURL(fichierFinal);
 
+    // AJOUT : nouvelle photo = on repart sans masque, et le bouton "Masquer mon visage" apparaît
+    reinitialiserMasque();
+    document.getElementById("btnMasquer").style.display = "block";
+
   } catch (erreur) {
     console.error("Erreur compression photo :", erreur);
     alert("Impossible de traiter cette photo. Essayez-en une autre.");
@@ -1226,6 +1348,232 @@ function urlPhoto(photoId) {
 }
 
 
+/* ========================================== AJOUT : MASQUE DU VISAGE ========================================== */
+
+// Exporte un canvas en JPEG de 500 Ko maximum (cela supprime aussi les données EXIF / GPS)
+function canvasVersFichier(canvas, tailleMaxOctets) {
+
+  tailleMaxOctets = tailleMaxOctets || 500000;
+
+  return new Promise(function (resolve, reject) {
+
+    function essayer(qualite) {
+
+      canvas.toBlob(function (blob) {
+
+        if (!blob) {
+          reject(new Error("Export de l'image impossible."));
+          return;
+        }
+
+        if (blob.size <= tailleMaxOctets || qualite <= 0.4) {
+          resolve(new File([blob], "photo.jpg", { type: "image/jpeg" }));
+        } else {
+          essayer(qualite - 0.1);
+        }
+
+      }, "image/jpeg", qualite);
+
+    }
+
+    essayer(0.85);
+
+  });
+
+}
+
+function reinitialiserMasque() {
+  masqueActif = false;
+  photoMasqueeFichier = null;
+  photoOriginaleFichier = null;
+  document.getElementById("maskStatus").classList.remove("show");
+}
+
+function dessinerMasque(avecEmoji) {
+
+  const canvas = document.getElementById("maskCanvas");
+  const ctx = canvas.getContext("2d");
+
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.drawImage(maskImage, 0, 0, canvas.width, canvas.height);
+
+  if (avecEmoji) {
+    ctx.font = Math.round(maskTaille) +
+      'px "Noto Color Emoji","Apple Color Emoji","Segoe UI Emoji",sans-serif';
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(maskEmoji, maskX, maskY);
+  }
+
+}
+
+function ouvrirEditeurMasque() {
+
+  if (!photoFichierSelectionne) {
+    alert("Choisissez d'abord une photo.");
+    return;
+  }
+
+  const image = new Image();
+
+  image.onload = function () {
+
+    let largeur = image.width;
+    let hauteur = image.height;
+
+    if (largeur > 1024) {
+      hauteur = Math.round((hauteur * 1024) / largeur);
+      largeur = 1024;
+    }
+
+    const canvas = document.getElementById("maskCanvas");
+    canvas.width = largeur;
+    canvas.height = hauteur;
+
+    maskImage = image;
+    maskX = largeur / 2;
+    maskY = hauteur / 2;
+
+    document.getElementById("maskSize").value = 40;
+    maskTaille = 0.4 * Math.min(largeur, hauteur);
+
+    dessinerMasque(true);
+
+    document.getElementById("maskModal").classList.add("show");
+
+  };
+
+  image.onerror = function () {
+    alert("Impossible d'ouvrir cette photo dans l'éditeur.");
+  };
+
+  image.src = URL.createObjectURL(photoFichierSelectionne);
+
+}
+
+function choisirEmoji(emoji) {
+
+  maskEmoji = emoji;
+
+  document.querySelectorAll(".emoji-choice").forEach(function (bouton) {
+    bouton.classList.toggle("active", bouton.dataset.emoji === emoji);
+  });
+
+  if (maskImage) dessinerMasque(true);
+
+}
+
+function changerTailleEmoji(valeur) {
+
+  const canvas = document.getElementById("maskCanvas");
+
+  maskTaille = (Number(valeur) / 100) * Math.min(canvas.width, canvas.height);
+
+  if (maskImage) dessinerMasque(true);
+
+}
+
+function positionDansCanvas(event) {
+
+  const canvas = document.getElementById("maskCanvas");
+  const rect = canvas.getBoundingClientRect();
+
+  maskX = (event.clientX - rect.left) * canvas.width / rect.width;
+  maskY = (event.clientY - rect.top) * canvas.height / rect.height;
+
+}
+
+function initialiserEditeurMasque() {
+
+  const canvas = document.getElementById("maskCanvas");
+
+  canvas.addEventListener("pointerdown", function (event) {
+    if (!maskImage) return;
+    maskDrag = true;
+    canvas.setPointerCapture(event.pointerId);
+    positionDansCanvas(event);
+    dessinerMasque(true);
+  });
+
+  canvas.addEventListener("pointermove", function (event) {
+    if (!maskDrag || !maskImage) return;
+    positionDansCanvas(event);
+    dessinerMasque(true);
+  });
+
+  ["pointerup", "pointercancel"].forEach(function (type) {
+    canvas.addEventListener(type, function () {
+      maskDrag = false;
+    });
+  });
+
+}
+
+function annulerMasque() {
+  fermerModal("maskModal");
+}
+
+async function validerMasque() {
+
+  const bouton = document.getElementById("btnValiderMasque");
+  const canvas = document.getElementById("maskCanvas");
+
+  bouton.disabled = true;
+
+  try {
+
+    // 1. Photo masquée : l'emoji est fusionné dans l'image
+    dessinerMasque(true);
+    const fichierMasque = await canvasVersFichier(canvas);
+
+    // 2. Photo originale : redessinée sans emoji (supprime les données EXIF / GPS)
+    dessinerMasque(false);
+    const fichierOriginal = await canvasVersFichier(canvas);
+
+    // On remet l'aperçu avec l'emoji dans l'éditeur
+    dessinerMasque(true);
+
+    if (fichierMasque.size > 500000 || fichierOriginal.size > 500000) {
+      alert("Cette photo reste trop volumineuse. Essayez une autre photo.");
+      return;
+    }
+
+    photoMasqueeFichier = fichierMasque;
+    photoOriginaleFichier = fichierOriginal;
+    masqueActif = true;
+
+    document.getElementById("photoPreview").src = URL.createObjectURL(fichierMasque);
+    document.getElementById("btnMasquer").style.display = "none";
+    document.getElementById("maskStatus").classList.add("show");
+
+    fermerModal("maskModal");
+
+  } catch (erreur) {
+
+    console.error("Erreur masque :", erreur);
+    alert("Impossible de créer la photo masquée. Essayez à nouveau.");
+
+  } finally {
+
+    bouton.disabled = false;
+
+  }
+
+}
+
+function retirerMasque() {
+
+  reinitialiserMasque();
+
+  document.getElementById("btnMasquer").style.display = "block";
+
+  if (photoFichierSelectionne) {
+    document.getElementById("photoPreview").src = URL.createObjectURL(photoFichierSelectionne);
+  }
+
+}
+
+
 /* ========================================== MODALE PROFIL ========================================== */
 
 function ouvrirModificationProfil() {
@@ -1246,7 +1594,6 @@ function ouvrirModificationProfil() {
 
   document.getElementById("editProfileModal").classList.add("show");
 }
-
 /* ========================================== ENREGISTRER LE PROFIL ========================================== */
 
 async function enregistrerProfil(event) {
@@ -1278,14 +1625,84 @@ async function enregistrerProfil(event) {
   try {
 
     let photoId = profilActuel ? profilActuel.photoPrincipale : null;
+    let photoOriginaleId = null;
+
+    // AJOUT : le masque est utilisé seulement si les deux fichiers sont prêts
+    const masqueUtilise = !!(
+      photoFichierSelectionne &&
+      masqueActif &&
+      photoMasqueeFichier &&
+      photoOriginaleFichier
+    );
+
+    const idUtilisateur = utilisateurConnecte.$id;
 
     if (photoFichierSelectionne) {
-      const fichierUploade = await storage.createFile({
-        bucketId: APPWRITE_BUCKET_PHOTOS,
-        fileId: Appwrite.ID.unique(),
-        file: photoFichierSelectionne
-      });
-      photoId = fichierUploade.$id;
+
+      if (masqueUtilise) {
+       // MODIFIÉ : deux fichiers : l'original PRIVÉ d'abord, puis la photo masquée PUBLIQUE
+        let fichierOriginalUploade = null;
+
+        try {
+
+          fichierOriginalUploade = await storage.createFile({
+            bucketId: APPWRITE_BUCKET_PHOTOS,
+            fileId: Appwrite.ID.unique(),
+            file: photoOriginaleFichier,
+            permissions: [
+              permLireUtilisateur(idUtilisateur),
+              permModifierUtilisateur(idUtilisateur),
+              permSupprimerUtilisateur(idUtilisateur)
+            ]
+          });
+
+          const fichierMasqueUploade = await storage.createFile({
+            bucketId: APPWRITE_BUCKET_PHOTOS,
+            fileId: Appwrite.ID.unique(),
+            file: photoMasqueeFichier,
+            permissions: [
+              permLirePublic(),
+              permModifierUtilisateur(idUtilisateur),
+              permSupprimerUtilisateur(idUtilisateur)
+            ]
+          });
+
+          photoId = fichierMasqueUploade.$id;
+          photoOriginaleId = fichierOriginalUploade.$id;
+
+        } catch (erreurUpload) {
+
+          // Si la photo masquée n'a pas pu être envoyée, on supprime l'original déjà envoyé
+          if (fichierOriginalUploade) {
+            try {
+              await storage.deleteFile({
+                bucketId: APPWRITE_BUCKET_PHOTOS,
+                fileId: fichierOriginalUploade.$id
+              });
+            } catch (e) {}
+          }
+         throw erreurUpload;
+
+        }
+
+      } else {
+
+        // MODIFIÉ : photo sans masque, avec sa propre lecture publique
+        const fichierUploade = await storage.createFile({
+          bucketId: APPWRITE_BUCKET_PHOTOS,
+          fileId: Appwrite.ID.unique(),
+          file: photoFichierSelectionne,
+          permissions: [
+            permLirePublic(),
+            permModifierUtilisateur(idUtilisateur),
+            permSupprimerUtilisateur(idUtilisateur)
+          ]
+        });
+
+        photoId = fichierUploade.$id;
+
+      }
+
     }
 
     const donnees = {
@@ -1295,6 +1712,14 @@ async function enregistrerProfil(event) {
       typeRelation,
       photoPrincipale: photoId
     };
+
+    // AJOUT : la colonne photoOriginaleId n'est envoyée que si nécessaire
+    if (masqueUtilise) {
+      donnees.photoOriginaleId = photoOriginaleId;
+    } else if (photoFichierSelectionne && profilActuel && profilActuel.photoOriginaleId) {
+      // nouvelle photo sans masque : on retire l'ancienne photo originale
+      donnees.photoOriginaleId = null;
+    }
 
     if (profilActuel) {
 
@@ -1331,12 +1756,16 @@ async function enregistrerProfil(event) {
     }
 
     photoFichierSelectionne = null;
+
+    // AJOUT : on remet le masque à zéro après l'enregistrement
+    reinitialiserMasque();
+    document.getElementById("btnMasquer").style.display = "none";
+
     await chargerProfilUtilisateur();
     await chargerSoldePoints(utilisateurConnecte.$id);
     fermerModal("editProfileModal");
     alert("Votre profil a été enregistré. Il sera visible après validation.");
-
-  } catch (erreur) {
+     } catch (erreur) {
     console.error("Erreur enregistrement profil :", erreur);
     alert("Une erreur est survenue lors de l'enregistrement : " + erreur.message);
   } finally {
@@ -1402,10 +1831,8 @@ function afficherProfil() {
   } else {
     badge.innerHTML = `<span class="pending-badge">⏳ Profil en attente de validation</span>`;
   }
-}
-
-
-/* ========================================== POINTS ========================================== */
+ }
+ /* ========================================== POINTS ========================================== */
 
 async function chargerSoldePoints(userId) {
   try {
@@ -1465,8 +1892,8 @@ function mettreAJourPrixPersonnalise() {
   if (!nombre || nombre < 1) nombre = 1;
   if (nombre > 500) nombre = 500;
 
-  input.value = nombre;
-
+  // MODIFIÉ : le champ n'est plus réécrit pendant la saisie,
+  // sinon on ne peut pas effacer le "1" pour taper 2, 3, 4...
   const prix = nombre * PRIX_PAR_POINT;
 
   document.getElementById("customPointsPrice").textContent =
@@ -1474,7 +1901,23 @@ function mettreAJourPrixPersonnalise() {
 
 }
 
+// AJOUT : corrige la valeur du champ quand la saisie est terminée
+function corrigerChampPersonnalise() {
+
+  const input = document.getElementById("customPointsInput");
+  let nombre = parseInt(input.value, 10);
+
+  if (!nombre || nombre < 1) nombre = 1;
+  if (nombre > 500) nombre = 500;
+
+  input.value = nombre;
+  mettreAJourPrixPersonnalise();
+
+}
+
 function ouvrirPaiementPersonnalise() {
+
+  corrigerChampPersonnalise(); // AJOUT : valeur toujours entre 1 et 500
 
   const nombre = parseInt(document.getElementById("customPointsInput").value, 10) || 1;
   const prix = nombre * PRIX_PAR_POINT;
@@ -1495,9 +1938,8 @@ function ouvrirPaiement(nombrePoints, prix) {
 
 function formaterPrix(prix) {
   return Number(prix).toLocaleString("fr-FR");
-}
-
-function continuerPaiement() {
+ }
+ function continuerPaiement() {
   const methode = document.querySelector('input[name="paymentMethod"]:checked');
 
   if (!methode) {
@@ -1526,6 +1968,7 @@ document.addEventListener("click", function (event) {
 /* ========================================== INITIALISATION ========================================== */
 
 document.addEventListener("DOMContentLoaded", async function () {
+  initialiserEditeurMasque(); // AJOUT : active le déplacement de l'emoji au doigt
   await chargerPays();
   await chargerToutesLesVilles();
   await verifierRetourEmail();
