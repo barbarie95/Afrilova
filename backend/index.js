@@ -207,9 +207,8 @@ Réponds uniquement en JSON :
           }
         ],
         generationConfig: {
-          responseMimeType: "application/json",
-          temperature: 0.7,
-          maxOutputTokens: 400
+  responseMimeType: "application/json",
+  maxOutputTokens: 400
         }
       })
     });
