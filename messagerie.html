@@ -1800,59 +1800,156 @@ async function selectionnerPhotos(event) {
 
 }
 
-
 /* ==========================================
-   AIDE À LA DISCUSSION
+   AIDE À LA DISCUSSION — GEMINI
 ========================================== */
 
 function ouvrirAide() {
 
-  document.getElementById(
-    "aideModal"
-  ).style.display =
-    "flex";
+  document.getElementById("aideModal").style.display = "flex";
 
-  document.getElementById(
-    "helpResults"
-  ).innerHTML =
-    "";
+  document.getElementById("helpResults").innerHTML = "";
 
-  document.getElementById(
-    "questionAide"
-  ).focus();
+  document.getElementById("questionAide").value = "";
+
+  document.getElementById("questionAide").focus();
 
 }
 
 
-function demanderAide() {
+async function demanderAide() {
 
   const question =
-    document.getElementById(
-      "questionAide"
-    ).value.trim();
+    document.getElementById("questionAide")
+      .value
+      .trim();
+
+  const zone =
+    document.getElementById("helpResults");
 
   if (!question) {
 
-    alert(
-      "Écris d'abord ta question."
-    );
+    alert("Écris d'abord ta question.");
 
     return;
-
   }
 
-  document.getElementById(
-    "helpResults"
-  ).innerHTML = `
+
+  /* Vérification de la conversation */
+
+  if (!conversationActuelle) {
+
+    zone.innerHTML = `
+      <div class="suggestion">
+        ❌ Ouvre d'abord une conversation.
+      </div>
+    `;
+
+    return;
+  }
+
+
+  /* Affichage du chargement */
+
+  zone.innerHTML = `
     <div class="suggestion">
-      💡 Cette fonctionnalité n'est pas encore connectée :
-      elle nécessite un traitement sécurisé côté serveur
-      (la clé de l'IA ne peut jamais être placée dans le site).
-      Elle sera activée prochainement.
-      En attendant, vous pouvez écrire votre message directement.
+      🤖 Gemini prépare des suggestions...
+      <br>
+      <small>Cette opération coûte 1 point.</small>
     </div>
   `;
 
+
+  try {
+
+    const resultat =
+      await appelerFonction({
+
+        action: "aideDiscussion",
+
+        question: question,
+
+        conversationId:
+          conversationActuelle
+
+      });
+
+
+    if (
+      !resultat ||
+      !Array.isArray(resultat.suggestions)
+    ) {
+
+      throw new Error(
+        "Aucune suggestion reçue."
+      );
+
+    }
+
+
+    const suggestions =
+      resultat.suggestions;
+
+
+    zone.innerHTML = `
+      <div class="suggestion">
+        <strong>🤖 Voici 3 idées de réponse :</strong>
+      </div>
+
+      ${suggestions.map(
+        (suggestion, index) => `
+          <div class="suggestion">
+            <strong>${index + 1}.</strong>
+            ${echapperHTML(suggestion)}
+          </div>
+        `
+      ).join("")}
+
+      <div class="suggestion">
+        <small>
+          💡 Ces réponses sont seulement des suggestions.
+          Tu peux les modifier avant de les envoyer.
+        </small>
+      </div>
+    `;
+
+
+  } catch (erreur) {
+
+    console.error(
+      "Erreur aide à la discussion :",
+      erreur
+    );
+
+
+    zone.innerHTML = `
+      <div class="suggestion">
+        ❌ ${
+          echapperHTML(
+            erreur.message ||
+            "Impossible de générer les suggestions."
+          )
+        }
+      </div>
+    `;
+
+  }
+
+}
+
+
+/* Protection du texte généré par l'IA */
+
+function echapperHTML(texte) {
+
+  return String(texte || "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+
+            }
 }
 
 
