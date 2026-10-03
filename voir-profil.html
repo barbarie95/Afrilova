@@ -3,119 +3,517 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Profil - Afrilova</title>
+
+<title>Profil - Affrilova</title>
 
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{
- font-family:Arial,sans-serif;background:#F3FBF7;
- color:#17352C;padding-bottom:85px
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0
 }
-button{font-family:inherit;cursor:pointer}
+
+:root{
+  --vert:#20B486;
+  --vert-fonce:#159B72;
+  --vert-clair:#55D3A8;
+  --vert-tres-clair:#E8F8F2;
+  --fond:#F7FCFA;
+  --texte:#17352C;
+  --gris:#668078;
+  --gris-clair:#55736A;
+  --blanc:#FFFFFF;
+  --bordure:#DDEFE8;
+  --ombre:0 5px 18px rgba(18,96,72,.07);
+}
+
+html{
+  scroll-behavior:smooth
+}
+
+body{
+  font-family:Arial,sans-serif;
+  background:
+    radial-gradient(
+      circle at top right,
+      rgba(85,211,168,.12),
+      transparent 30%
+    ),
+    var(--fond);
+  color:var(--texte);
+  padding-bottom:90px;
+  min-height:100vh
+}
+
+button{
+  font-family:inherit;
+  cursor:pointer
+}
+
+/* ==========================================
+   HEADER
+========================================== */
 
 header{
- background:linear-gradient(135deg,#0B8F6A,#3DBB91);
- color:white;padding:18px 16px;
- display:flex;align-items:center;justify-content:space-between;
- box-shadow:0 3px 10px rgba(0,0,0,.08)
-}
-.logo{font-size:20px;font-weight:bold}
-.header-points{
- background:rgba(255,255,255,.18);
- padding:8px 12px;border-radius:20px;
- font-size:13px;font-weight:bold
+  background:
+    linear-gradient(
+      135deg,
+      var(--vert-fonce),
+      var(--vert),
+      var(--vert-clair)
+    );
+  color:white;
+  padding:17px 16px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  box-shadow:0 4px 14px rgba(21,155,114,.16);
+  position:relative;
+  overflow:hidden;
 }
 
-.container{
- width:100%;max-width:700px;margin:auto;
- padding:18px 14px 30px
+header::after{
+  content:"";
+  position:absolute;
+  width:150px;
+  height:150px;
+  border-radius:50%;
+  background:rgba(255,255,255,.08);
+  right:-60px;
+  top:-80px;
+  pointer-events:none;
 }
+
+.logo{
+  font-size:20px;
+  font-weight:bold;
+  position:relative;
+  z-index:1
+}
+
+.header-points{
+  background:rgba(255,255,255,.18);
+  border:1px solid rgba(255,255,255,.18);
+  padding:8px 12px;
+  border-radius:20px;
+  font-size:13px;
+  font-weight:bold;
+  position:relative;
+  z-index:1;
+  backdrop-filter:blur(5px);
+  transition:transform .2s ease
+}
+
+.header-points:hover{
+  transform:translateY(-1px)
+}
+
+/* ==========================================
+   CONTENEUR
+========================================== */
+
+.container{
+  width:100%;
+  max-width:700px;
+  margin:auto;
+  padding:18px 14px 30px
+}
+
 .back-link{
- display:inline-block;color:#087557;text-decoration:none;
- font-size:14px;font-weight:bold;margin-bottom:14px
+  display:inline-block;
+  color:var(--vert-fonce);
+  text-decoration:none;
+  font-size:14px;
+  font-weight:bold;
+  margin-bottom:14px;
+  transition:
+    transform .2s ease,
+    color .2s ease
+}
+
+.back-link:hover{
+  color:var(--vert);
+  transform:translateX(-3px)
+}
+
+/* ==========================================
+   ANIMATIONS
+========================================== */
+
+@keyframes apparition{
+  from{
+    opacity:0;
+    transform:translateY(12px)
+  }
+  to{
+    opacity:1;
+    transform:translateY(0)
+  }
+}
+
+@keyframes apparitionPhoto{
+  from{
+    opacity:0;
+    transform:scale(1.025)
+  }
+  to{
+    opacity:1;
+    transform:scale(1)
+  }
+}
+
+@keyframes pulsePoint{
+  0%{
+    transform:scale(1)
+  }
+  50%{
+    transform:scale(1.04)
+  }
+  100%{
+    transform:scale(1)
+  }
+}
+
+#contenuProfil{
+  animation:apparition .45s ease both
 }
 
 .card{
- background:white;border-radius:18px;overflow:hidden;
- box-shadow:0 3px 12px rgba(0,0,0,.06);margin-bottom:16px
-}
-.photo{
- width:100%;height:340px;object-fit:cover;
- display:block;background:#E0F7EE
-}
-.card-content{padding:18px}
-.name{font-size:22px;color:#17352C;margin-bottom:5px}
-.location{color:#668078;font-size:14px;margin-bottom:14px}
-
-.info-grid{
- display:grid;grid-template-columns:1fr 1fr;
- gap:9px;margin-bottom:14px
-}
-.info-box{background:#F3FBF7;border-radius:11px;padding:11px}
-.info-box span{
- display:block;color:#668078;font-size:11px;margin-bottom:4px
-}
-.info-box strong{color:#087557;font-size:13px}
-
-.description{
- background:#F3FBF7;border-radius:12px;padding:13px
-}
-.description strong{
- display:block;color:#087557;font-size:13px;margin-bottom:6px
-}
-.description p{
- color:#55736A;font-size:14px;line-height:1.5;
- white-space:pre-wrap;word-wrap:break-word
+  animation:apparition .45s ease .05s both
 }
 
 .action-card{
- background:white;border-radius:18px;padding:18px;
- box-shadow:0 3px 12px rgba(0,0,0,.06);text-align:center
+  animation:apparition .45s ease .12s both
 }
-.btn-principal{
- display:block;width:100%;border:none;background:#0B8F6A;
- color:white;padding:14px;border-radius:12px;
- font-weight:bold;font-size:14px;text-decoration:none
+
+/* ==========================================
+   PROFIL
+========================================== */
+
+.card{
+  background:var(--blanc);
+  border-radius:20px;
+  overflow:hidden;
+  box-shadow:var(--ombre);
+  margin-bottom:16px;
+  border:1px solid rgba(221,239,232,.65)
 }
-.btn-principal:disabled{opacity:.6}
+
+.photo{
+  width:100%;
+  height:340px;
+  object-fit:cover;
+  display:block;
+  background:var(--vert-tres-clair);
+  animation:apparitionPhoto .6s ease both
+}
+
+.card-content{
+  padding:19px
+}
+
+.name{
+  font-size:23px;
+  color:var(--texte);
+  margin-bottom:5px
+}
+
+.location{
+  color:var(--gris);
+  font-size:14px;
+  margin-bottom:15px
+}
+
+.info-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:9px;
+  margin-bottom:15px
+}
+
+.info-box{
+  background:var(--vert-tres-clair);
+  border:1px solid rgba(32,180,134,.06);
+  border-radius:12px;
+  padding:12px;
+  transition:
+    transform .2s ease,
+    box-shadow .2s ease
+}
+
+.info-box:hover{
+  transform:translateY(-2px);
+  box-shadow:0 4px 10px rgba(32,180,134,.08)
+}
+
+.info-box span{
+  display:block;
+  color:var(--gris);
+  font-size:11px;
+  margin-bottom:5px
+}
+
+.info-box strong{
+  color:var(--vert-fonce);
+  font-size:13px
+}
+
+.description{
+  background:#F7FCFA;
+  border:1px solid var(--bordure);
+  border-radius:13px;
+  padding:14px
+}
+
+.description strong{
+  display:block;
+  color:var(--vert-fonce);
+  font-size:13px;
+  margin-bottom:7px
+}
+
+.description p{
+  color:var(--gris-clair);
+  font-size:14px;
+  line-height:1.55;
+  white-space:pre-wrap;
+  word-wrap:break-word
+}
+
+/* ==========================================
+   ZONE ACTION
+========================================== */
+
+.action-card{
+  background:var(--blanc);
+  border-radius:20px;
+  padding:18px;
+  box-shadow:var(--ombre);
+  text-align:center;
+  border:1px solid rgba(221,239,232,.65)
+}
+
 .action-note{
- color:#55736A;font-size:13px;line-height:1.5;margin-bottom:12px
+  color:var(--gris-clair);
+  font-size:13px;
+  line-height:1.5;
+  margin-bottom:12px
 }
+
 .action-hint{
- color:#668078;font-size:11px;margin-top:10px;line-height:1.4
+  color:var(--gris);
+  font-size:11px;
+  margin-top:9px;
+  line-height:1.4
 }
+
+.action-buttons{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  margin-top:4px
+}
+
+.btn-principal,
+.btn-prioritaire{
+  display:block;
+  width:100%;
+  border:none;
+  color:white;
+  padding:14px;
+  border-radius:13px;
+  font-weight:bold;
+  font-size:14px;
+  text-decoration:none;
+  transition:
+    transform .18s ease,
+    box-shadow .18s ease,
+    opacity .18s ease
+}
+
+.btn-principal{
+  background:
+    linear-gradient(
+      135deg,
+      var(--vert-fonce),
+      var(--vert)
+    );
+  box-shadow:0 4px 10px rgba(21,155,114,.15)
+}
+
+.btn-principal:hover{
+  transform:translateY(-2px);
+  box-shadow:0 7px 15px rgba(21,155,114,.18)
+}
+
+.btn-prioritaire{
+  background:
+    linear-gradient(
+      135deg,
+      #159B72,
+      #20B486
+    );
+  border:1px solid rgba(255,255,255,.1);
+  box-shadow:0 4px 10px rgba(21,155,114,.13)
+}
+
+.btn-prioritaire:hover{
+  transform:translateY(-2px);
+  box-shadow:0 7px 15px rgba(21,155,114,.18)
+}
+
+.btn-principal:active,
+.btn-prioritaire:active{
+  transform:scale(.98)
+}
+
+.btn-principal:disabled,
+.btn-prioritaire:disabled{
+  opacity:.6;
+  cursor:not-allowed;
+  transform:none;
+  box-shadow:none
+}
+
+.priority-description{
+  margin-top:12px;
+  padding:10px 12px;
+  background:var(--vert-tres-clair);
+  border-radius:11px;
+  color:var(--gris-clair);
+  font-size:11px;
+  line-height:1.45;
+  text-align:left
+}
+
 .success-note{
- background:#E6F7EF;color:#0B8F6A;border-radius:10px;
- padding:12px;font-size:13px;font-weight:bold
+  background:var(--vert-tres-clair);
+  color:var(--vert-fonce);
+  border:1px solid #CDEFE1;
+  border-radius:11px;
+  padding:13px;
+  font-size:13px;
+  font-weight:bold;
+  animation:apparition .35s ease both
 }
+
+/* ==========================================
+   ÉTATS
+========================================== */
 
 .state-message{
- background:white;border-radius:18px;padding:35px 20px;
- text-align:center;color:#668078;font-size:14px;line-height:1.5;
- box-shadow:0 3px 12px rgba(0,0,0,.05)
+  background:var(--blanc);
+  border-radius:20px;
+  padding:35px 20px;
+  text-align:center;
+  color:var(--gris);
+  font-size:14px;
+  line-height:1.5;
+  box-shadow:var(--ombre);
+  border:1px solid rgba(221,239,232,.65);
+  animation:apparition .4s ease both
 }
+
+/* ==========================================
+   NAVIGATION
+========================================== */
 
 .bottom-nav{
- position:fixed;left:0;right:0;bottom:0;height:68px;
- background:white;border-top:1px solid #dcefe7;
- display:flex;z-index:40;
- box-shadow:0 -2px 10px rgba(0,0,0,.06)
+  position:fixed;
+  left:0;
+  right:0;
+  bottom:0;
+  height:68px;
+  background:rgba(255,255,255,.97);
+  border-top:1px solid var(--bordure);
+  display:flex;
+  z-index:40;
+  box-shadow:0 -3px 14px rgba(18,96,72,.07);
+  backdrop-filter:blur(8px)
 }
+
 .bottom-nav a{
- flex:1;text-decoration:none;color:#668078;
- display:flex;flex-direction:column;
- align-items:center;justify-content:center;
- gap:3px;font-size:11px;font-weight:bold
+  flex:1;
+  text-decoration:none;
+  color:var(--gris);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:3px;
+  font-size:11px;
+  font-weight:bold;
+  transition:
+    color .2s ease,
+    transform .2s ease
 }
-.bottom-nav a span{font-size:20px;line-height:1}
-.bottom-nav a.active{color:#0B8F6A}
+
+.bottom-nav a span{
+  font-size:20px;
+  line-height:1;
+  transition:transform .2s ease
+}
+
+.bottom-nav a:hover{
+  color:var(--vert-fonce);
+  transform:translateY(-1px)
+}
+
+.bottom-nav a:hover span{
+  transform:scale(1.08)
+}
+
+.bottom-nav a.active{
+  color:var(--vert-fonce)
+}
+
+/* ==========================================
+   MOBILE
+========================================== */
+
+@media(max-width:420px){
+
+  .card-content{
+    padding:16px
+  }
+
+  .photo{
+    height:315px
+  }
+
+  .info-grid{
+    gap:8px
+  }
+
+  .info-box{
+    padding:10px
+  }
+
+  .info-box strong{
+    font-size:12px
+  }
+
+}
+
+/* ==========================================
+   DESKTOP
+========================================== */
 
 @media(min-width:700px){
- .bottom-nav{
-  max-width:700px;left:50%;transform:translateX(-50%);
-  border-radius:16px 16px 0 0
- }
- .photo{height:400px}
+
+  .bottom-nav{
+    max-width:700px;
+    left:50%;
+    right:auto;
+    width:100%;
+    transform:translateX(-50%);
+    border-radius:16px 16px 0 0
+  }
+
+  .photo{
+    height:400px
+  }
+
 }
 </style>
 </head>
@@ -123,28 +521,60 @@ header{
 <body>
 
 <header>
-<div class="logo">💚 Afrilova</div>
-<div class="header-points">
+
+<div class="logo">💚 Affrilova</div>
+
+<div class="header-points" id="pointsBadge">
 ⭐ <span id="headerPoints">-</span> points
 </div>
+
 </header>
+
 
 <main class="container">
 
-<a href="explorer.html" class="back-link">← Retour à Explorer</a>
+<a
+  href="explorer.html"
+  class="back-link"
+>
+← Retour à Explorer
+</a>
 
-<div id="etatMessage" class="state-message">Chargement du profil...</div>
 
-<div id="contenuProfil" style="display:none">
+<div
+  id="etatMessage"
+  class="state-message"
+>
+Chargement du profil...
+</div>
+
+
+<div
+  id="contenuProfil"
+  style="display:none"
+>
 
 <div class="card">
 
-<img id="photo" class="photo" src="" alt="Photo de profil">
+<img
+  id="photo"
+  class="photo"
+  src=""
+  alt="Photo de profil"
+>
 
 <div class="card-content">
 
-<h1 id="nom" class="name"></h1>
-<p id="lieu" class="location"></p>
+<h1
+  id="nom"
+  class="name"
+></h1>
+
+<p
+  id="lieu"
+  class="location"
+></p>
+
 
 <div class="info-grid">
 
@@ -153,462 +583,831 @@ header{
 <strong id="age">—</strong>
 </div>
 
+
 <div class="info-box">
 <span>Type de relation</span>
 <strong id="typeRelation">—</strong>
 </div>
+
 
 <div class="info-box">
 <span>Polygamie</span>
 <strong id="polygamie">—</strong>
 </div>
 
+
 <div class="info-box">
-<span>Partenaire avec enfants</span>
+<span>Situation familiale</span>
 <strong id="enfants">—</strong>
 </div>
 
 </div>
 
+
 <div class="description">
+
 <strong>À propos</strong>
+
 <p id="description"></p>
+
 </div>
 
 </div>
 </div>
 
-<div class="action-card" id="zoneAction"></div>
+
+<div
+  class="action-card"
+  id="zoneAction"
+></div>
+
 
 </div>
 
 </main>
 
+
 <nav class="bottom-nav">
-<a href="index.html"><span>🏠</span>Accueil</a>
-<a href="explorer.html" class="active"><span>🔎</span>Explorer</a>
-<a href="messagerie.html"><span>💬</span>Messagerie</a>
-<a href="profil.html"><span>👤</span>Profil</a>
+
+<a href="index.html">
+<span>🏠</span>
+Accueil
+</a>
+
+<a
+  href="explorer.html"
+  class="active"
+>
+<span>🔎</span>
+Explorer
+</a>
+
+<a href="messagerie.html">
+<span>💬</span>
+Messagerie
+</a>
+
+<a href="profil.html">
+<span>👤</span>
+Profil
+</a>
+
 </nav>
 
 
-<!-- SDK APPWRITE (CDN) -->
+<!-- SDK APPWRITE -->
 <script src="https://cdn.jsdelivr.net/npm/appwrite@20.0.0"></script>
 
 <script>
 
-/* ========================================== CONFIGURATION ========================================== */
+/* ==========================================
+   CONFIGURATION
+========================================== */
 
-const APPWRITE_ENDPOINT = "https://fra.cloud.appwrite.io/v1";
-const APPWRITE_PROJECT_ID = "6aac203e00209ccb3014";
-const APPWRITE_DATABASE_ID = "6aac2a200000e6be5877";
-const APPWRITE_BUCKET_PHOTOS = "6aad2a754e0e095d6a9a";
-const FUNCTION_ID = "6aaf8d3fdb99e41f0aaf";
+const APPWRITE_ENDPOINT =
+  "https://fra.cloud.appwrite.io/v1";
 
-const TABLE_PROFILS = "6aac2b35002a0debbb85";
-const TABLE_PAYS = "pays";
-const TABLE_VILLES = "villes";
-const TABLE_POINTS = "points";
-const TABLE_DEMANDES = "demandes";
-const TABLE_CONVERSATIONS = "conversations";
+const APPWRITE_PROJECT_ID =
+  "6aac203e00209ccb3014";
 
-const client = new Appwrite.Client();
-client.setEndpoint(APPWRITE_ENDPOINT).setProject(APPWRITE_PROJECT_ID);
+const APPWRITE_DATABASE_ID =
+  "6aac2a200000e6be5877";
 
-const account = new Appwrite.Account(client);
-const tablesDB = new Appwrite.TablesDB(client);
-const storage = new Appwrite.Storage(client);
-const functions = new Appwrite.Functions(client);
+const APPWRITE_BUCKET_PHOTOS =
+  "6aad2a754e0e095d6a9a";
 
-let utilisateurConnecte = null;
-let profil = null;
-let paysDisponibles = [];
-let villesDisponibles = [];
-let soldeActuel = 0;
+const FUNCTION_ID =
+  "6aaf8d3fdb99e41f0aaf";
+
+
+const TABLE_PROFILS =
+  "6aac2b35002a0debbb85";
+
+const TABLE_PAYS =
+  "pays";
+
+const TABLE_VILLES =
+  "villes";
+
+const TABLE_POINTS =
+  "points";
+
+const TABLE_DEMANDES =
+  "demandes";
+
+const TABLE_CONVERSATIONS =
+  "conversations";
+
+
+const COUT_DEMANDE_NORMALE =
+  1;
+
+const COUT_DEMANDE_PRIORITAIRE =
+  2;
+
+
+const client =
+  new Appwrite.Client();
+
+client
+  .setEndpoint(APPWRITE_ENDPOINT)
+  .setProject(APPWRITE_PROJECT_ID);
+
+
+const account =
+  new Appwrite.Account(client);
+
+const tablesDB =
+  new Appwrite.TablesDB(client);
+
+const storage =
+  new Appwrite.Storage(client);
+
+const functions =
+  new Appwrite.Functions(client);
+
+
+let utilisateurConnecte =
+  null;
+
+let profil =
+  null;
+
+let paysDisponibles =
+  [];
+
+let villesDisponibles =
+  [];
+
+let soldeActuel =
+  0;
+
 
 const LABELS_TYPE_RELATION = {
-  mariage: "💍 Mariage",
-  amoureuse: "🌹 Sans précipitation",
-  projet: "💕 Projet de vie à deux"
+
+  mariage:
+    "💍 Mariage",
+
+  amoureuse:
+    "🌹 Sans précipitation",
+
+  projet:
+    "💕 Projet de vie à deux"
+
 };
+
 
 const LABELS_POLYGAMIE = {
-  oui: "Accepte",
-  non: "N'accepte pas",
-  indifferent: "Indifférent"
+
+  oui:
+    "Accepte",
+
+  non:
+    "N'accepte pas",
+
+  indifferent:
+    "Indifférent"
+
 };
 
 
-/* ========================================== OUTILS ========================================== */
+/* ==========================================
+   OUTILS
+========================================== */
 
-function afficherEtat(texte) {
-  const bloc = document.getElementById("etatMessage");
-  bloc.textContent = texte;
-  bloc.style.display = "block";
-  document.getElementById("contenuProfil").style.display = "none";
+function afficherEtat(texte){
+
+  const bloc =
+    document.getElementById(
+      "etatMessage"
+    );
+
+  bloc.textContent =
+    texte;
+
+  bloc.style.display =
+    "block";
+
+  document.getElementById(
+    "contenuProfil"
+  ).style.display =
+    "none";
 }
 
-function urlPhoto(photoId) {
-  if (!photoId) return "https://via.placeholder.com/600x500/E0F7EE/087557?text=Afrilova";
-  return storage.getFileView({ bucketId: APPWRITE_BUCKET_PHOTOS, fileId: photoId });
-}
 
-function nomPays(paysId) {
-  const trouve = paysDisponibles.find(p => p.$id === paysId);
-  return trouve ? trouve.nom : "";
-}
+function urlPhoto(photoId){
 
-function nomVille(villeId) {
-  const trouve = villesDisponibles.find(v => v.$id === villeId);
-  return trouve ? trouve.nom : "";
-}
+  if (!photoId){
 
-async function appelerFonction(donnees) {
+    return "https://via.placeholder.com/600x500/E8F8F2/159B72?text=Affrilova";
 
-  const execution = await functions.createExecution({
-    functionId: FUNCTION_ID,
-    body: JSON.stringify(donnees),
-    method: "POST"
+  }
+
+  return storage.getFileView({
+
+    bucketId:
+      APPWRITE_BUCKET_PHOTOS,
+
+    fileId:
+      photoId
+
   });
+
+}
+
+
+function nomPays(paysId){
+
+  const trouve =
+    paysDisponibles.find(
+      p =>
+        p.$id === paysId
+    );
+
+  return trouve
+    ? trouve.nom
+    : "";
+
+}
+
+
+function nomVille(villeId){
+
+  const trouve =
+    villesDisponibles.find(
+      v =>
+        v.$id === villeId
+    );
+
+  return trouve
+    ? trouve.nom
+    : "";
+
+}
+
+
+async function appelerFonction(donnees){
+
+  const execution =
+    await functions.createExecution({
+
+      functionId:
+        FUNCTION_ID,
+
+      body:
+        JSON.stringify(
+          donnees
+        ),
+
+      method:
+        "POST"
+
+    });
+
 
   let resultat;
 
-  try {
-    resultat = JSON.parse(execution.responseBody);
-  } catch (e) {
-    throw new Error("Réponse invalide du serveur.");
+
+  try{
+
+    resultat =
+      JSON.parse(
+        execution.responseBody
+      );
+
+  }catch(e){
+
+    throw new Error(
+      "Réponse invalide du serveur."
+    );
+
   }
 
-  if (!resultat.ok) {
-    throw new Error(resultat.message || "Une erreur est survenue.");
+
+  if(!resultat.ok){
+
+    throw new Error(
+      resultat.message ||
+      "Une erreur est survenue."
+    );
+
   }
+
 
   return resultat;
+
 }
 
 
-/* ========================================== CHARGEMENT ========================================== */
+/* ==========================================
+   CHARGEMENT PAYS / VILLES
+========================================== */
 
-async function chargerPaysEtVilles() {
-  try {
-    const p = await tablesDB.listRows({
-      databaseId: APPWRITE_DATABASE_ID,
-      tableId: TABLE_PAYS,
-      queries: [Appwrite.Query.limit(50)]
-    });
-    paysDisponibles = p.rows;
+async function chargerPaysEtVilles(){
 
-    const v = await tablesDB.listRows({
-      databaseId: APPWRITE_DATABASE_ID,
-      tableId: TABLE_VILLES,
-      queries: [Appwrite.Query.limit(200)]
-    });
-    villesDisponibles = v.rows;
-  } catch (erreur) {
-    console.error("Erreur chargement pays/villes :", erreur);
-  }
-}
+  try{
 
-async function chargerSolde() {
-  try {
-    const reponse = await tablesDB.listRows({
-      databaseId: APPWRITE_DATABASE_ID,
-      tableId: TABLE_POINTS,
-      queries: [
-        Appwrite.Query.equal("userId", utilisateurConnecte.$id),
-        Appwrite.Query.limit(1)
-      ]
-    });
-    soldeActuel = reponse.total > 0 ? (reponse.rows[0].solde || 0) : 0;
-  } catch (erreur) {
-    console.error("Erreur chargement points :", erreur);
-    soldeActuel = 0;
-  }
-  document.getElementById("headerPoints").textContent = soldeActuel;
-}
+    const p =
+      await tablesDB.listRows({
+
+        databaseId:
+          APPWRITE_DATABASE_ID,
+
+        tableId:
+          TABLE_PAYS,
+
+        queries:[
+          Appwrite.Query.limit(50)
+        ]
+
+      });
 
 
-/* ========================================== AFFICHAGE DU PROFIL ========================================== */
-
-function afficherProfil() {
-
-  /* textContent partout : le contenu saisi par les utilisateurs n'est jamais interprété comme du HTML */
-
-  document.getElementById("photo").src = urlPhoto(profil.photoPrincipale);
-  document.getElementById("photo").alt = "Photo de " + (profil.nom || "profil");
-
-  document.getElementById("nom").textContent = profil.nom || "Profil";
-
-  const ville = nomVille(profil.villeId);
-  const pays = nomPays(profil.paysId);
-  document.getElementById("lieu").textContent =
-    "📍 " + ville + (ville && pays ? ", " : "") + pays;
-
-  document.getElementById("age").textContent =
-    profil.age ? profil.age + " ans" : "—";
-
-  document.getElementById("typeRelation").textContent =
-    LABELS_TYPE_RELATION[profil.typeRelation] || "—";
-
-  document.getElementById("polygamie").textContent =
-    LABELS_POLYGAMIE[profil.polygamie] || "—";
-
-  document.getElementById("enfants").textContent =
-    profil.aDesEnfants === true ? "Accepte"
-    : (profil.aDesEnfants === false ? "N'accepte pas" : "—");
-
-  document.getElementById("description").textContent =
-    profil.description || "";
-
-  document.getElementById("etatMessage").style.display = "none";
-  document.getElementById("contenuProfil").style.display = "block";
-}
+    paysDisponibles =
+      p.rows;
 
 
-/* ========================================== ZONE D'ACTION ========================================== */
+    const v =
+      await tablesDB.listRows({
 
-const zoneAction = document.getElementById("zoneAction");
+        databaseId:
+          APPWRITE_DATABASE_ID,
 
-function viderZone() {
-  zoneAction.innerHTML = "";
-}
+        tableId:
+          TABLE_VILLES,
 
-function ajouterNote(texte) {
-  const p = document.createElement("p");
-  p.className = "action-note";
-  p.textContent = texte;
-  zoneAction.appendChild(p);
-}
+        queries:[
+          Appwrite.Query.limit(200)
+        ]
 
-function ajouterSucces(texte) {
-  const div = document.createElement("div");
-  div.className = "success-note";
-  div.textContent = texte;
-  zoneAction.appendChild(div);
-}
+      });
 
-function ajouterLien(texte, href) {
-  const a = document.createElement("a");
-  a.className = "btn-principal";
-  a.href = href;
-  a.textContent = texte;
-  zoneAction.appendChild(a);
-}
 
-function ajouterBoutonDemande() {
-  const bouton = document.createElement("button");
-  bouton.type = "button";
-  bouton.id = "btnDemande";
-  bouton.className = "btn-principal";
-  bouton.textContent = "💬 Envoyer une demande de discussion";
-  bouton.addEventListener("click", envoyerDemande);
-  zoneAction.appendChild(bouton);
+    villesDisponibles =
+      v.rows;
 
-  const hint = document.createElement("p");
-  hint.className = "action-hint";
-  hint.textContent = "1 point sera utilisé. Vous avez " + soldeActuel + (soldeActuel > 1 ? " points." : " point.");
-  zoneAction.appendChild(hint);
-}
 
-/* Retourne : "conversation" | "demande_envoyee" | "demande_recue" | "libre" */
-async function determinerEtat(moi, autre) {
+  }catch(erreur){
 
-  try {
+    console.error(
+      "Erreur chargement pays/villes :",
+      erreur
+    );
 
-    const c1 = await tablesDB.listRows({
-      databaseId: APPWRITE_DATABASE_ID,
-      tableId: TABLE_CONVERSATIONS,
-      queries: [
-        Appwrite.Query.equal("utilisateur1Id", moi),
-        Appwrite.Query.equal("utilisateur2Id", autre),
-        Appwrite.Query.limit(1)
-      ]
-    });
-    if (c1.total > 0) return "conversation";
-
-    const c2 = await tablesDB.listRows({
-      databaseId: APPWRITE_DATABASE_ID,
-      tableId: TABLE_CONVERSATIONS,
-      queries: [
-        Appwrite.Query.equal("utilisateur1Id", autre),
-        Appwrite.Query.equal("utilisateur2Id", moi),
-        Appwrite.Query.limit(1)
-      ]
-    });
-    if (c2.total > 0) return "conversation";
-
-    const d1 = await tablesDB.listRows({
-      databaseId: APPWRITE_DATABASE_ID,
-      tableId: TABLE_DEMANDES,
-      queries: [
-        Appwrite.Query.equal("expediteurId", moi),
-        Appwrite.Query.equal("destinataireId", autre),
-        Appwrite.Query.equal("statut", "en_attente"),
-        Appwrite.Query.limit(1)
-      ]
-    });
-    if (d1.total > 0) return "demande_envoyee";
-
-    const d2 = await tablesDB.listRows({
-      databaseId: APPWRITE_DATABASE_ID,
-      tableId: TABLE_DEMANDES,
-      queries: [
-        Appwrite.Query.equal("expediteurId", autre),
-        Appwrite.Query.equal("destinataireId", moi),
-        Appwrite.Query.equal("statut", "en_attente"),
-        Appwrite.Query.limit(1)
-      ]
-    });
-    if (d2.total > 0) return "demande_recue";
-
-  } catch (erreur) {
-    console.error("Erreur vérification état :", erreur);
   }
 
-  return "libre";
-}
-
-async function preparerZoneAction() {
-
-  viderZone();
-
-  if (!utilisateurConnecte) {
-    ajouterNote("Connectez-vous pour envoyer une demande de discussion.");
-    ajouterLien("Aller à mon profil", "profil.html");
-    return;
-  }
-
-  if (profil.userId === utilisateurConnecte.$id) {
-    ajouterNote("C'est votre propre profil.");
-    ajouterLien("✏️ Modifier mon profil", "profil.html");
-    return;
-  }
-
-  const etat = await determinerEtat(utilisateurConnecte.$id, profil.userId);
-
-  if (etat === "conversation") {
-    ajouterNote("Vous avez déjà une discussion avec cette personne.");
-    ajouterLien("💬 Ouvrir la messagerie", "messagerie.html");
-    return;
-  }
-
-  if (etat === "demande_envoyee") {
-    ajouterSucces("✅ Demande envoyée. En attente de sa réponse.");
-    return;
-  }
-
-  if (etat === "demande_recue") {
-    ajouterNote("Cette personne vous a déjà envoyé une demande.");
-    ajouterLien("📩 Voir mes demandes", "messagerie.html");
-    return;
-  }
-
-  if (soldeActuel < 1) {
-    ajouterNote("Il vous faut 1 point pour envoyer une demande de discussion.");
-    ajouterLien("⭐ Acheter des points", "profil.html");
-    return;
-  }
-
-  ajouterBoutonDemande();
 }
 
 
-/* ========================================== ENVOYER LA DEMANDE ========================================== */
+/* ==========================================
+   SOLDE
+========================================== */
 
-async function envoyerDemande() {
+async function chargerSolde(){
 
-  if (!utilisateurConnecte || !profil) return;
+  try{
 
-  const confirme = confirm(
-    "Envoyer une demande de discussion à " + (profil.nom || "cette personne") +
-    " ?\n\n1 point sera utilisé."
+    const reponse =
+      await tablesDB.listRows({
+
+        databaseId:
+          APPWRITE_DATABASE_ID,
+
+        tableId:
+          TABLE_POINTS,
+
+        queries:[
+
+          Appwrite.Query.equal(
+            "userId",
+            utilisateurConnecte.$id
+          ),
+
+          Appwrite.Query.limit(1)
+
+        ]
+
+      });
+
+
+    soldeActuel =
+      reponse.total > 0
+        ? Number(
+            reponse.rows[0].solde || 0
+          )
+        : 0;
+
+
+  }catch(erreur){
+
+    console.error(
+      "Erreur chargement points :",
+      erreur
+    );
+
+    soldeActuel =
+      0;
+
+  }
+
+
+  document.getElementById(
+    "headerPoints"
+  ).textContent =
+    soldeActuel;
+
+
+  const badge =
+    document.getElementById(
+      "pointsBadge"
+    );
+
+
+  badge.style.animation =
+    "pulsePoint .35s ease";
+
+
+  setTimeout(() => {
+
+    badge.style.animation =
+      "";
+
+  }, 400);
+
+}
+
+
+/* ==========================================
+   AFFICHAGE PROFIL
+========================================== */
+
+function afficherProfil(){
+
+  document.getElementById(
+    "photo"
+  ).src =
+    urlPhoto(
+      profil.photoPrincipale
+    );
+
+
+  document.getElementById(
+    "photo"
+  ).alt =
+    "Photo de " +
+    (
+      profil.nom ||
+      "profil"
+    );
+
+
+  document.getElementById(
+    "nom"
+  ).textContent =
+    profil.nom ||
+    "Profil";
+
+
+  const ville =
+    nomVille(
+      profil.villeId
+    );
+
+
+  const pays =
+    nomPays(
+      profil.paysId
+    );
+
+
+  document.getElementById(
+    "lieu"
+  ).textContent =
+    "📍 " +
+    ville +
+    (
+      ville && pays
+        ? ", "
+        : ""
+    ) +
+    pays;
+
+
+  document.getElementById(
+    "age"
+  ).textContent =
+    profil.age
+      ? profil.age + " ans"
+      : "—";
+
+
+  document.getElementById(
+    "typeRelation"
+  ).textContent =
+    LABELS_TYPE_RELATION[
+      profil.typeRelation
+    ] ||
+    "—";
+
+
+  document.getElementById(
+    "polygamie"
+  ).textContent =
+    LABELS_POLYGAMIE[
+      profil.polygamie
+    ] ||
+    "—";
+
+
+  /*
+   * aDesEnfants indique si la personne
+   * possède elle-même des enfants.
+   *
+   * Il ne signifie pas :
+   * "accepte un partenaire ayant des enfants".
+   */
+
+  document.getElementById(
+    "enfants"
+  ).textContent =
+    profil.aDesEnfants === true
+      ? "👨‍👩‍👧 A des enfants"
+      : (
+          profil.aDesEnfants === false
+            ? "N'a pas d'enfants"
+            : "—"
+        );
+
+
+  document.getElementById(
+    "description"
+  ).textContent =
+    profil.description ||
+    "";
+
+
+  document.getElementById(
+    "etatMessage"
+  ).style.display =
+    "none";
+
+
+  document.getElementById(
+    "contenuProfil"
+  ).style.display =
+    "block";
+
+}
+
+
+/* ==========================================
+   ZONE ACTION
+========================================== */
+
+const zoneAction =
+  document.getElementById(
+    "zoneAction"
   );
 
-  if (!confirme) return;
 
-  const bouton = document.getElementById("btnDemande");
-  if (bouton) {
-    bouton.disabled = true;
-    bouton.textContent = "Envoi en cours...";
-  }
+function viderZone(){
 
-  try {
-
-    await appelerFonction({
-      action: "envoyerDemande",
-      peerId: profil.userId
-    });
-
-    soldeActuel = Math.max(0, soldeActuel - 1);
-    document.getElementById("headerPoints").textContent = soldeActuel;
-
-    viderZone();
-    ajouterSucces("✅ Demande envoyée ! Vous serez prévenu(e) dans votre messagerie dès qu'elle sera acceptée.");
-
-  } catch (erreur) {
-
-    console.error("Erreur envoi demande :", erreur);
-
-    alert("La demande n'a pas pu être envoyée : " + erreur.message);
-
-    await chargerSolde();
-    await preparerZoneAction();
-
-  }
+  zoneAction.innerHTML =
+    "";
 
 }
 
 
-/* ========================================== INITIALISATION ========================================== */
+function ajouterNote(texte){
 
-document.addEventListener("DOMContentLoaded", async function () {
+  const p =
+    document.createElement(
+      "p"
+    );
 
-  const parametres = new URLSearchParams(window.location.search);
-  const profilRowId = parametres.get("id");
+  p.className =
+    "action-note";
 
-  if (!profilRowId) {
-    afficherEtat("Profil introuvable.");
-    return;
-  }
+  p.textContent =
+    texte;
 
-  await chargerPaysEtVilles();
+  zoneAction.appendChild(
+    p
+  );
 
-  try {
-    utilisateurConnecte = await account.get();
-  } catch (erreur) {
-    utilisateurConnecte = null;
-  }
+}
 
-  try {
-    profil = await tablesDB.getRow({
-      databaseId: APPWRITE_DATABASE_ID,
-      tableId: TABLE_PROFILS,
-      rowId: profilRowId
-    });
-  } catch (erreur) {
-    console.error("Erreur chargement profil :", erreur);
-    afficherEtat("Ce profil est introuvable.");
-    return;
-  }
 
-  const estMonProfil = utilisateurConnecte && profil.userId === utilisateurConnecte.$id;
+function ajouterSucces(texte){
 
-  if (profil.statut !== "approuve" && !estMonProfil) {
-    afficherEtat("Ce profil n'est pas disponible.");
-    return;
-  }
+  const div =
+    document.createElement(
+      "div"
+    );
 
-  afficherProfil();
+  div.className =
+    "success-note";
 
-  if (utilisateurConnecte) {
-    await chargerSolde();
-  }
+  div.textContent =
+    texte;
 
-  await preparerZoneAction();
+  zoneAction.appendChild(
+    div
+  );
 
-});
+}
 
-</script>
 
-</body>
-  </html>
+function ajouterLien(
+  texte,
+  href
+){
+
+  const a =
+    document.createElement(
+      "a"
+    );
+
+  a.className =
+    "btn-principal";
+
+  a.href =
+    href;
+
+  a.textContent =
+    texte;
+
+  zoneAction.appendChild(
+    a
+  );
+
+}
+
+
+/* ==========================================
+   BOUTONS DE DEMANDE
+========================================== */
+
+function ajouterBoutonsDemande(){
+
+  const titre =
+    document.createElement(
+      "p"
+    );
+
+  titre.className =
+    "action-note";
+
+  titre.textContent =
+    "Choisissez le type de demande que vous souhaitez envoyer.";
+
+  zoneAction.appendChild(
+    titre
+  );
+
+
+  const boutons =
+    document.createElement(
+      "div"
+    );
+
+  boutons.className =
+    "action-buttons";
+
+
+  /* =========================
+     DEMANDE NORMALE
+  ========================= */
+
+  const boutonNormal =
+    document.createElement(
+      "button"
+    );
+
+  boutonNormal.type =
+    "button";
+
+  boutonNormal.id =
+    "btnDemande";
+
+  boutonNormal.className =
+    "btn-principal";
+
+  boutonNormal.textContent =
+    "💬 Demande de discussion — 1 point";
+
+  boutonNormal.addEventListener(
+    "click",
+    () =>
+      envoyerDemande(false)
+  );
+
+
+  /* =========================
+     DEMANDE PRIORITAIRE
+  ========================= */
+
+  const boutonPrioritaire =
+    document.createElement(
+      "button"
+    );
+
+  boutonPrioritaire.type =
+    "button";
+
+  boutonPrioritaire.id =
+    "btnDemandePrioritaire";
+
+  boutonPrioritaire.className =
+    "btn-prioritaire";
+
+  boutonPrioritaire.textContent =
+    "⚡ Demande prioritaire — 2 points";
+
+  boutonPrioritaire.addEventListener(
+    "click",
+    () =>
+      envoyerDemande(true)
+  );
+
+
+  boutons.appendChild(
+    boutonNormal
+  );
+
+  boutons.appendChild(
+    boutonPrioritaire
+  );
+
+
+  zoneAction.appendChild(
+    boutons
+  );
+
+
+  const hint =
+    document.createElement(
+      "p"
+    );
+
+  hint.className =
+    "action-hint";
+
+  hint.textContent =
+    "Votre solde actuel : " +
+    soldeActuel +
+    (
+      soldeActuel > 1
+        ? " points."
+        : " point."
+    );
+
+  zoneAction.appendChild(
+    hint
+  );
+
+
+  const explication =
+    document.createElement(
+      "div"
+    );
+
+  explication.className =
+    "priority-description";
+
+  explication.textContent =
+    "⚡ La demande prioritaire coûte 2 points. Le choix du type de demande est enregistré avec votre demande.";
+
+  zoneAction.appendChild(
+    explication
+  );
+
+}
+
+
+/* ==========================================
+   VÉRIFICATION ÉTAT
+========================================== */
+
+async function determinerEtat(
+  moi,
+  autre
+){
+
+  try{
+
+    const c1 =
+      await tablesDB.listRows({
+
+        databaseId:
+          APPWRITE_DATABASE_ID,
+
+        tableId:
+          TABLE_CONVERSATIONS,
+
+        queries:[
+
+          Appwrite.Query.equal(
+            "utilisateur1Id",
+            moi
+ 
