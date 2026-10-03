@@ -221,6 +221,16 @@ h1{color:#087557;font-size:25px;margin-bottom:7px}
 }
 .checkbox-row input{width:auto;margin-top:3px}
 
+/* AJOUT : boutons Politique de confidentialité et Conditions d'utilisation */
+.legal-link{
+ font-size:12px;margin-top:10px;text-align:center;
+ display:flex;flex-wrap:wrap;gap:8px;justify-content:center
+}
+.legal-link a{
+ color:#087557;background:#E0F7EE;font-weight:bold;
+ text-decoration:none;padding:7px 11px;border-radius:20px
+}
+
 .save-button,.continue-payment{
  width:100%;border:none;background:#0B8F6A;
  color:white;padding:12px;border-radius:10px;
@@ -384,8 +394,8 @@ h1{color:#087557;font-size:25px;margin-bottom:7px}
   border-radius:16px 16px 0 0
  }
 }
-</style>
-</head>
+ </style>
+ </head>
 
 <body>
 
@@ -441,6 +451,12 @@ h1{color:#087557;font-size:25px;margin-bottom:7px}
       Mot de passe oublié ?
       </button>
 
+      <!-- AJOUT : boutons politique de confidentialité et conditions -->
+      <p class="legal-link">
+        <a href="politique-confidentialite.html" target="_blank" rel="noopener">🔒 Politique de confidentialité</a>
+        <a href="conditions-utilisation.html" target="_blank" rel="noopener">📜 Conditions d'utilisation</a>
+      </p>
+
     </form>
 
     <div class="auth-error" id="authErrorInscription"></div>
@@ -464,6 +480,12 @@ h1{color:#087557;font-size:25px;margin-bottom:7px}
         et les Conditions d'utilisation. Je confirme avoir 18 ans ou plus.
         </label>
       </div>
+
+      <!-- AJOUT : boutons politique de confidentialité et conditions -->
+      <p class="legal-link">
+        <a href="politique-confidentialite.html" target="_blank" rel="noopener">🔒 Politique de confidentialité</a>
+        <a href="conditions-utilisation.html" target="_blank" rel="noopener">📜 Conditions d'utilisation</a>
+      </p>
 
       <button type="submit" class="save-button" id="btnInscription">
       Créer mon compte
@@ -892,8 +914,8 @@ Continuer vers le paiement
 <a href="explorer.html"><span>🔎</span>Explorer</a>
 <a href="messagerie.html"><span>💬</span>Messagerie</a>
 <a href="profil.html" class="active"><span>👤</span>Profil</a>
- </nav>
-<!-- SDK APPWRITE (CDN) -->
+     </nav>
+     <!-- SDK APPWRITE (CDN) -->
 <script src="https://cdn.jsdelivr.net/npm/appwrite@20.0.0"></script>
 
 <script>
@@ -1595,7 +1617,6 @@ function ouvrirModificationProfil() {
   document.getElementById("editProfileModal").classList.add("show");
 }
 /* ========================================== ENREGISTRER LE PROFIL ========================================== */
-
 async function enregistrerProfil(event) {
   event.preventDefault();
 
@@ -1671,8 +1692,7 @@ async function enregistrerProfil(event) {
           photoOriginaleId = fichierOriginalUploade.$id;
 
         } catch (erreurUpload) {
-
-          // Si la photo masquée n'a pas pu être envoyée, on supprime l'original déjà envoyé
+         // Si la photo masquée n'a pas pu être envoyée, on supprime l'original déjà envoyé
           if (fichierOriginalUploade) {
             try {
               await storage.deleteFile({
@@ -1772,10 +1792,8 @@ async function enregistrerProfil(event) {
     bouton.disabled = false;
     bouton.textContent = "💾 Enregistrer";
   }
-}
-
-
-/* ========================================== CHARGER / AFFICHER LE PROFIL ========================================== */
+ }
+ /* ========================================== CHARGER / AFFICHER LE PROFIL ========================================== */
 
 async function chargerProfilUtilisateur() {
   try {
@@ -1879,10 +1897,8 @@ async function chargerEtatConnexion() {
     document.getElementById("profilConnecte").style.display = "none";
     document.getElementById("headerPoints").textContent = "-";
   }
-}
-
-
-/* ========================================== ACHAT DE POINTS (packs + montant personnalisé) ========================================== */
+ }
+ /* ========================================== ACHAT DE POINTS (packs + montant personnalisé) ========================================== */
 
 function mettreAJourPrixPersonnalise() {
 
