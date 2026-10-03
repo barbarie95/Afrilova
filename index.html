@@ -1,308 +1,1007 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Afrilova - Trouvez l'amour</title>
+
+<meta
+  name="viewport"
+  content="width=device-width,initial-scale=1.0"
+>
+
+<title>Affrilova - Trouvez l'amour</title>
 
 <style>
+
+/* ==========================================
+   BASE
+========================================== */
+
 *{
   box-sizing:border-box;
   margin:0;
   padding:0;
 }
 
-body{
-  font-family:Arial,sans-serif;
-  background:#F3FBF7;
-  color:#17352C;
-  padding-bottom:75px;
+html{
+  scroll-behavior:smooth;
 }
 
+body{
+  font-family:Arial,sans-serif;
+  background:#F7FCFA;
+  color:#24463C;
+  padding-bottom:78px;
+  overflow-x:hidden;
+}
+
+
+/* ==========================================
+   HEADER
+========================================== */
+
 header{
-  background:linear-gradient(135deg,#0B8F6A,#3DBB91);
+  background:linear-gradient(
+    135deg,
+    #20B486,
+    #55D3A8
+  );
+
   color:white;
-  padding:17px 15px;
+
+  padding:16px 15px;
+
   display:flex;
   align-items:center;
   justify-content:space-between;
-  box-shadow:0 3px 10px rgba(0,0,0,.08);
+
+  box-shadow:
+    0 3px 12px rgba(32,180,134,.16);
+
+  position:relative;
+  z-index:10;
 }
 
 .logo{
   font-size:21px;
   font-weight:bold;
+  letter-spacing:-.3px;
 }
 
 .points{
-  background:rgba(255,255,255,.18);
+  background:rgba(255,255,255,.22);
+
   padding:7px 11px;
+
   border-radius:20px;
+
   font-size:12px;
   font-weight:bold;
+
+  backdrop-filter:blur(5px);
 }
+
+
+/* ==========================================
+   CONTENEUR
+========================================== */
 
 .container{
-  max-width:700px;
+  width:100%;
+  max-width:720px;
   margin:auto;
-  padding:22px 14px;
+  padding:20px 14px 28px;
 }
 
+
+/* ==========================================
+   ANIMATIONS
+========================================== */
+
+@keyframes apparition{
+
+  from{
+    opacity:0;
+    transform:translateY(14px);
+  }
+
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+
+}
+
+@keyframes flottement{
+
+  0%,100%{
+    transform:translateY(0);
+  }
+
+  50%{
+    transform:translateY(-4px);
+  }
+
+}
+
+@keyframes pulseDouce{
+
+  0%,100%{
+    transform:scale(1);
+  }
+
+  50%{
+    transform:scale(1.025);
+  }
+
+}
+
+
+/* ==========================================
+   HERO
+========================================== */
+
 .hero{
+
   text-align:center;
-  padding:12px 5px 25px;
+
+  padding:25px 8px 28px;
+
+  animation:apparition .7s ease both;
+
+}
+
+.hero-decoration{
+
+  width:62px;
+  height:6px;
+
+  margin:0 auto 16px;
+
+  border-radius:20px;
+
+  background:#55D3A8;
+
+  opacity:.7;
+
 }
 
 .hero h1{
-  color:#087557;
-  font-size:27px;
+
+  color:#159B72;
+
+  font-size:28px;
+
   line-height:1.2;
-  margin-bottom:10px;
+
+  margin-bottom:11px;
+
+  letter-spacing:-.5px;
+
 }
 
 .hero p{
-  color:#668078;
+
+  color:#6A867D;
+
   font-size:14px;
-  line-height:1.5;
+
+  line-height:1.55;
+
+  max-width:520px;
+
+  margin:auto;
+
 }
 
 .hero-button{
+
   display:inline-block;
-  margin-top:17px;
-  padding:12px 22px;
-  background:#0B8F6A;
+
+  margin-top:18px;
+
+  padding:12px 21px;
+
+  background:#20B486;
+
   color:white;
+
   text-decoration:none;
-  border-radius:12px;
+
+  border-radius:13px;
+
   font-weight:bold;
+
   font-size:14px;
+
+  box-shadow:
+    0 5px 14px rgba(32,180,134,.18);
+
+  transition:
+    transform .2s ease,
+    box-shadow .2s ease;
+
 }
 
-.section-title{
+.hero-button:active{
+
+  transform:scale(.97);
+
+}
+
+
+/* ==========================================
+   ANALYSE COMPATIBILITÉ
+========================================== */
+
+.compatibilite-card{
+
+  background:white;
+
+  border-radius:22px;
+
+  padding:20px 17px;
+
+  margin-bottom:25px;
+
+  box-shadow:
+    0 5px 20px rgba(25,110,84,.07);
+
+  border:1px solid #E5F4EE;
+
+  animation:
+    apparition .75s ease .1s both;
+
+}
+
+.compatibilite-header{
+
+  text-align:center;
+
+  margin-bottom:18px;
+
+}
+
+.compatibilite-icon{
+
+  width:50px;
+  height:50px;
+
+  margin:0 auto 10px;
+
+  border-radius:16px;
+
+  background:#E8F8F2;
+
   display:flex;
+
   align-items:center;
+  justify-content:center;
+
+  font-size:25px;
+
+  animation:
+    flottement 3s ease-in-out infinite;
+
+}
+
+.compatibilite-header h2{
+
+  color:#159B72;
+
+  font-size:19px;
+
+  margin-bottom:7px;
+
+}
+
+.compatibilite-header p{
+
+  color:#718980;
+
+  font-size:12px;
+
+  line-height:1.5;
+
+}
+
+
+/* ==========================================
+   CRITÈRES
+========================================== */
+
+.criteres{
+
+  display:flex;
+
+  flex-direction:column;
+
+  gap:12px;
+
+}
+
+.critere{
+
+  background:#F7FCFA;
+
+  border:1px solid #E1F2EB;
+
+  border-radius:14px;
+
+  padding:12px;
+
+  transition:
+    border-color .2s ease,
+    transform .2s ease;
+
+}
+
+.critere:focus-within{
+
+  border-color:#55CDA5;
+
+  transform:translateY(-1px);
+
+}
+
+.critere-label{
+
+  display:block;
+
+  color:#31584D;
+
+  font-size:12px;
+
+  font-weight:bold;
+
+  margin-bottom:7px;
+
+}
+
+.critere select{
+
+  width:100%;
+
+  border:0;
+
+  outline:none;
+
+  background:white;
+
+  color:#31584D;
+
+  border-radius:9px;
+
+  padding:10px;
+
+  font-size:13px;
+
+  border:1px solid #E1F0EB;
+
+}
+
+.age-range{
+
+  display:grid;
+
+  grid-template-columns:1fr 1fr;
+
+  gap:9px;
+
+}
+
+.age-range select{
+
+  min-width:0;
+
+}
+
+
+/* ==========================================
+   BOUTON ANALYSE
+========================================== */
+
+.btn-compatibilite{
+
+  width:100%;
+
+  border:0;
+
+  margin-top:16px;
+
+  padding:13px 16px;
+
+  border-radius:13px;
+
+  background:linear-gradient(
+    135deg,
+    #20B486,
+    #45C99D
+  );
+
+  color:white;
+
+  font-size:14px;
+
+  font-weight:bold;
+
+  cursor:pointer;
+
+  box-shadow:
+    0 5px 15px rgba(32,180,134,.18);
+
+  transition:
+    transform .2s ease,
+    box-shadow .2s ease;
+
+}
+
+.btn-compatibilite:active{
+
+  transform:scale(.98);
+
+}
+
+.compatibilite-cout{
+
+  text-align:center;
+
+  color:#7A928A;
+
+  font-size:11px;
+
+  margin-top:8px;
+
+}
+
+
+/* ==========================================
+   RÉSULTATS COMPATIBILITÉ
+========================================== */
+
+#resultatsCompatibilite{
+
+  margin-top:17px;
+
+}
+
+.resultat-titre{
+
+  color:#159B72;
+
+  font-size:15px;
+
+  font-weight:bold;
+
+  margin-bottom:10px;
+
+}
+
+.compatibilite-resultat{
+
+  background:white;
+
+  border:1px solid #E3F1EC;
+
+  border-radius:15px;
+
+  padding:11px;
+
+  margin-bottom:10px;
+
+  display:flex;
+
+  gap:11px;
+
+  align-items:center;
+
+  box-shadow:
+    0 3px 10px rgba(20,100,78,.04);
+
+  animation:
+    apparition .45s ease both;
+
+}
+
+.compatibilite-photo{
+
+  width:68px;
+  height:68px;
+
+  flex-shrink:0;
+
+  object-fit:cover;
+
+  border-radius:13px;
+
+  background:#E8F8F2;
+
+}
+
+.compatibilite-info{
+
+  flex:1;
+
+  min-width:0;
+
+}
+
+.compatibilite-nom{
+
+  color:#24463C;
+
+  font-size:14px;
+
+  font-weight:bold;
+
+  margin-bottom:3px;
+
+}
+
+.compatibilite-lieu{
+
+  color:#718980;
+
+  font-size:11px;
+
+  margin-bottom:5px;
+
+}
+
+.compatibilite-pourcentage{
+
+  display:inline-block;
+
+  background:#E5F8F0;
+
+  color:#128A65;
+
+  padding:4px 7px;
+
+  border-radius:20px;
+
+  font-size:11px;
+
+  font-weight:bold;
+
+}
+
+.compatibilite-lien{
+
+  display:inline-block;
+
+  margin-top:6px;
+
+  color:#159B72;
+
+  text-decoration:none;
+
+  font-size:11px;
+
+  font-weight:bold;
+
+}
+
+.compatibilite-vide{
+
+  text-align:center;
+
+  background:#F7FCFA;
+
+  border-radius:13px;
+
+  padding:17px 10px;
+
+  color:#718980;
+
+  font-size:12px;
+
+  line-height:1.5;
+
+}
+
+
+/* ==========================================
+   SECTION PROFILS
+========================================== */
+
+.section-title{
+
+  display:flex;
+
+  align-items:center;
+
   justify-content:space-between;
-  margin:5px 0 12px;
+
+  margin:4px 0 12px;
+
 }
 
 .section-title h2{
-  color:#087557;
-  font-size:19px;
+
+  color:#159B72;
+
+  font-size:18px;
+
 }
 
 .section-title a{
-  color:#0B8F6A;
+
+  color:#20A77D;
+
   text-decoration:none;
+
   font-size:12px;
+
   font-weight:bold;
+
 }
 
 .profiles{
+
   display:flex;
+
   flex-direction:column;
+
   gap:14px;
+
 }
 
 .profile-card{
+
   background:white;
-  border-radius:18px;
+
+  border-radius:19px;
+
   overflow:hidden;
-  box-shadow:0 3px 12px rgba(0,0,0,.06);
+
+  box-shadow:
+    0 4px 15px rgba(25,110,84,.06);
+
+  animation:
+    apparition .55s ease both;
+
+  transition:
+    transform .2s ease,
+    box-shadow .2s ease;
+
+}
+
+.profile-card:active{
+
+  transform:scale(.99);
+
 }
 
 .profile-card img{
+
   width:100%;
-  height:260px;
+
+  height:255px;
+
   object-fit:cover;
-  background:#E0F7EE;
+
+  background:#E8F8F2;
+
 }
 
 .profile-content{
+
   padding:15px;
+
 }
 
 .profile-name{
-  color:#17352C;
+
+  color:#24463C;
+
   font-size:19px;
+
   margin-bottom:4px;
+
 }
 
 .profile-location{
-  color:#668078;
+
+  color:#718980;
+
   font-size:12px;
+
   margin-bottom:9px;
+
 }
 
 .profile-description{
-  color:#55736A;
+
+  color:#58776D;
+
   font-size:13px;
+
   line-height:1.5;
+
   margin-bottom:12px;
+
 }
 
 .profile-link{
+
   display:block;
+
   text-align:center;
-  background:#E0F7EE;
-  color:#087557;
+
+  background:#E7F8F1;
+
+  color:#138A65;
+
   text-decoration:none;
+
   padding:10px;
-  border-radius:10px;
+
+  border-radius:11px;
+
   font-size:13px;
+
   font-weight:bold;
+
+  transition:
+    background .2s ease;
+
 }
 
-.info-card{
-  margin-top:20px;
+.profile-link:active{
+
+  background:#D6F2E7;
+
+}
+
+
+/* ==========================================
+   MESSAGE VIDE
+========================================== */
+
+.empty{
+
   background:white;
+
   border-radius:18px;
+
+  padding:30px 15px;
+
+  text-align:center;
+
+  color:#718980;
+
+  font-size:13px;
+
+  line-height:1.5;
+
+}
+
+
+/* ==========================================
+   COMMENT ÇA MARCHE
+========================================== */
+
+.info-card{
+
+  margin-top:22px;
+
+  background:white;
+
+  border-radius:19px;
+
   padding:18px;
-  box-shadow:0 3px 12px rgba(0,0,0,.05);
+
+  box-shadow:
+    0 4px 15px rgba(25,110,84,.05);
+
+  animation:
+    apparition .7s ease .2s both;
+
 }
 
 .info-card h2{
-  color:#087557;
+
+  color:#159B72;
+
   font-size:18px;
+
   margin-bottom:8px;
+
 }
 
 .info-card p{
-  color:#668078;
+
+  color:#718980;
+
   font-size:13px;
+
   line-height:1.5;
+
 }
 
 .steps{
+
   display:flex;
+
   flex-direction:column;
+
   gap:10px;
+
   margin-top:13px;
+
 }
 
 .step{
+
   display:flex;
+
   align-items:center;
+
   gap:10px;
-  background:#F3FBF7;
-  border-radius:11px;
+
+  background:#F7FCFA;
+
+  border-radius:12px;
+
   padding:11px;
+
 }
 
 .step-icon{
+
   width:36px;
   height:36px;
+
   border-radius:10px;
-  background:#E0F7EE;
+
+  background:#E7F8F1;
+
   display:flex;
+
   align-items:center;
   justify-content:center;
+
   flex-shrink:0;
+
 }
 
 .step strong{
+
   display:block;
+
   font-size:13px;
+
   margin-bottom:3px;
+
 }
 
 .step small{
-  color:#668078;
+
+  color:#718980;
+
   font-size:11px;
+
 }
 
-.bonus{
-  margin-top:18px;
-  background:linear-gradient(135deg,#087557,#3DBB91);
-  color:white;
-  border-radius:18px;
-  padding:18px;
-  text-align:center;
-}
 
-.bonus h2{
-  font-size:18px;
-  margin-bottom:7px;
-}
-
-.bonus p{
-  font-size:12px;
-  line-height:1.5;
-  opacity:.95;
-}
-
-.bonus button{
-  margin-top:12px;
-  border:0;
-  background:white;
-  color:#087557;
-  padding:10px 17px;
-  border-radius:10px;
-  font-weight:bold;
-}
-
-.empty{
-  background:white;
-  border-radius:18px;
-  padding:30px 15px;
-  text-align:center;
-  color:#668078;
-  font-size:13px;
-}
+/* ==========================================
+   NAVIGATION
+========================================== */
 
 .bottom-nav{
+
   position:fixed;
+
   bottom:0;
   left:0;
   right:0;
+
   height:68px;
+
   background:white;
-  border-top:1px solid #dcefe7;
+
+  border-top:1px solid #DDEFE8;
+
   display:flex;
+
   z-index:50;
-  box-shadow:0 -2px 10px rgba(0,0,0,.06);
+
+  box-shadow:
+    0 -3px 12px rgba(0,0,0,.05);
+
 }
 
 .bottom-nav a{
+
   flex:1;
+
   text-decoration:none;
-  color:#668078;
+
+  color:#718980;
+
   display:flex;
+
   flex-direction:column;
+
   align-items:center;
+
   justify-content:center;
+
   gap:3px;
+
   font-size:11px;
+
   font-weight:bold;
+
+  transition:
+    color .2s ease,
+    transform .2s ease;
+
 }
 
 .bottom-nav span{
+
   font-size:20px;
+
   line-height:1;
+
 }
 
 .bottom-nav a.active{
-  color:#0B8F6A;
+
+  color:#20A77D;
+
 }
+
+.bottom-nav a:active{
+
+  transform:scale(.94);
+
+}
+
+
+/* ==========================================
+   RESPONSIVE
+========================================== */
 
 @media(min-width:700px){
+
+  .container{
+    padding-left:20px;
+    padding-right:20px;
+  }
+
   .bottom-nav{
-    max-width:700px;
+
+    max-width:720px;
+
     left:50%;
     right:auto;
+
     width:100%;
+
     transform:translateX(-50%);
-    border-radius:16px 16px 0 0;
+
+    border-radius:17px 17px 0 0;
+
   }
+
 }
+
 </style>
+
 </head>
 
+
 <body>
+
 
 <header>
 
   <div class="logo">
-    💚 Afrilova
+    💚 Affrilova
   </div>
 
   <div class="points">
@@ -314,26 +1013,267 @@ header{
 
 <main class="container">
 
-  <!-- ACCUEIL -->
+
+  <!-- ======================================
+       ACCUEIL / HERO
+  ======================================= -->
 
   <section class="hero">
+
+    <div class="hero-decoration"></div>
 
     <h1>
       Trouvez l’amour qui vous correspond ❤️
     </h1>
 
     <p>
-      Une personne, une rencontre, peut-être une belle histoire à écrire.
+      Une personne, une rencontre,
+      peut-être une belle histoire à écrire.
     </p>
 
-    <a href="explorer.html" class="hero-button">
+    <a
+      href="explorer.html"
+      class="hero-button"
+    >
       💚 Découvrir des profils
     </a>
 
   </section>
 
 
-  <!-- PROFILS -->
+  <!-- ======================================
+       ANALYSE DE COMPATIBILITÉ
+  ======================================= -->
+
+  <section class="compatibilite-card">
+
+    <div class="compatibilite-header">
+
+      <div class="compatibilite-icon">
+        💖
+      </div>
+
+      <h2>
+        Trouvez des profils compatibles
+      </h2>
+
+      <p>
+        Choisissez les informations qui vous conviennent
+        et découvrez les profils correspondant à vos attentes.
+      </p>
+
+    </div>
+
+
+    <div class="criteres">
+
+
+      <!-- ÂGE -->
+
+      <div class="critere">
+
+        <label class="critere-label">
+          🎂 Tranche d’âge souhaitée
+        </label>
+
+        <div class="age-range">
+
+          <select id="ageMin">
+
+            <option value="">
+              Âge minimum
+            </option>
+
+            <option value="18">18 ans</option>
+            <option value="20">20 ans</option>
+            <option value="22">22 ans</option>
+            <option value="24">24 ans</option>
+            <option value="25">25 ans</option>
+            <option value="27">27 ans</option>
+            <option value="30">30 ans</option>
+            <option value="32">32 ans</option>
+            <option value="35">35 ans</option>
+            <option value="40">40 ans</option>
+            <option value="45">45 ans</option>
+            <option value="50">50 ans</option>
+
+          </select>
+
+
+          <select id="ageMax">
+
+            <option value="">
+              Âge maximum
+            </option>
+
+            <option value="20">20 ans</option>
+            <option value="22">22 ans</option>
+            <option value="24">24 ans</option>
+            <option value="25">25 ans</option>
+            <option value="27">27 ans</option>
+            <option value="30">30 ans</option>
+            <option value="32">32 ans</option>
+            <option value="35">35 ans</option>
+            <option value="40">40 ans</option>
+            <option value="45">45 ans</option>
+            <option value="50">50 ans</option>
+            <option value="60">60 ans</option>
+
+          </select>
+
+        </div>
+
+      </div>
+
+
+      <!-- PAYS -->
+
+      <div class="critere">
+
+        <label class="critere-label">
+          🌍 Pays
+        </label>
+
+        <select id="paysCompatibilite">
+
+          <option value="">
+            Tous les pays
+          </option>
+
+        </select>
+
+      </div>
+
+
+      <!-- VILLE -->
+
+      <div class="critere">
+
+        <label class="critere-label">
+          📍 Ville
+        </label>
+
+        <select id="villeCompatibilite">
+
+          <option value="">
+            Toutes les villes
+          </option>
+
+        </select>
+
+      </div>
+
+
+      <!-- RELATION -->
+
+      <div class="critere">
+
+        <label class="critere-label">
+          ❤️ Type de relation recherché
+        </label>
+
+        <select id="relationCompatibilite">
+
+          <option value="">
+            Peu importe
+          </option>
+
+          <option value="mariage">
+            💍 Mariage
+          </option>
+
+          <option value="amoureuse">
+            🌹 Relation sans précipitation
+          </option>
+
+          <option value="projet">
+            💕 Projet de vie à deux
+          </option>
+
+        </select>
+
+      </div>
+
+
+      <!-- ENFANTS -->
+
+      <div class="critere">
+
+        <label class="critere-label">
+          👨‍👩‍👧 Partenaire ayant des enfants
+        </label>
+
+        <select id="enfantsCompatibilite">
+
+          <option value="">
+            Peu importe
+          </option>
+
+          <option value="oui">
+            Oui
+          </option>
+
+          <option value="non">
+            Non
+          </option>
+
+        </select>
+
+      </div>
+
+
+      <!-- POLYGAMIE -->
+
+      <div class="critere">
+
+        <label class="critere-label">
+          💞 Position concernant la polygamie
+        </label>
+
+        <select id="polygamieCompatibilite">
+
+          <option value="">
+            Peu importe
+          </option>
+
+          <option value="oui">
+            Je recherche une personne qui l’accepte
+          </option>
+
+          <option value="non">
+            Je préfère une relation monogame
+          </option>
+
+        </select>
+
+      </div>
+
+
+    </div>
+
+
+    <button
+      type="button"
+      class="btn-compatibilite"
+      onclick="analyserCompatibilite()"
+    >
+      💖 Trouver des profils compatibles
+    </button>
+
+
+    <div class="compatibilite-cout">
+      Cette analyse coûte 1 point.
+    </div>
+
+
+    <div id="resultatsCompatibilite"></div>
+
+  </section>
+
+
+  <!-- ======================================
+       PROFILS
+  ======================================= -->
 
   <section>
 
@@ -350,7 +1290,10 @@ header{
     </div>
 
 
-    <div class="profiles" id="profiles">
+    <div
+      class="profiles"
+      id="profiles"
+    >
 
       <div class="empty">
         Chargement des profils...
@@ -361,7 +1304,9 @@ header{
   </section>
 
 
-  <!-- COMMENT ÇA MARCHE -->
+  <!-- ======================================
+       COMMENT ÇA MARCHE
+  ======================================= -->
 
   <section class="info-card">
 
@@ -370,13 +1315,14 @@ header{
     </h2>
 
     <p>
-      Afrilova vous permet de découvrir des personnes
-      et d'ouvrir une discussion lorsque vous souhaitez
+      Affrilova vous permet de découvrir des personnes
+      et d’ouvrir une discussion lorsque vous souhaitez
       faire connaissance.
     </p>
 
 
     <div class="steps">
+
 
       <div class="step">
 
@@ -385,6 +1331,7 @@ header{
         </div>
 
         <div>
+
           <strong>
             Créez votre profil
           </strong>
@@ -392,6 +1339,7 @@ header{
           <small>
             Présentez-vous simplement.
           </small>
+
         </div>
 
       </div>
@@ -404,6 +1352,7 @@ header{
         </div>
 
         <div>
+
           <strong>
             Découvrez des profils
           </strong>
@@ -411,6 +1360,7 @@ header{
           <small>
             Explorez les personnes disponibles.
           </small>
+
         </div>
 
       </div>
@@ -423,6 +1373,7 @@ header{
         </div>
 
         <div>
+
           <strong>
             Faites connaissance
           </strong>
@@ -430,68 +1381,73 @@ header{
           <small>
             Envoyez une demande de discussion.
           </small>
+
         </div>
 
       </div>
+
 
     </div>
 
   </section>
 
 
-  <!-- BONUS -->
-
-  <section class="bonus">
-
-    <h2>
-      🌟 Une petite surprise vous attend
-    </h2>
-
-    <p>
-      Découvrez une fonctionnalité pensée pour rendre
-      vos premières rencontres plus simples.
-    </p>
-
-    <button onclick="ouvrirBonus()">
-      Découvrir
-    </button>
-
-  </section>
-
 </main>
 
 
-<!-- NAVIGATION -->
+<!-- ======================================
+     NAVIGATION
+======================================= -->
 
 <nav class="bottom-nav">
 
-  <a href="index.html" class="active">
+  <a
+    href="index.html"
+    class="active"
+  >
+
     <span>🏠</span>
+
     Accueil
+
   </a>
+
 
   <a href="explorer.html">
+
     <span>🔎</span>
+
     Explorer
+
   </a>
+
 
   <a href="messagerie.html">
+
     <span>💬</span>
+
     Messagerie
+
   </a>
 
+
   <a href="profil.html">
+
     <span>👤</span>
+
     Profil
+
   </a>
 
 </nav>
 
 
-<!-- SDK APPWRITE (CDN) -->
+<!-- SDK APPWRITE -->
+
 <script src="https://cdn.jsdelivr.net/npm/appwrite@20.0.0"></script>
 
 <script>
+  <script>
 
 /*
 ==========================================
@@ -499,171 +1455,121 @@ CONFIGURATION APPWRITE
 ==========================================
 */
 
-const APPWRITE_ENDPOINT = "https://fra.cloud.appwrite.io/v1";
-const APPWRITE_PROJECT_ID = "6aac203e00209ccb3014";
-const APPWRITE_DATABASE_ID = "6aac2a200000e6be5877";
-const APPWRITE_BUCKET_PHOTOS = "6aad2a754e0e095d6a9a";
-const TABLE_PROFILS = "6aac2b35002a0debbb85";
-const TABLE_POINTS = "points";
-const TABLE_BLOCAGES = "blocages";
+const APPWRITE_ENDPOINT =
+  "https://fra.cloud.appwrite.io/v1";
 
-const PHOTO_PLACEHOLDER =
-  "https://via.placeholder.com/700x500/E0F7EE/087557?text=Afrilova";
+const APPWRITE_PROJECT_ID =
+  "6aac203e00209ccb3014";
 
-const client = new Appwrite.Client();
+const APPWRITE_DATABASE_ID =
+  "6aac2a200000e6be5877";
+
+const APPWRITE_BUCKET_PHOTOS =
+  "6aad2a754e0e095d6a9a";
+
+const TABLE_PROFILS =
+  "6aac2b35002a0debbb85";
+
+const TABLE_PAYS =
+  "pays";
+
+const TABLE_VILLES =
+  "villes";
+
+const TABLE_POINTS =
+  "points";
+
+const TABLE_BLOCAGES =
+  "blocages";
+
+const FUNCTION_ID =
+  "6aaf8d3fdb99e41f0aaf";
+
+
+/*
+==========================================
+INITIALISATION APPWRITE
+==========================================
+*/
+
+const client =
+  new Appwrite.Client();
 
 client
   .setEndpoint(APPWRITE_ENDPOINT)
   .setProject(APPWRITE_PROJECT_ID);
 
-const account = new Appwrite.Account(client);
-const tablesDB = new Appwrite.TablesDB(client);
-const storage = new Appwrite.Storage(client);
+const account =
+  new Appwrite.Account(client);
 
-let utilisateurConnecte = null;
-let blocagesEmis = [];
+const tablesDB =
+  new Appwrite.TablesDB(client);
 
-const LABELS_TYPE_RELATION = {
-  mariage: "💍 Mariage",
-  amoureuse: "🌹 Sans précipitation",
-  projet: "💕 Projet de vie à deux"
-};
+const storage =
+  new Appwrite.Storage(client);
+
+const functions =
+  new Appwrite.Functions(client);
 
 
 /*
 ==========================================
-SÉCURITÉ : AFFICHER LE TEXTE SANS L'INTERPRÉTER COMME DU CODE
+ÉTAT DE LA PAGE
+==========================================
+*/
+
+let utilisateurConnecte = null;
+
+let blocagesEmis = [];
+
+let listePays = [];
+
+let listeVilles = [];
+
+
+/*
+==========================================
+SÉCURITÉ HTML
 ==========================================
 */
 
 function echapperHTML(texte){
 
-  return String(texte === null || texte === undefined ? "" : texte)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#39;");
+  return String(
+    texte === null ||
+    texte === undefined
+      ? ""
+      : texte
+  )
+  .replace(/&/g,"&amp;")
+  .replace(/</g,"&lt;")
+  .replace(/>/g,"&gt;")
+  .replace(/"/g,"&quot;")
+  .replace(/'/g,"&#39;");
 
 }
 
 
 /*
 ==========================================
-SOLDE DE POINTS (VRAI SOLDE)
-==========================================
-*/
-
-async function chargerSolde(){
-
-  const element = document.getElementById("points");
-
-  try {
-
-    utilisateurConnecte = await account.get();
-
-  } catch (erreur) {
-
-    utilisateurConnecte = null;
-    element.textContent = "-";
-    return;
-
-  }
-
-  try {
-
-    const reponse = await tablesDB.listRows({
-      databaseId: APPWRITE_DATABASE_ID,
-      tableId: TABLE_POINTS,
-      queries: [
-        Appwrite.Query.equal("userId", utilisateurConnecte.$id),
-        Appwrite.Query.limit(1)
-      ]
-    });
-
-    element.textContent =
-      reponse.total > 0
-        ? (reponse.rows[0].solde || 0)
-        : 0;
-
-  } catch (erreur) {
-
-    console.error("Erreur chargement points :", erreur);
-    element.textContent = 0;
-
-  }
-
-}
-
-
-/*
-==========================================
-PERSONNES BLOQUÉES
-==========================================
-*/
-
-async function chargerBlocages(){
-
-  if (!utilisateurConnecte){
-    blocagesEmis = [];
-    return;
-  }
-
-  try {
-
-    const reponse = await tablesDB.listRows({
-      databaseId: APPWRITE_DATABASE_ID,
-      tableId: TABLE_BLOCAGES,
-      queries: [
-        Appwrite.Query.equal("bloqueurId", utilisateurConnecte.$id),
-        Appwrite.Query.limit(100)
-      ]
-    });
-
-    blocagesEmis = reponse.rows.map(function(b){
-      return b.bloqueId;
-    });
-
-  } catch (erreur) {
-
-    console.error("Erreur chargement blocages :", erreur);
-    blocagesEmis = [];
-
-  }
-
-}
-
-
-/*
-==========================================
-BONUS
-==========================================
-*/
-
-function ouvrirBonus(){
-
-  alert(
-    "💚 Cette fonctionnalité sera activée avec la prochaine étape d'Afrilova."
-  );
-
-}
-
-
-/*
-==========================================
-OBTENIR L'URL D'UNE PHOTO
+URL PHOTO
 ==========================================
 */
 
 function urlPhoto(photoId){
 
   if (!photoId){
-    return PHOTO_PLACEHOLDER;
+
+    return "https://via.placeholder.com/700x500/E8F8F2/159B72?text=Affrilova";
+
   }
 
   return storage.getFileView({
-    bucketId: APPWRITE_BUCKET_PHOTOS,
-    fileId: photoId
+    bucketId:
+      APPWRITE_BUCKET_PHOTOS,
+
+    fileId:
+      photoId
   });
 
 }
@@ -671,78 +1577,415 @@ function urlPhoto(photoId){
 
 /*
 ==========================================
-CRÉER UNE CARTE DE PROFIL
+APPEL FONCTION BACKEND
 ==========================================
 */
 
-function creerCarteProfil(profil){
+async function appelerFonction(donnees){
 
-  const nom = echapperHTML(profil.nom || "Profil");
+  const execution =
+    await functions.createExecution({
+      functionId:
+        FUNCTION_ID,
 
-  const age = profil.age
-    ? ", " + echapperHTML(profil.age) + " ans"
-    : "";
+      body:
+        JSON.stringify(donnees),
 
-  const description = echapperHTML(profil.description || "");
+      method:
+        "POST"
+    });
 
-  const texteRecherche =
-    LABELS_TYPE_RELATION[profil.typeRelation] ||
-    profil.recherche ||
-    "";
+  let resultat;
 
-  const recherche = texteRecherche
-    ? "🔎 Recherche : " + echapperHTML(texteRecherche)
-    : "";
+  try {
 
-  return `
-    <div class="profile-card">
+    resultat =
+      JSON.parse(
+        execution.responseBody
+      );
 
-      <img
-        src="${urlPhoto(profil.photoPrincipale)}"
-        alt="${nom}">
+  } catch {
 
-      <div class="profile-content">
+    throw new Error(
+      "Réponse du serveur invalide."
+    );
 
-        <h3 class="profile-name">
-          ${nom}${age}
-        </h3>
+  }
 
-        <p class="profile-location">
-          🌍 Afrilova
-        </p>
+  if (!resultat.ok){
 
-        <p class="profile-description">
-          ${description}
-          ${recherche ? "<br>" + recherche : ""}
-        </p>
+    throw new Error(
+      resultat.message ||
+      "Une erreur est survenue."
+    );
 
-        <a href="voir-profil.html?id=${encodeURIComponent(profil.$id || "")}" class="profile-link">
-          👀 Voir le profil
-        </a>
+  }
 
-      </div>
-
-    </div>
-  `;
+  return resultat;
 
 }
 
 
 /*
 ==========================================
-MESSAGE VIDE
+SOLDE DE POINTS
 ==========================================
 */
 
-function messageVide(){
+async function chargerSolde(){
 
-  return `
-    <div class="empty">
-      Les profils approuvés apparaîtront ici.
-      Explorez Afrilova pour découvrir des personnes
-      qui pourraient vous correspondre.
-    </div>
+  const element =
+    document.getElementById("points");
+
+  try {
+
+    utilisateurConnecte =
+      await account.get();
+
+  } catch {
+
+    utilisateurConnecte =
+      null;
+
+    element.textContent =
+      "-";
+
+    return;
+
+  }
+
+
+  try {
+
+    const reponse =
+      await tablesDB.listRows({
+
+        databaseId:
+          APPWRITE_DATABASE_ID,
+
+        tableId:
+          TABLE_POINTS,
+
+        queries: [
+
+          Appwrite.Query.equal(
+            "userId",
+            utilisateurConnecte.$id
+          ),
+
+          Appwrite.Query.limit(1)
+
+        ]
+
+      });
+
+
+    element.textContent =
+      reponse.total > 0
+        ? Number(
+            reponse.rows[0].solde || 0
+          )
+        : 0;
+
+
+  } catch (erreur) {
+
+    console.error(
+      "Erreur chargement points :",
+      erreur
+    );
+
+    element.textContent =
+      0;
+
+  }
+
+}
+
+
+/*
+==========================================
+CHARGER LES BLOCAGES
+==========================================
+*/
+
+async function chargerBlocages(){
+
+  if (!utilisateurConnecte){
+
+    blocagesEmis = [];
+
+    return;
+
+  }
+
+
+  try {
+
+    const reponse =
+      await tablesDB.listRows({
+
+        databaseId:
+          APPWRITE_DATABASE_ID,
+
+        tableId:
+          TABLE_BLOCAGES,
+
+        queries: [
+
+          Appwrite.Query.equal(
+            "bloqueurId",
+            utilisateurConnecte.$id
+          ),
+
+          Appwrite.Query.limit(100)
+
+        ]
+
+      });
+
+
+    blocagesEmis =
+      reponse.rows.map(
+        function(ligne){
+
+          return ligne.bloqueId;
+
+        }
+      );
+
+
+  } catch (erreur) {
+
+    console.error(
+      "Erreur chargement blocages :",
+      erreur
+    );
+
+    blocagesEmis = [];
+
+  }
+
+}
+
+
+/*
+==========================================
+CHARGER LES PAYS
+==========================================
+*/
+
+async function chargerPays(){
+
+  const select =
+    document.getElementById(
+      "paysCompatibilite"
+    );
+
+
+  try {
+
+    const reponse =
+      await tablesDB.listRows({
+
+        databaseId:
+          APPWRITE_DATABASE_ID,
+
+        tableId:
+          TABLE_PAYS,
+
+        queries: [
+
+          Appwrite.Query.limit(100)
+
+        ]
+
+      });
+
+
+    listePays =
+      reponse.rows || [];
+
+
+    listePays
+      .sort(function(a,b){
+
+        return String(a.nom || "")
+          .localeCompare(
+            String(b.nom || ""),
+            "fr"
+          );
+
+      });
+
+
+    select.innerHTML = `
+      <option value="">
+        Tous les pays
+      </option>
+    `;
+
+
+    listePays.forEach(
+      function(pays){
+
+        const option =
+          document.createElement(
+            "option"
+          );
+
+        option.value =
+          pays.$id;
+
+        option.textContent =
+          pays.nom;
+
+        select.appendChild(
+          option
+        );
+
+      }
+    );
+
+
+  } catch (erreur) {
+
+    console.error(
+      "Erreur chargement pays :",
+      erreur
+    );
+
+  }
+
+}
+
+
+/*
+==========================================
+CHARGER LES VILLES
+==========================================
+*/
+
+async function chargerVilles(){
+
+  const select =
+    document.getElementById(
+      "villeCompatibilite"
+    );
+
+
+  try {
+
+    const reponse =
+      await tablesDB.listRows({
+
+        databaseId:
+          APPWRITE_DATABASE_ID,
+
+        tableId:
+          TABLE_VILLES,
+
+        queries: [
+
+          Appwrite.Query.limit(500)
+
+        ]
+
+      });
+
+
+    listeVilles =
+      reponse.rows || [];
+
+
+  } catch (erreur) {
+
+    console.error(
+      "Erreur chargement villes :",
+      erreur
+    );
+
+    listeVilles = [];
+
+  }
+
+}
+
+
+/*
+==========================================
+AFFICHER LES VILLES SELON LE PAYS
+==========================================
+*/
+
+function actualiserVilles(){
+
+  const paysId =
+    document.getElementById(
+      "paysCompatibilite"
+    ).value;
+
+
+  const selectVille =
+    document.getElementById(
+      "villeCompatibilite"
+    );
+
+
+  selectVille.innerHTML = `
+    <option value="">
+      Toutes les villes
+    </option>
   `;
+
+
+  if (!paysId){
+
+    return;
+
+  }
+
+
+  const villes =
+    listeVilles
+      .filter(function(ville){
+
+        return String(
+          ville.paysId
+        ) === String(paysId);
+
+      })
+      .sort(function(a,b){
+
+        return String(a.nom || "")
+          .localeCompare(
+            String(b.nom || ""),
+            "fr"
+          );
+
+      });
+
+
+  villes.forEach(
+    function(ville){
+
+      const option =
+        document.createElement(
+          "option"
+        );
+
+      option.value =
+        ville.$id;
+
+      option.textContent =
+        ville.nom;
+
+      selectVille.appendChild(
+        option
+      );
+
+    }
+  );
 
 }
 
@@ -753,37 +1996,195 @@ CHARGER LES PROFILS
 ==========================================
 */
 
+const LABELS_TYPE_RELATION = {
+
+  mariage:
+    "💍 Mariage",
+
+  amoureuse:
+    "🌹 Relation sans précipitation",
+
+  projet:
+    "💕 Projet de vie à deux"
+
+};
+
+
+function creerCarteProfil(profil){
+
+  const nom =
+    echapperHTML(
+      profil.nom || "Profil"
+    );
+
+
+  const age =
+    profil.age
+      ? ", " +
+        echapperHTML(
+          profil.age
+        ) +
+        " ans"
+      : "";
+
+
+  const description =
+    echapperHTML(
+      profil.description || ""
+    );
+
+
+  const relation =
+    LABELS_TYPE_RELATION[
+      profil.typeRelation
+    ] ||
+    "";
+
+
+  const recherche =
+    relation
+      ? "🔎 " + relation
+      : "";
+
+
+  return `
+
+    <div class="profile-card">
+
+      <img
+        src="${urlPhoto(
+          profil.photoPrincipale
+        )}"
+        alt="${nom}"
+        loading="lazy"
+      >
+
+      <div class="profile-content">
+
+        <h3 class="profile-name">
+          ${nom}${age}
+        </h3>
+
+        <p class="profile-location">
+          💚 Affrilova
+        </p>
+
+        <p class="profile-description">
+
+          ${description}
+
+          ${
+            recherche
+              ? "<br>" +
+                echapperHTML(
+                  recherche
+                )
+              : ""
+          }
+
+        </p>
+
+        <a
+          href="voir-profil.html?id=${encodeURIComponent(
+            profil.$id || ""
+          )}"
+          class="profile-link"
+        >
+          👀 Voir le profil
+        </a>
+
+      </div>
+
+    </div>
+
+  `;
+
+}
+
+
+function messageVide(){
+
+  return `
+
+    <div class="empty">
+
+      Les profils approuvés
+      apparaîtront ici.
+
+      <br><br>
+
+      Découvrez des personnes
+      qui pourraient vous correspondre.
+
+    </div>
+
+  `;
+
+}
+
+
 async function chargerProfils(){
 
   const conteneur =
-    document.getElementById("profiles");
+    document.getElementById(
+      "profiles"
+    );
+
 
   try {
 
-    const reponse = await tablesDB.listRows({
-      databaseId: APPWRITE_DATABASE_ID,
-      tableId: TABLE_PROFILS,
-      queries: [
-        Appwrite.Query.equal("statut", "approuve"),
-        Appwrite.Query.limit(10)
-      ]
-    });
+    const reponse =
+      await tablesDB.listRows({
 
-    const profilsVisibles = reponse.rows.filter(function(profil){
-      return !blocagesEmis.includes(profil.userId);
-    });
+        databaseId:
+          APPWRITE_DATABASE_ID,
 
-    if (profilsVisibles.length === 0){
+        tableId:
+          TABLE_PROFILS,
 
-      conteneur.innerHTML = messageVide();
+        queries: [
+
+          Appwrite.Query.equal(
+            "statut",
+            "approuve"
+          ),
+
+          Appwrite.Query.limit(10)
+
+        ]
+
+      });
+
+
+    const profilsVisibles =
+      reponse.rows.filter(
+        function(profil){
+
+          return !blocagesEmis.includes(
+            profil.userId
+          );
+
+        }
+      );
+
+
+    if (
+      profilsVisibles.length === 0
+    ){
+
+      conteneur.innerHTML =
+        messageVide();
 
       return;
 
     }
 
-    conteneur.innerHTML = profilsVisibles
-      .map(creerCarteProfil)
-      .join("");
+
+    conteneur.innerHTML =
+      profilsVisibles
+        .map(creerCarteProfil)
+        .join("");
+
 
   } catch (erreur) {
 
@@ -792,11 +2193,485 @@ async function chargerProfils(){
       erreur
     );
 
-    conteneur.innerHTML = messageVide();
+    conteneur.innerHTML =
+      messageVide();
 
   }
 
 }
+
+
+/*
+==========================================
+VALIDATION DES CRITÈRES
+==========================================
+*/
+
+function obtenirCriteresCompatibilite(){
+
+  const ageMin =
+    document.getElementById(
+      "ageMin"
+    ).value;
+
+  const ageMax =
+    document.getElementById(
+      "ageMax"
+    ).value;
+
+  const paysId =
+    document.getElementById(
+      "paysCompatibilite"
+    ).value;
+
+  const villeId =
+    document.getElementById(
+      "villeCompatibilite"
+    ).value;
+
+  const typeRelation =
+    document.getElementById(
+      "relationCompatibilite"
+    ).value;
+
+  const enfants =
+    document.getElementById(
+      "enfantsCompatibilite"
+    ).value;
+
+  const polygamie =
+    document.getElementById(
+      "polygamieCompatibilite"
+    ).value;
+
+
+  return {
+
+    ageMin:
+      ageMin
+        ? Number(ageMin)
+        : null,
+
+    ageMax:
+      ageMax
+        ? Number(ageMax)
+        : null,
+
+    paysId:
+      paysId || null,
+
+    villeId:
+      villeId || null,
+
+    typeRelation:
+      typeRelation || null,
+
+    enfants:
+      enfants || null,
+
+    polygamie:
+      polygamie || null
+
+  };
+
+}
+
+
+/*
+==========================================
+AFFICHER LES RÉSULTATS
+==========================================
+*/
+
+function afficherResultatsCompatibilite(
+  resultats
+){
+
+  const zone =
+    document.getElementById(
+      "resultatsCompatibilite"
+    );
+
+
+  if (
+    !Array.isArray(resultats) ||
+    resultats.length === 0
+  ){
+
+    zone.innerHTML = `
+
+      <div class="compatibilite-vide">
+
+        💚 Aucun profil ne correspond
+        actuellement à vos critères.
+
+        <br>
+
+        Essayez d'élargir votre recherche.
+
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+
+  zone.innerHTML = `
+
+    <div class="resultat-titre">
+
+      💖 Profils compatibles
+
+    </div>
+
+    ${
+      resultats
+        .map(function(resultat){
+
+          const profil =
+            resultat.profil ||
+            resultat;
+
+          const pourcentage =
+            Number(
+              resultat.pourcentage ||
+              resultat.compatibilite ||
+              0
+            );
+
+
+          const nom =
+            echapperHTML(
+              profil.nom ||
+              "Profil"
+            );
+
+
+          const age =
+            profil.age
+              ? ", " +
+                echapperHTML(
+                  profil.age
+                ) +
+                " ans"
+              : "";
+
+
+          const lieu =
+            echapperHTML(
+              resultat.lieu ||
+              ""
+            );
+
+
+          const analyse =
+            Array.isArray(
+              resultat.analyse
+            )
+              ? resultat.analyse
+              : [];
+
+
+          return `
+
+            <div class="compatibilite-resultat">
+
+              <img
+                class="compatibilite-photo"
+                src="${urlPhoto(
+                  profil.photoPrincipale
+                )}"
+                alt="${nom}"
+                loading="lazy"
+              >
+
+
+              <div class="compatibilite-info">
+
+                <div class="compatibilite-nom">
+                  ${nom}${age}
+                </div>
+
+
+                ${
+                  lieu
+                    ? `
+                      <div class="compatibilite-lieu">
+                        📍 ${lieu}
+                      </div>
+                    `
+                    : ""
+                }
+
+
+                <span
+                  class="compatibilite-pourcentage"
+                >
+                  💖 ${pourcentage}% compatible
+                </span>
+
+
+                ${
+                  analyse.length
+                    ? `
+                      <div
+                        class="compatibilite-lieu"
+                        style="margin-top:6px;"
+                      >
+                        ${analyse
+                          .slice(0,2)
+                          .map(
+                            echapperHTML
+                          )
+                          .join("<br>")}
+                      </div>
+                    `
+                    : ""
+                }
+
+
+                <a
+                  class="compatibilite-lien"
+                  href="voir-profil.html?id=${encodeURIComponent(
+                    profil.$id || ""
+                  )}"
+                >
+                  👀 Voir le profil
+                </a>
+
+              </div>
+
+            </div>
+
+          `;
+
+        })
+        .join("")
+    }
+
+  `;
+
+}
+
+
+/*
+==========================================
+ANALYSE DE COMPATIBILITÉ
+==========================================
+*/
+
+async function analyserCompatibilite(){
+
+  const zone =
+    document.getElementById(
+      "resultatsCompatibilite"
+    );
+
+  const bouton =
+    document.querySelector(
+      ".btn-compatibilite"
+    );
+
+
+  if (!utilisateurConnecte){
+
+    zone.innerHTML = `
+
+      <div class="compatibilite-vide">
+
+        🔐 Connectez-vous à votre compte
+        pour utiliser l'analyse de compatibilité.
+
+        <br><br>
+
+        <a
+          href="profil.html"
+          style="
+            color:#159B72;
+            font-weight:bold;
+            text-decoration:none;
+          "
+        >
+          Aller à mon profil
+        </a>
+
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+
+  const criteres =
+    obtenirCriteresCompatibilite();
+
+
+  if (
+    criteres.ageMin &&
+    criteres.ageMax &&
+    criteres.ageMin > criteres.ageMax
+  ){
+
+    zone.innerHTML = `
+
+      <div class="compatibilite-vide">
+
+        ⚠️ L'âge minimum ne peut pas
+        être supérieur à l'âge maximum.
+
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+
+  if (
+    criteres.villeId &&
+    !criteres.paysId
+  ){
+
+    zone.innerHTML = `
+
+      <div class="compatibilite-vide">
+
+        ⚠️ Sélectionnez d'abord un pays
+        avant de choisir une ville.
+
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+
+  const confirmation =
+    confirm(
+      "L'analyse de compatibilité coûte 1 point. Voulez-vous continuer ?"
+    );
+
+
+  if (!confirmation){
+
+    return;
+
+  }
+
+
+  bouton.disabled =
+    true;
+
+  bouton.textContent =
+    "💖 Analyse en cours...";
+
+
+  zone.innerHTML = `
+
+    <div class="compatibilite-vide">
+
+      🔎 Recherche des profils
+      correspondant à vos critères...
+
+    </div>
+
+  `;
+
+
+  try {
+
+    const resultat =
+      await appelerFonction({
+
+        action:
+          "analyserCompatibilite",
+
+        criteres:
+          criteres
+
+      });
+
+
+    afficherResultatsCompatibilite(
+      resultat.resultats || []
+    );
+
+
+    /*
+      Mise à jour immédiate du vrai solde
+      affiché dans l'en-tête.
+    */
+
+    if (
+      resultat.nouveauSolde !==
+      undefined
+    ){
+
+      document.getElementById(
+        "points"
+      ).textContent =
+        resultat.nouveauSolde;
+
+    }
+
+
+  } catch (erreur) {
+
+    console.error(
+      "Erreur analyse compatibilité :",
+      erreur
+    );
+
+
+    zone.innerHTML = `
+
+      <div class="compatibilite-vide">
+
+        ❌ ${
+          echapperHTML(
+            erreur.message ||
+            "Impossible d'effectuer l'analyse."
+          )
+        }
+
+      </div>
+
+    `;
+
+  } finally {
+
+    bouton.disabled =
+      false;
+
+    bouton.textContent =
+      "💖 Trouver des profils compatibles";
+
+  }
+
+}
+
+
+/*
+==========================================
+ÉVÉNEMENT PAYS → VILLES
+==========================================
+*/
+
+document
+  .getElementById(
+    "paysCompatibilite"
+  )
+  .addEventListener(
+    "change",
+    actualiserVilles
+  );
 
 
 /*
@@ -810,7 +2685,13 @@ document.addEventListener(
   async function(){
 
     await chargerSolde();
+
     await chargerBlocages();
+
+    await chargerPays();
+
+    await chargerVilles();
+
     await chargerProfils();
 
   }
@@ -819,4 +2700,5 @@ document.addEventListener(
 </script>
 
 </body>
+
 </html>
