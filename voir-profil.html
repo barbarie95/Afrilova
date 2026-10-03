@@ -1410,4 +1410,559 @@ async function determinerEtat(
           Appwrite.Query.equal(
             "utilisateur1Id",
             moi
- 
+     );
+
+    if (c1.total > 0) {
+      return "conversation";
+    }
+
+    const c2 = await tablesDB.listRows({
+      databaseId: APPWRITE_DATABASE_ID,
+      tableId: TABLE_CONVERSATIONS,
+      queries: [
+        Appwrite.Query.equal(
+          "utilisateur1Id",
+          autre
+        ),
+        Appwrite.Query.equal(
+          "utilisateur2Id",
+          moi
+        ),
+        Appwrite.Query.limit(1)
+      ]
+    });
+
+    if (c2.total > 0) {
+      return "conversation";
+    }
+
+    const d1 = await tablesDB.listRows({
+      databaseId: APPWRITE_DATABASE_ID,
+      tableId: TABLE_DEMANDES,
+      queries: [
+        Appwrite.Query.equal(
+          "expediteurId",
+          moi
+        ),
+        Appwrite.Query.equal(
+          "destinataireId",
+          autre
+        ),
+        Appwrite.Query.equal(
+          "statut",
+          "en_attente"
+        ),
+        Appwrite.Query.limit(1)
+      ]
+    });
+
+    if (d1.total > 0) {
+      return "demande_envoyee";
+    }
+
+    const d2 = await tablesDB.listRows({
+      databaseId: APPWRITE_DATABASE_ID,
+      tableId: TABLE_DEMANDES,
+      queries: [
+        Appwrite.Query.equal(
+          "expediteurId",
+          autre
+        ),
+        Appwrite.Query.equal(
+          "destinataireId",
+          moi
+        ),
+        Appwrite.Query.equal(
+          "statut",
+          "en_attente"
+        ),
+        Appwrite.Query.limit(1)
+      ]
+    });
+
+    if (d2.total > 0) {
+      return "demande_recue";
+    }
+
+  } catch (erreur) {
+
+    console.error(
+      "Erreur vérification état :",
+      erreur
+    );
+  }
+
+  return "libre";
+}
+
+
+/* =========================================
+   PRÉPARER LA ZONE D'ACTION
+========================================= */
+
+async function preparerZoneAction() {
+
+  viderZone();
+
+  if (!utilisateurConnecte) {
+
+    ajouterNote(
+      "Connectez-vous pour envoyer une demande de discussion."
+    );
+
+    ajouterLien(
+      "Aller à mon profil",
+      "profil.html"
+    );
+
+    return;
+  }
+
+  if (profil.userId === utilisateurConnecte.$id) {
+
+    ajouterNote(
+      "C'est votre propre profil."
+    );
+
+    ajouterLien(
+      "✏️ Modifier mon profil",
+      "profil.html"
+    );
+
+    return;
+  }
+
+  const etat = await determinerEtat(
+    utilisateurConnecte.$id,
+    profil.userId
+  );
+
+  if (etat === "conversation") {
+
+    ajouterNote(
+      "Vous avez déjà une discussion avec cette personne."
+    );
+
+    ajouterLien(
+      "💬 Ouvrir la messagerie",
+      "messagerie.html"
+    );
+
+    return;
+  }
+
+  if (etat === "demande_envoyee") {
+
+    ajouterSucces(
+      "✅ Demande envoyée. En attente de sa réponse."
+    );
+
+    return;
+  }
+
+  if (etat === "demande_recue") {
+
+    ajouterNote(
+      "Cette personne vous a déjà envoyé une demande."
+    );
+
+    ajouterLien(
+      "📩 Voir mes demandes",
+      "messagerie.html"
+    );
+
+    return;
+  }
+
+  if (soldeActuel < 1) {
+
+    ajouterNote(
+      "Il vous faut au moins 1 point pour envoyer une demande de discussion."
+    );
+
+    ajouterLien(
+      "⭐ Acheter des points",
+      "profil.html"
+    );
+
+    return;
+  }
+
+  ajouterBoutonsDemandes();
+}
+
+
+/* =========================================
+   BOUTONS DEMANDE NORMALE + PRIORITAIRE
+========================================= */
+
+function ajouterBoutonsDemandes() {
+
+  const bloc = document.createElement("div");
+
+  bloc.className = "demandes-actions";
+
+
+  /* DEMANDE NORMALE */
+
+  const boutonNormal =
+    document.createElement("button");
+
+  boutonNormal.type = "button";
+  boutonNormal.id = "btnDemande";
+  boutonNormal.className = "btn-principal";
+
+  boutonNormal.textContent =
+    "💬 Envoyer une demande — 1 point";
+
+  boutonNormal.addEventListener(
+    "click",
+    function () {
+      envoyerDemande(false);
+    }
+  );
+
+  bloc.appendChild(boutonNormal);
+
+
+  /* DEMANDE PRIORITAIRE */
+
+  const boutonPrioritaire =
+    document.createElement("button");
+
+  boutonPrioritaire.type = "button";
+  boutonPrioritaire.id =
+    "btnDemandePrioritaire";
+
+  boutonPrioritaire.className =
+    "btn-prioritaire";
+
+  boutonPrioritaire.textContent =
+    "⭐ Demande prioritaire — 2 points";
+
+
+  if (soldeActuel >= 2) {
+
+    boutonPrioritaire.addEventListener(
+      "click",
+      function () {
+        envoyerDemande(true);
+      }
+    );
+
+  } else {
+
+    boutonPrioritaire.disabled = true;
+
+    boutonPrioritaire.classList.add(
+      "disabled"
+    );
+
+  }
+
+
+  bloc.appendChild(
+    boutonPrioritaire
+  );
+
+  zoneAction.appendChild(
+    bloc
+  );
+
+
+  const hint =
+    document.createElement("p");
+
+  hint.className =
+    "action-hint";
+
+
+  if (soldeActuel >= 2) {
+
+    hint.textContent =
+      "Demande normale : 1 point • " +
+      "Demande prioritaire : 2 points. " +
+      "Vous avez " +
+      soldeActuel +
+      " points.";
+
+  } else {
+
+    hint.textContent =
+      "Vous avez 1 point. " +
+      "La demande normale est disponible. " +
+      "Il faut 2 points pour une demande prioritaire.";
+
+  }
+
+
+  zoneAction.appendChild(
+    hint
+  );
+
+
+  const explication =
+    document.createElement("div");
+
+  explication.className =
+    "priority-description";
+
+  explication.textContent =
+    "⭐ La demande prioritaire coûte 2 points et est enregistrée comme prioritaire.";
+
+  zoneAction.appendChild(
+    explication
+  );
+}
+
+
+/* =========================================
+   ENVOYER LA DEMANDE
+========================================= */
+
+async function envoyerDemande(
+  prioritaire = false
+) {
+
+  if (
+    !utilisateurConnecte ||
+    !profil
+  ) {
+    return;
+  }
+
+
+  const cout =
+    prioritaire ? 2 : 1;
+
+
+  if (soldeActuel < cout) {
+
+    alert(
+      "Vous n'avez pas assez de points pour cette demande."
+    );
+
+    return;
+  }
+
+
+  const typeDemande =
+    prioritaire
+      ? "demande prioritaire"
+      : "demande de discussion";
+
+
+  const confirme = confirm(
+    "Envoyer une " +
+    typeDemande +
+    " à " +
+    (profil.nom || "cette personne") +
+    " ?\n\n" +
+    cout +
+    (cout > 1
+      ? " points seront utilisés."
+      : " point sera utilisé.")
+  );
+
+
+  if (!confirme) {
+    return;
+  }
+
+
+  const bouton =
+    prioritaire
+      ? document.getElementById(
+          "btnDemandePrioritaire"
+        )
+      : document.getElementById(
+          "btnDemande"
+        );
+
+
+  if (bouton) {
+
+    bouton.disabled = true;
+
+    bouton.textContent =
+      "Envoi en cours...";
+
+  }
+
+
+  try {
+
+    await appelerFonction({
+
+      action:
+        "envoyerDemande",
+
+      peerId:
+        profil.userId,
+
+      prioritaire:
+        prioritaire
+
+    });
+
+
+    soldeActuel =
+      Math.max(
+        0,
+        soldeActuel - cout
+      );
+
+
+    document.getElementById(
+      "headerPoints"
+    ).textContent =
+      soldeActuel;
+
+
+    viderZone();
+
+
+    if (prioritaire) {
+
+      ajouterSucces(
+        "⭐ Demande prioritaire envoyée ! Vous serez prévenu(e) dans votre messagerie dès que la personne répondra."
+      );
+
+    } else {
+
+      ajouterSucces(
+        "✅ Demande envoyée ! Vous serez prévenu(e) dans votre messagerie dès que la personne répondra."
+      );
+
+    }
+
+  } catch (erreur) {
+
+    console.error(
+      "Erreur envoi demande :",
+      erreur
+    );
+
+    alert(
+      "La demande n'a pas pu être envoyée : " +
+      erreur.message
+    );
+
+    await chargerSolde();
+
+    await preparerZoneAction();
+  }
+}
+
+
+/* =========================================
+   CHARGEMENT FINAL DE LA PAGE
+========================================= */
+
+document.addEventListener(
+  "DOMContentLoaded",
+  async function () {
+
+    const parametres =
+      new URLSearchParams(
+        window.location.search
+      );
+
+    const profilRowId =
+      parametres.get("id");
+
+
+    if (!profilRowId) {
+
+      afficherEtat(
+        "Profil introuvable."
+      );
+
+      return;
+    }
+
+
+    await chargerPaysEtVilles();
+
+
+    try {
+
+      utilisateurConnecte =
+        await account.get();
+
+    } catch (erreur) {
+
+      utilisateurConnecte =
+        null;
+    }
+
+
+    try {
+
+      profil =
+        await tablesDB.getRow({
+
+          databaseId:
+            APPWRITE_DATABASE_ID,
+
+          tableId:
+            TABLE_PROFILS,
+
+          rowId:
+            profilRowId
+
+        });
+
+    } catch (erreur) {
+
+      console.error(
+        "Erreur chargement profil :",
+        erreur
+      );
+
+      afficherEtat(
+        "Ce profil est introuvable."
+      );
+
+      return;
+    }
+
+
+    const estMonProfil =
+      utilisateurConnecte &&
+      profil.userId ===
+      utilisateurConnecte.$id;
+
+
+    if (
+      profil.statut !== "approuve" &&
+      !estMonProfil
+    ) {
+
+      afficherEtat(
+        "Ce profil n'est pas disponible."
+      );
+
+      return;
+    }
+
+
+    afficherProfil();
+
+
+    if (utilisateurConnecte) {
+
+      await chargerSolde();
+
+    }
+
+
+    await preparerZoneAction();
+
+  }
+);
+
+</script>
+
+</body>
+</html>
