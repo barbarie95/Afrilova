@@ -17,7 +17,7 @@ const TABLE_POINTS = "points";
 const BUCKET_PHOTOS = "6aad2a754e0e095d6a9a";
 const ADMIN_TEAM_ID = "6aacffe749b1978e61bf";
 
-const GEMINI_MODEL = "gemini-3.8-flash";
+const GEMINI_MODEL = "gemini-3.5-flash-lite";
 const GEMINI_URL =
   `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
 
@@ -190,36 +190,88 @@ Réponds uniquement en JSON :
   ]
 }
 `;
-
-    const appel = await fetch(GEMINI_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-goog-api-key": cle
-      },
-      body: JSON.stringify({
-        contents: [
-          {
-            role: "user",
-            parts: [
-              { text: prompt }
-            ]
-          }
-        ],
-        generationConfig: {
-  responseMimeType: "application/json",
-  maxOutputTokens: 400
-        }
-      })
-    });
-
-    if (!appel.ok) {
-      log(`Erreur Gemini HTTP ${appel.status}`);
-      throw new Error(
-        "Le service d'aide est temporairement indisponible."
-      );
+const requeteGemini = {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    "x-goog-api-key": cle
+  },
+  body: JSON.stringify({
+    contents: [
+      {
+        role: "user",
+        parts: [
+          { text: prompt }
+        ]
+      }
+    ],
+    generationConfig: {
+      responseMimeType: "application/json",
+      maxOutputTokens: 400
     }
+  })
+};
 
+
+/* ==========================================
+   APPEL GEMINI AVEC RETRY
+========================================== */
+
+let appel = null;
+
+for (let tentative = 1; tentative <= 3; tentative++) {
+
+  appel = await fetch(
+    GEMINI_URL,
+    requeteGemini
+  );
+
+  if (appel.ok) {
+    break;
+  }
+
+  log(
+    `Gemini HTTP ${appel.status} - tentative ${tentative}/3`
+  );
+
+  /*
+   * On réessaie uniquement les erreurs
+   * temporaires du serveur.
+   */
+  if (
+    appel.status !== 503 &&
+    appel.status !== 502 &&
+    appel.status !== 504 &&
+    appel.status !== 429
+  ) {
+    break;
+  }
+
+  if (tentative < 3) {
+
+    const attente =
+      tentative === 1
+        ? 1500
+        : 3000;
+
+    await new Promise(
+      resolve =>
+        setTimeout(resolve, attente)
+    );
+  }
+}
+
+
+if (!appel || !appel.ok) {
+
+  log(
+    `Gemini indisponible après ${appel?.status || "aucune réponse"}`
+  );
+
+  throw new Error(
+    "Le service d'aide est temporairement indisponible. Réessaie dans quelques instants."
+  );
+}
     const data = await appel.json();
 
     const texte =
