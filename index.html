@@ -3,7 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Affrilova ❤️</title>
+<title>Afrilova ❤️</title>
+<!-- AJOUT : logo comme icône de l'onglet du navigateur -->
+<link rel="icon" href="logo.png">
 <script src="https://cdn.jsdelivr.net/npm/appwrite@20.0.0"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -16,6 +18,9 @@ button,select{font:inherit}button{cursor:pointer}
 
 header{background:linear-gradient(135deg,var(--v2),var(--m));color:#fff;padding:18px 15px 24px;border-radius:0 0 27px 27px;box-shadow:0 7px 22px #159b7225}
 .top{display:flex;justify-content:space-between;align-items:center}
+/* AJOUT : logo + nom du site */
+.brand{display:flex;align-items:center;gap:10px}
+.logo-img{width:42px;height:42px;border-radius:12px;object-fit:cover;background:#fff;display:block}
 .logo{font-size:24px;font-weight:800}
 .solde{background:#ffffff30;border:1px solid #ffffff45;padding:7px 12px;border-radius:20px;font-size:13px;font-weight:bold}
 .hero{margin-top:24px;animation:in .5s}
@@ -40,12 +45,13 @@ main{max-width:900px;margin:auto;padding:16px 13px}
 .title{display:flex;justify-content:space-between;align-items:center;margin:5px 2px 11px}
 .title h2{font-size:19px}.title span{font-size:11px;color:var(--g)}
 
-#profils{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+/* MODIFIÉ : cartes de profil plus grandes (2 par ligne, 3 sur grand écran) */
+#profils{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .card{background:#fff;border:1px solid #dcefe8;border-radius:17px;overflow:hidden;box-shadow:0 7px 22px #159b7212;animation:in .5s;transition:.2s}
 .card:hover{transform:translateY(-3px)}
-.photo{width:100%;aspect-ratio:1;object-fit:cover;background:var(--p);display:block}
-.info{padding:9px}.name{font-weight:bold;font-size:14px;margin-bottom:3px}.meta{font-size:11px;color:var(--g);margin-bottom:6px}.desc{font-size:11px;color:#52665f;line-height:1.4;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;min-height:46px}
-.view{width:100%;border:0;background:var(--p);color:#087557;padding:9px;border-radius:10px;font-size:11px;font-weight:bold;margin-top:8px}
+.photo{width:100%;aspect-ratio:4/5;object-fit:cover;background:var(--p);display:block}
+.info{padding:12px}.name{font-weight:bold;font-size:16px;margin-bottom:4px}.meta{font-size:12px;color:var(--g);margin-bottom:7px}.desc{font-size:12px;color:#52665f;line-height:1.45;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;min-height:52px}
+.view{width:100%;border:0;background:var(--p);color:#087557;padding:11px;border-radius:10px;font-size:12px;font-weight:bold;margin-top:10px}
 
 .loading,.empty,.error{grid-column:1/-1;background:#fff;border-radius:16px;padding:28px 12px;text-align:center;color:var(--g);font-size:13px;border:1px solid #dcefe8}
 .error{color:#a94442;background:#fff6f6}
@@ -57,9 +63,12 @@ main{max-width:900px;margin:auto;padding:16px 13px}
 .nav a span{display:block;font-size:19px;margin-bottom:2px}.nav a.active,.nav a:hover{color:var(--v);background:var(--p)}
 .heart{display:inline-block;animation:heart 2s infinite}
 
+/* MODIFIÉ : avant, 4 profils par ligne dès 650 px */
 @media(min-width:650px){
-#profils{grid-template-columns:repeat(4,1fr)}
 .criteria{grid-template-columns:repeat(3,1fr)}
+}
+@media(min-width:900px){
+#profils{grid-template-columns:repeat(3,1fr)}
 }
 @media(max-width:380px){.criteria{grid-template-columns:1fr}}
 </style>
@@ -69,7 +78,11 @@ main{max-width:900px;margin:auto;padding:16px 13px}
 
 <header>
 <div class="top">
-<div class="logo">Affrilova ❤️</div>
+<!-- MODIFIÉ : logo (image) + nom du site "Afrilova" -->
+<div class="brand">
+<img class="logo-img" src="logo.png" alt="Logo Afrilova" onerror="this.style.display='none'">
+<div class="logo">Afrilova ❤️</div>
+</div>
 <div class="solde" id="soldePoints">💎 — point</div>
 </div>
 <div class="hero">
@@ -164,9 +177,9 @@ main{max-width:900px;margin:auto;padding:16px 13px}
 </div>
 </section>
 
+<!-- MODIFIÉ : le compteur de profils est retiré -->
 <div class="title">
 <h2>✨ Découvrez des profils</h2>
-<span id="nombreProfils"></span>
 </div>
 
 <section id="profils">
@@ -190,8 +203,9 @@ main{max-width:900px;margin:auto;padding:16px 13px}
 <script>
 const ENDPOINT="https://fra.cloud.appwrite.io/v1",
 PROJECT="6aac203e00209ccb3014",
-DATABASE="6aac2a200000e6be5877", // CORRIGÉ : l'identifiant se terminait par 5871 avant
-PROFILS="6aac2b35002a0debbb85";
+DATABASE="6aac2a200000e6be5877",
+PROFILS="6aac2b35002a0debbb85",
+BUCKET="6aad2a754e0e095d6a9a"; // AJOUT : dossier des photos
 
 const client=new Appwrite.Client()
 .setEndpoint(ENDPOINT).setProject(PROJECT);
@@ -201,6 +215,13 @@ const account=new Appwrite.Account(client);
 
 function esc(v){
 return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
+}
+
+// AJOUT : transforme l'identifiant du fichier photo en adresse d'image
+function photoURL(id){
+if(!id)return"";
+if(String(id).startsWith("http"))return id;
+return ENDPOINT+"/storage/buckets/"+BUCKET+"/files/"+encodeURIComponent(id)+"/view?project="+PROJECT;
 }
 
 async function user(){
@@ -280,7 +301,7 @@ const photo=p.photoPrincipale||"";
 return `
 <article class="card" style="animation-delay:${Math.min(i*.06,.4)}s">
 ${photo?
-`<img class="photo" src="${esc(photo)}" alt="Photo" onerror="this.outerHTML='<div class=photo style=display:flex;align-items:center;justify-content:center;font-size:38px>❤️</div>'">`
+`<img class="photo" src="${esc(photoURL(photo))}" alt="Photo" onerror="this.outerHTML='<div class=photo style=display:flex;align-items:center;justify-content:center;font-size:38px>❤️</div>'">`
 :`<div class="photo" style="display:flex;align-items:center;justify-content:center;font-size:38px">❤️</div>`}
 <div class="info">
 <div class="name">${esc(p.nom||"Profil")}${p.age?", "+esc(p.age)+" ans":""}</div>
@@ -296,8 +317,7 @@ location.href="voir-profil.html?id="+encodeURIComponent(id);
 }
 
 async function chargerProfils(){
-const box=document.getElementById("profils"),
-nb=document.getElementById("nombreProfils");
+const box=document.getElementById("profils");
 box.innerHTML='<div class="loading">Recherche de belles rencontres… ❤️</div>';
 
 try{
@@ -314,11 +334,10 @@ const profils=r.documents.filter(p=>
 
 if(!profils.length){
 box.innerHTML='<div class="empty">💚<br><strong>Aucun profil disponible pour le moment.</strong><br>De nouvelles rencontres arriveront bientôt.</div>';
-nb.textContent="";
 return;
 }
 
-nb.textContent=profils.length+" profil"+(profils.length>1?"s":"");
+// MODIFIÉ : le compteur de profils n'est plus affiché
 box.innerHTML=profils.map(afficherProfil).join("");
 
 }catch(e){
