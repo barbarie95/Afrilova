@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Afrilova ❤️</title>
-<!-- AJOUT : logo comme icône de l'onglet du navigateur -->
 <link rel="icon" href="logo.png">
 <script src="https://cdn.jsdelivr.net/npm/appwrite@20.0.0"></script>
 <style>
@@ -18,7 +17,6 @@ button,select{font:inherit}button{cursor:pointer}
 
 header{background:linear-gradient(135deg,var(--v2),var(--m));color:#fff;padding:18px 15px 24px;border-radius:0 0 27px 27px;box-shadow:0 7px 22px #159b7225}
 .top{display:flex;justify-content:space-between;align-items:center}
-/* AJOUT : logo + nom du site */
 .brand{display:flex;align-items:center;gap:10px}
 .logo-img{width:42px;height:42px;border-radius:12px;object-fit:cover;background:#fff;display:block}
 .logo{font-size:24px;font-weight:800}
@@ -43,34 +41,66 @@ main{max-width:900px;margin:auto;padding:16px 13px}
 #resultatsCompatibilite{margin-top:10px}
 
 .title{display:flex;justify-content:space-between;align-items:center;margin:5px 2px 11px}
-.title h2{font-size:19px}.title span{font-size:11px;color:var(--g)}
+.title h2{font-size:19px}
 
-/* MODIFIÉ : cartes de profil plus grandes (2 par ligne, 3 sur grand écran) */
-#profils{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.card{background:#fff;border:1px solid #dcefe8;border-radius:17px;overflow:hidden;box-shadow:0 7px 22px #159b7212;animation:in .5s;transition:.2s}
-.card:hover{transform:translateY(-3px)}
-.photo{width:100%;aspect-ratio:4/5;object-fit:cover;background:var(--p);display:block}
-.info{padding:12px}.name{font-weight:bold;font-size:16px;margin-bottom:4px}.meta{font-size:12px;color:var(--g);margin-bottom:7px}.desc{font-size:12px;color:#52665f;line-height:1.45;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;min-height:52px}
-.view{width:100%;border:0;background:var(--p);color:#087557;padding:11px;border-radius:10px;font-size:12px;font-weight:bold;margin-top:10px}
+/* MODIFIÉ : les profils s'affichent comme un fil d'actualité (une carte par profil) */
+#profils{display:flex;flex-direction:column;gap:16px;max-width:600px;margin:0 auto}
 
-.loading,.empty,.error{grid-column:1/-1;background:#fff;border-radius:16px;padding:28px 12px;text-align:center;color:var(--g);font-size:13px;border:1px solid #dcefe8}
+.card{background:#fff;border:1px solid #dcefe8;border-radius:16px;overflow:hidden;box-shadow:0 4px 16px #159b7214;opacity:0;transition:box-shadow .25s}
+.card:hover{box-shadow:0 10px 28px #159b7226}
+.card.visible{animation:apparition .55s ease both}
+@keyframes apparition{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+
+.post-head{display:flex;align-items:center;gap:10px;padding:12px 14px}
+.avatar{width:46px;height:46px;border-radius:50%;object-fit:cover;background:var(--p);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:22px;border:2px solid var(--p)}
+.who{min-width:0}
+.name{font-weight:bold;font-size:15px;line-height:1.25}
+.meta{font-size:12px;color:var(--g);margin-top:2px}
+.chip{display:inline-block;margin:0 14px 8px;background:var(--p);color:#087557;font-size:12px;font-weight:bold;padding:5px 11px;border-radius:20px}
+.desc{padding:0 14px 12px;font-size:14px;color:#3f564f;line-height:1.5;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
+
+.photo-wrap{background:var(--p);overflow:hidden}
+.photo{width:100%;aspect-ratio:4/5;object-fit:cover;display:block;opacity:0;transition:opacity .6s ease,transform .7s ease}
+.photo.loaded{opacity:1}
+.card:hover .photo{transform:scale(1.03)}
+.photo-empty{width:100%;aspect-ratio:4/5;display:flex;align-items:center;justify-content:center;font-size:56px;background:var(--p)}
+
+.post-actions{border-top:1px solid #e6f3ee;padding:10px 14px}
+.view{width:100%;border:0;background:var(--v);color:#fff;padding:12px;border-radius:12px;font-size:14px;font-weight:bold;transition:transform .15s,background .2s}
+.view:hover{background:var(--v2)}
+.view:active{transform:scale(.97)}
+
+/* AJOUT : cartes grises animées pendant le chargement */
+.skeleton{background:#fff;border:1px solid #dcefe8;border-radius:16px;overflow:hidden}
+.sk-head{display:flex;gap:10px;padding:12px 14px;align-items:center}
+.sk-circle,.sk-line,.sk-photo{background:linear-gradient(90deg,#e8f8f2 25%,#f6fcf9 50%,#e8f8f2 75%);background-size:200% 100%;animation:brillance 1.3s linear infinite}
+.sk-circle{width:46px;height:46px;border-radius:50%;flex-shrink:0}
+.sk-lines{flex:1}
+.sk-line{height:10px;border-radius:6px;margin-bottom:7px}
+.w60{width:60%}.w40{width:40%}
+.sk-photo{width:100%;aspect-ratio:4/5}
+@keyframes brillance{from{background-position:200% 0}to{background-position:-200% 0}}
+
+.loading,.empty,.error{background:#fff;border-radius:16px;padding:28px 12px;text-align:center;color:var(--g);font-size:13px;border:1px solid #dcefe8}
 .error{color:#a94442;background:#fff6f6}
-.extra{background:#fff;border:1px solid #dcefe8;border-radius:17px;padding:14px;margin-top:17px;box-shadow:0 7px 22px #159b7212}
+.extra{background:#fff;border:1px solid #dcefe8;border-radius:17px;padding:14px;margin-top:17px;box-shadow:0 7px 22px #159b7212;max-width:600px;margin-left:auto;margin-right:auto}
 .extra h3{font-size:15px;margin-bottom:5px}.extra p{font-size:12px;color:var(--g);line-height:1.5}
 
 .nav{position:fixed;bottom:0;left:0;right:0;z-index:20;background:#fffffff5;border-top:1px solid #dcefe8;display:grid;grid-template-columns:repeat(4,1fr);padding:7px 6px calc(7px + env(safe-area-inset-bottom));box-shadow:0 -7px 22px #159b7210}
-.nav a{text-decoration:none;text-align:center;color:var(--g);font-size:10px;padding:5px;border-radius:11px}
+.nav a{text-decoration:none;text-align:center;color:var(--g);font-size:10px;padding:5px;border-radius:11px;transition:background .2s,color .2s}
 .nav a span{display:block;font-size:19px;margin-bottom:2px}.nav a.active,.nav a:hover{color:var(--v);background:var(--p)}
 .heart{display:inline-block;animation:heart 2s infinite}
 
-/* MODIFIÉ : avant, 4 profils par ligne dès 650 px */
 @media(min-width:650px){
 .criteria{grid-template-columns:repeat(3,1fr)}
 }
-@media(min-width:900px){
-#profils{grid-template-columns:repeat(3,1fr)}
-}
 @media(max-width:380px){.criteria{grid-template-columns:1fr}}
+
+/* AJOUT : respect des personnes qui ont désactivé les animations */
+@media(prefers-reduced-motion:reduce){
+*{animation:none!important;transition:none!important}
+.card,.photo{opacity:1!important}
+}
 </style>
 </head>
 
@@ -78,7 +108,6 @@ main{max-width:900px;margin:auto;padding:16px 13px}
 
 <header>
 <div class="top">
-<!-- MODIFIÉ : logo (image) + nom du site "Afrilova" -->
 <div class="brand">
 <img class="logo-img" src="logo.png" alt="Logo Afrilova" onerror="this.style.display='none'">
 <div class="logo">Afrilova ❤️</div>
@@ -177,13 +206,14 @@ main{max-width:900px;margin:auto;padding:16px 13px}
 </div>
 </section>
 
-<!-- MODIFIÉ : le compteur de profils est retiré -->
 <div class="title">
 <h2>✨ Découvrez des profils</h2>
 </div>
 
+<!-- MODIFIÉ : cartes grises animées pendant le chargement -->
 <section id="profils">
-<div class="loading">Recherche de belles rencontres… ❤️</div>
+<div class="skeleton"><div class="sk-head"><div class="sk-circle"></div><div class="sk-lines"><div class="sk-line w60"></div><div class="sk-line w40"></div></div></div><div class="sk-photo"></div></div>
+<div class="skeleton"><div class="sk-head"><div class="sk-circle"></div><div class="sk-lines"><div class="sk-line w60"></div><div class="sk-line w40"></div></div></div><div class="sk-photo"></div></div>
 </section>
 
 <section class="extra">
@@ -205,7 +235,7 @@ const ENDPOINT="https://fra.cloud.appwrite.io/v1",
 PROJECT="6aac203e00209ccb3014",
 DATABASE="6aac2a200000e6be5877",
 PROFILS="6aac2b35002a0debbb85",
-BUCKET="6aad2a754e0e095d6a9a"; // AJOUT : dossier des photos
+BUCKET="6aad2a754e0e095d6a9a";
 
 const client=new Appwrite.Client()
 .setEndpoint(ENDPOINT).setProject(PROJECT);
@@ -213,11 +243,27 @@ const client=new Appwrite.Client()
 const db=new Appwrite.Databases(client);
 const account=new Appwrite.Account(client);
 
+/* AJOUT : noms des villes et des pays, et libellés du type de relation */
+let villesMap={},paysMap={};
+
+const RELATIONS={
+mariage:"💍 Mariage",
+amoureuse:"🌹 Relation sans précipitation",
+"relation sans précipitation":"🌹 Relation sans précipitation",
+projet:"💕 Projet de vie à deux",
+"projet de vie à deux":"💕 Projet de vie à deux"
+};
+
+/* AJOUT : cartes grises affichées pendant le chargement */
+const SQUELETTE=`
+<div class="skeleton"><div class="sk-head"><div class="sk-circle"></div><div class="sk-lines"><div class="sk-line w60"></div><div class="sk-line w40"></div></div></div><div class="sk-photo"></div></div>
+<div class="skeleton"><div class="sk-head"><div class="sk-circle"></div><div class="sk-lines"><div class="sk-line w60"></div><div class="sk-line w40"></div></div></div><div class="sk-photo"></div></div>`;
+
 function esc(v){
 return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
 }
 
-// AJOUT : transforme l'identifiant du fichier photo en adresse d'image
+// transforme l'identifiant du fichier photo en adresse d'image
 function photoURL(id){
 if(!id)return"";
 if(String(id).startsWith("http"))return id;
@@ -252,6 +298,18 @@ Appwrite.Query.limit(100)
 ]);
 return r.documents.map(x=>x.bloqueId);
 }catch{return[]}
+}
+
+/* AJOUT : charge les noms des villes et des pays pour l'affichage des cartes */
+async function chargerNoms(){
+try{
+const [v,p]=await Promise.all([
+db.listDocuments(DATABASE,"villes",[Appwrite.Query.limit(300)]),
+db.listDocuments(DATABASE,"pays",[Appwrite.Query.limit(100)])
+]);
+v.documents.forEach(x=>{villesMap[x.$id]=x.nom});
+p.documents.forEach(x=>{paysMap[x.$id]=x.nom});
+}catch(e){console.log(e)}
 }
 
 async function chargerPays(){
@@ -296,18 +354,35 @@ b.textContent=open?"✕ Masquer mes critères":"💖 Afficher mes critères";
 b.setAttribute("aria-expanded",open);
 }
 
+/* MODIFIÉ : une carte de profil façon fil d'actualité */
 function afficherProfil(p,i){
-const photo=p.photoPrincipale||"";
+const url=photoURL(p.photoPrincipale||"");
+const ville=villesMap[p.villeId]||"",pays=paysMap[p.paysId]||"";
+const lieu=[ville,pays].filter(Boolean).join(", ")||"Afrique";
+const relation=RELATIONS[p.typeRelation]||"";
+
+const avatar=url
+?`<img class="avatar" src="${esc(url)}" alt="" onerror="this.outerHTML='<div class=avatar>❤️</div>'">`
+:`<div class="avatar">❤️</div>`;
+
+const photo=url
+?`<img class="photo" loading="lazy" src="${esc(url)}" alt="Photo de ${esc(p.nom||"profil")}" onload="this.classList.add('loaded')" onerror="this.outerHTML='<div class=photo-empty>❤️</div>'">`
+:`<div class="photo-empty">❤️</div>`;
+
 return `
-<article class="card" style="animation-delay:${Math.min(i*.06,.4)}s">
-${photo?
-`<img class="photo" src="${esc(photoURL(photo))}" alt="Photo" onerror="this.outerHTML='<div class=photo style=display:flex;align-items:center;justify-content:center;font-size:38px>❤️</div>'">`
-:`<div class="photo" style="display:flex;align-items:center;justify-content:center;font-size:38px">❤️</div>`}
-<div class="info">
-<div class="name">${esc(p.nom||"Profil")}${p.age?", "+esc(p.age)+" ans":""}</div>
-<div class="meta">🌍 ${esc(p.villeId||"Afrique")}</div>
+<article class="card" style="animation-delay:${Math.min(i,3)*.08}s">
+<div class="post-head">
+${avatar}
+<div class="who">
+<div class="name">${esc(p.nom||"Profil")}${p.age?" · "+esc(p.age)+" ans":""}</div>
+<div class="meta">📍 ${esc(lieu)}</div>
+</div>
+</div>
+${relation?`<div class="chip">${esc(relation)}</div>`:""}
 <div class="desc">${esc(p.description||"À la recherche d'une belle rencontre.")}</div>
-<button class="view" onclick="voirProfil('${p.$id}')">Voir le profil ❤️</button>
+<div class="photo-wrap">${photo}</div>
+<div class="post-actions">
+<button class="view" onclick="voirProfil('${esc(p.$id)}')">Voir le profil ❤️</button>
 </div>
 </article>`;
 }
@@ -316,12 +391,31 @@ function voirProfil(id){
 location.href="voir-profil.html?id="+encodeURIComponent(id);
 }
 
+/* AJOUT : les cartes apparaissent en douceur quand on fait défiler la page */
+function animerCartes(){
+const cartes=document.querySelectorAll("#profils .card");
+if(!("IntersectionObserver" in window)){
+cartes.forEach(c=>c.classList.add("visible"));
+return;
+}
+const obs=new IntersectionObserver(entrees=>{
+entrees.forEach(e=>{
+if(e.isIntersecting){
+e.target.classList.add("visible");
+obs.unobserve(e.target);
+}
+});
+},{threshold:.1});
+cartes.forEach(c=>obs.observe(c));
+}
+
 async function chargerProfils(){
 const box=document.getElementById("profils");
-box.innerHTML='<div class="loading">Recherche de belles rencontres… ❤️</div>';
+box.innerHTML=SQUELETTE;
 
 try{
 const u=await user(), bloque=await chargerBlocages();
+await chargerNoms();
 const r=await db.listDocuments(DATABASE,PROFILS,[
 Appwrite.Query.equal("statut","approuve"),
 Appwrite.Query.limit(50)
@@ -337,8 +431,8 @@ box.innerHTML='<div class="empty">💚<br><strong>Aucun profil disponible pour l
 return;
 }
 
-// MODIFIÉ : le compteur de profils n'est plus affiché
 box.innerHTML=profils.map(afficherProfil).join("");
+animerCartes();
 
 }catch(e){
 console.error(e);
