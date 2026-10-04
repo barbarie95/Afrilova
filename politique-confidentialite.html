@@ -3,42 +3,244 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<meta name="description" content="Politique de confidentialité d'Afrilova : données collectées, utilisation, partage et droits des utilisateurs.">
+
+<meta name="description"
+content="Politique de confidentialité d'Afrilova : données collectées, utilisation, sécurité, partage et droits des utilisateurs.">
+
 <title>Politique de confidentialité - Afrilova</title>
 
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0
+}
+
+:root{
+  --vert:#20B486;
+  --vert2:#55D3A8;
+  --vert3:#159B72;
+  --clair:#E8F8F2;
+  --fond:#F7FCFA;
+  --texte:#17352C;
+  --texte2:#526B63;
+  --blanc:#fff;
+  --ombre:0 6px 22px rgba(21,155,114,.08)
+}
+
 body{
- font-family:Arial,sans-serif;background:#F3FBF7;
- color:#17352C;line-height:1.6;padding-bottom:30px
+  font-family:Arial,sans-serif;
+  background:linear-gradient(180deg,#F7FCFA 0%,#E8F8F2 100%);
+  color:var(--texte);
+  line-height:1.6;
+  min-height:100vh;
+  padding-bottom:35px
 }
+
 header{
- background:linear-gradient(135deg,#0B8F6A,#3DBB91);
- color:white;padding:18px 16px;
- display:flex;align-items:center;justify-content:space-between;
- box-shadow:0 3px 10px rgba(0,0,0,.08)
+  background:linear-gradient(135deg,var(--vert),var(--vert2));
+  color:white;
+  padding:16px 15px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  box-shadow:0 4px 16px rgba(21,155,114,.16);
+  position:sticky;
+  top:0;
+  z-index:10
 }
-.logo{font-size:20px;font-weight:bold}
+
+.logo{
+  font-size:20px;
+  font-weight:800;
+  letter-spacing:-.4px
+}
+
 .back{
- color:white;text-decoration:none;font-size:13px;font-weight:bold;
- background:rgba(255,255,255,.18);padding:8px 12px;border-radius:20px
+  color:white;
+  text-decoration:none;
+  font-size:13px;
+  font-weight:700;
+  background:rgba(255,255,255,.18);
+  border:1px solid rgba(255,255,255,.25);
+  padding:8px 13px;
+  border-radius:22px;
+  transition:.2s
 }
-main{max-width:700px;margin:auto;padding:20px 14px}
-h1{color:#087557;font-size:24px;margin-bottom:6px}
-.update{color:#668078;font-size:12px;margin-bottom:16px}
+
+.back:active{
+  transform:scale(.96)
+}
+
+main{
+  width:100%;
+  max-width:720px;
+  margin:auto;
+  padding:22px 14px
+}
+
+.hero{
+  text-align:center;
+  padding:8px 4px 20px
+}
+
+.hero-icon{
+  width:58px;
+  height:58px;
+  margin:0 auto 12px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:18px;
+  background:linear-gradient(135deg,var(--vert),var(--vert2));
+  color:white;
+  font-size:28px;
+  box-shadow:0 7px 20px rgba(32,180,134,.2)
+}
+
+h1{
+  color:var(--vert3);
+  font-size:25px;
+  line-height:1.2;
+  margin-bottom:7px
+}
+
+.subtitle{
+  color:var(--texte2);
+  font-size:14px
+}
+
+.update{
+  display:inline-block;
+  margin-top:10px;
+  color:#71847D;
+  font-size:12px;
+  background:#fff;
+  padding:5px 10px;
+  border-radius:20px
+}
+
+.intro{
+  background:linear-gradient(135deg,#E8F8F2,#fff);
+  border:1px solid rgba(32,180,134,.12);
+  border-radius:17px;
+  padding:15px;
+  margin-bottom:15px;
+  box-shadow:var(--ombre)
+}
+
+.intro strong{
+  color:var(--vert3)
+}
+
 .card{
- background:white;border-radius:16px;padding:16px;
- margin-bottom:14px;box-shadow:0 3px 12px rgba(0,0,0,.05)
+  background:var(--blanc);
+  border:1px solid rgba(32,180,134,.08);
+  border-radius:17px;
+  padding:17px;
+  margin-bottom:13px;
+  box-shadow:var(--ombre)
 }
-.card h2{color:#087557;font-size:17px;margin-bottom:8px}
-.card p,.card li{color:#44625A;font-size:14px}
-.card p{margin-bottom:8px}
-.card ul{margin:6px 0 8px 20px}
-.card li{margin-bottom:4px}
-.card a{color:#0B8F6A;font-weight:bold}
-.note{
- background:#FFF6E0;color:#8A6100;border-radius:12px;
- padding:12px;font-size:13px;margin-bottom:14px
+
+.card h2{
+  color:var(--vert3);
+  font-size:17px;
+  margin-bottom:9px;
+  line-height:1.3
+}
+
+.card p,
+.card li{
+  color:var(--texte2);
+  font-size:14px
+}
+
+.card p{
+  margin-bottom:9px
+}
+
+.card p:last-child{
+  margin-bottom:0
+}
+
+.card ul{
+  margin:7px 0 9px 20px
+}
+
+.card li{
+  margin-bottom:6px
+}
+
+.card li:last-child{
+  margin-bottom:0
+}
+
+.card strong{
+  color:#315A4E
+}
+
+.card a{
+  color:var(--vert3);
+  font-weight:700;
+  text-decoration:none
+}
+
+.card a:hover{
+  text-decoration:underline
+}
+
+.warning{
+  background:#FFF9EA;
+  border:1px solid #F3D98B;
+  color:#765A17;
+  border-radius:15px;
+  padding:13px 14px;
+  margin-bottom:14px;
+  font-size:13px
+}
+
+.warning strong{
+  color:#765A17
+}
+
+.footer{
+  text-align:center;
+  color:#789088;
+  font-size:12px;
+  padding:10px 10px 20px
+}
+
+@media(max-width:420px){
+
+  header{
+    padding:14px 12px
+  }
+
+  .logo{
+    font-size:18px
+  }
+
+  main{
+    padding:18px 11px
+  }
+
+  h1{
+    font-size:23px
+  }
+
+  .card{
+    padding:15px;
+    border-radius:15px
+  }
+
+  .card h2{
+    font-size:16px
+  }
+
+  .card p,
+  .card li{
+    font-size:13.5px
+  }
 }
 </style>
 </head>
@@ -46,115 +248,555 @@ h1{color:#087557;font-size:24px;margin-bottom:6px}
 <body>
 
 <header>
-<div class="logo">💚 Afrilova</div>
-<a class="back" href="profil.html">← Retour</a>
+  <div class="logo">💚 Afrilova</div>
+  <a class="back" href="profil.html">← Retour</a>
 </header>
 
 <main>
 
-<h1>🔒 Politique de confidentialité</h1>
-<p class="update">Dernière mise à jour : 3 octobre 2026</p>
+  <section class="hero">
 
-<div class="note">
-Afrilova est une plateforme de rencontres réservée aux personnes de 18 ans et plus.
-Cette page explique quelles données nous utilisons, pourquoi, et comment vous
-gardez le contrôle.
-</div>
+    <div class="hero-icon">🔒</div>
 
-<section class="card">
-<h2>1. Qui est responsable de vos données ?</h2>
-<p>Afrilova est édité par Arsène Gansonre, basé au Burkina Faso.</p>
-<p>Contact pour toute question sur vos données : <a href="mailto:senomarket1@gmail.com">senomarket1@gmail.com</a></p>
-</section>
+    <h1>Politique de confidentialité</h1>
 
-<section class="card">
-<h2>2. Les données que nous collectons</h2>
-<ul>
-<li><strong>Compte :</strong> votre adresse email et votre mot de passe (conservé sous forme protégée : nous ne pouvons pas le lire).</li>
-<li><strong>Profil :</strong> nom ou pseudonyme, âge, pays, ville, description, vos réponses (enfants, polygamie, type de relation recherchée) et votre photo.</li>
-<li><strong>Photo d'origine :</strong> si vous masquez votre visage avec un emoji, nous conservons aussi votre photo d'origine, qui n'est pas affichée publiquement.</li>
-<li><strong>Activité :</strong> demandes de discussion, conversations, messages et photos échangés, blocages et signalements.</li>
-<li><strong>Points et achats :</strong> votre solde, l'utilisation de vos points et vos achats.</li>
-<li><strong>Aide à la discussion :</strong> le texte que vous saisissez pour obtenir des suggestions de réponse.</li>
-<li><strong>Données techniques :</strong> adresse IP, type d'appareil et de navigateur, journaux de sécurité.</li>
-</ul>
-<p>Certaines informations de votre profil touchent à votre vie privée. Vous choisissez ce que vous y écrivez.</p>
-</section>
+    <p class="subtitle">
+      Votre vie privée et la protection de vos données sont importantes pour nous.
+    </p>
 
-<section class="card">
-<h2>3. Pourquoi nous les utilisons</h2>
-<ul>
-<li>Créer et gérer votre compte, et faire fonctionner le service (profils, demandes, discussions).</li>
-<li>Gérer vos points et vos paiements.</li>
-<li>Vous proposer l'Aide à la discussion.</li>
-<li>Protéger la plateforme : modération, signalements, lutte contre les faux profils et la fraude.</li>
-<li>Respecter nos obligations légales.</li>
-</ul>
-<p>Nous nous appuyons sur votre consentement, sur l'exécution du service que vous demandez, et sur notre intérêt légitime à sécuriser la plateforme.</p>
-</section>
+    <span class="update">
+      Dernière mise à jour : 3 octobre 2026
+    </span>
 
-<section class="card">
-<h2>4. Qui peut voir quoi ?</h2>
-<ul>
-<li><strong>Les autres membres</strong> voient votre nom ou pseudonyme, votre âge, votre ville et votre pays, votre description, vos préférences et votre photo de profil (avec votre emoji si vous avez masqué votre visage).</li>
-<li><strong>Votre photo d'origine</strong> n'est visible que par vous et par la personne avec qui une discussion est lancée.</li>
-<li><strong>Vos messages</strong> ne sont visibles que par vous et votre interlocuteur. L'équipe de modération peut y accéder uniquement lorsque c'est nécessaire : signalement, sécurité ou fraude.</li>
-<li>Nous ne vendons pas vos données et nous ne les partageons pas à des fins publicitaires.</li>
-</ul>
-</section>
+  </section>
 
-<section class="card">
-<h2>5. Les prestataires qui nous aident</h2>
-<ul>
-<li><strong>Hébergement des données :</strong> Appwrite (serveurs situés en Europe).</li>
-<li><strong>Hébergement du site :</strong> GitHub Pages.</li>
-<li><strong>Paiement des points :</strong> PayDunya. Nous ne conservons pas vos informations de paiement complètes.</li>
-<li><strong>Aide à la discussion :</strong> Google (Gemini). Le texte de votre question et le contexte nécessaire pour générer des suggestions lui sont transmis. Ne partagez pas d'informations très sensibles dans cet outil.</li>
-</ul>
-<p>Ces prestataires peuvent se trouver dans un pays différent du vôtre. Nous ne leur confions que ce qui est nécessaire à leur mission.</p>
-</section>
 
-<section class="card">
-<h2>6. Combien de temps nous gardons vos données</h2>
-<ul>
-<li>Tant que votre compte est actif.</li>
-<li>Après suppression de votre compte, vos données de profil, vos messages et vos photos sont supprimés dans un délai de 30 jours, sauf celles que la loi nous oblige à conserver (par exemple les preuves de paiement) ou qui sont nécessaires pour traiter un signalement en cours.</li>
-</ul>
-</section>
+  <div class="intro">
 
-<section class="card">
-<h2>7. Vos droits</h2>
-<p>Vous pouvez à tout moment demander à :</p>
-<ul>
-<li>accéder à vos données et en recevoir une copie ;</li>
-<li>corriger vos informations ;</li>
-<li>supprimer votre compte et vos données ;</li>
-<li>vous opposer à certains usages ou retirer votre consentement.</li>
-</ul>
-<p>Écrivez-nous à <a href="mailto:senomarket1@gmail.com">senomarket1@gmail.com</a>. Nous répondons dans un délai de 30 jours. Vous pouvez aussi saisir l'autorité de protection des données de votre pays (au Burkina Faso : la Commission de l'informatique et des libertés, CIL).</p>
-</section>
+    <p>
+      <strong>Afrilova</strong> est une plateforme de rencontres destinée
+      à permettre à ses utilisateurs de découvrir des personnes,
+      d'échanger et, éventuellement, de construire une relation.
+    </p>
 
-<section class="card">
-<h2>8. Sécurité</h2>
-<p>Les échanges avec le site sont chiffrés, les mots de passe sont protégés et l'accès à vos données est limité. Aucun système n'est parfait : restez prudent(e), ne partagez jamais vos mots de passe, ne transférez jamais d'argent à une personne rencontrée sur Afrilova et utilisez les boutons bloquer et signaler en cas de problème.</p>
-</section>
+    <p>
+      Cette politique explique quelles informations nous collectons,
+      pourquoi nous les utilisons, avec qui elles peuvent être partagées
+      et quels sont vos droits.
+    </p>
 
-<section class="card">
-<h2>9. Mineurs</h2>
-<p>Afrilova est interdit aux moins de 18 ans. Si nous découvrons qu'un compte appartient à un mineur, nous le supprimons.</p>
-</section>
+  </div>
 
-<section class="card">
-<h2>10. Cookies et stockage sur votre appareil</h2>
-<p>Nous utilisons uniquement ce qui est nécessaire pour vous garder connecté(e). Nous n'utilisons pas de cookies publicitaires.</p>
-</section>
 
-<section class="card">
-<h2>11. Modifications de cette politique</h2>
-<p>Nous pouvons mettre cette page à jour. La date de dernière mise à jour est indiquée en haut. En cas de changement important, nous vous en informerons sur le site.</p>
-</section>
+  <div class="warning">
+    <strong>🔐 À retenir :</strong>
+    nous ne vendons pas vos données personnelles à des fins publicitaires.
+    Nous mettons également en place des mesures de sécurité pour limiter
+    les accès non autorisés à vos informations.
+  </div>
+
+
+  <section class="card">
+
+    <h2>1. Responsable du traitement</h2>
+
+    <p>
+      Afrilova est édité par <strong>Arsène Gansonre</strong>,
+      basé au Burkina Faso.
+    </p>
+
+    <p>
+      Pour toute question concernant vos données personnelles,
+      vous pouvez nous contacter à :
+    </p>
+
+    <p>
+      <a href="mailto:senomarket1@gmail.com">
+        senomarket1@gmail.com
+      </a>
+    </p>
+
+  </section>
+
+
+  <section class="card">
+
+    <h2>2. Les informations que nous collectons</h2>
+
+    <p>
+      Selon votre utilisation d'Afrilova, nous pouvons collecter
+      les catégories d'informations suivantes :
+    </p>
+
+    <ul>
+
+      <li>
+        <strong>Compte :</strong>
+        adresse email et informations nécessaires à l'authentification.
+        Votre mot de passe est protégé par notre système d'authentification
+        et n'est pas accessible en clair par notre équipe.
+      </li>
+
+      <li>
+        <strong>Profil :</strong>
+        nom ou pseudonyme, âge, pays, ville, description,
+        photo et informations que vous choisissez de renseigner
+        concernant votre recherche.
+      </li>
+
+      <li>
+        <strong>Informations de recherche :</strong>
+        présence d'enfants, préférence concernant la polygamie
+        et type de relation recherché.
+      </li>
+
+      <li>
+        <strong>Photos :</strong>
+        photo de profil et, lorsque cela est utilisé,
+        photo originale associée à une photo dont le visage
+        a été masqué.
+      </li>
+
+      <li>
+        <strong>Interactions :</strong>
+        demandes de discussion, conversations, messages,
+        photos échangées, blocages et signalements.
+      </li>
+
+      <li>
+        <strong>Points et transactions :</strong>
+        solde de points, utilisation des points,
+        achats et informations nécessaires au suivi
+        des transactions.
+      </li>
+
+      <li>
+        <strong>Aide à la discussion :</strong>
+        texte que vous fournissez afin de recevoir
+        des suggestions de réponse.
+      </li>
+
+      <li>
+        <strong>Données techniques :</strong>
+        adresse IP, type d'appareil, navigateur
+        et informations nécessaires à la sécurité
+        et au fonctionnement du service.
+      </li>
+
+    </ul>
+
+  </section>
+
+
+  <section class="card">
+
+    <h2>3. Pourquoi utilisons-nous vos données ?</h2>
+
+    <ul>
+
+      <li>
+        Créer et gérer votre compte.
+      </li>
+
+      <li>
+        Créer et afficher votre profil selon vos paramètres.
+      </li>
+
+      <li>
+        Permettre la découverte d'autres profils.
+      </li>
+
+      <li>
+        Gérer les demandes de discussion et les conversations.
+      </li>
+
+      <li>
+        Gérer vos points et vos transactions.
+      </li>
+
+      <li>
+        Fournir l'Aide à la discussion lorsque vous la demandez.
+      </li>
+
+      <li>
+        Prévenir les abus, les faux profils,
+        les fraudes et les comportements dangereux.
+      </li>
+
+      <li>
+        Traiter les signalements et les blocages.
+      </li>
+
+      <li>
+        Améliorer la sécurité et le fonctionnement de la plateforme.
+      </li>
+
+      <li>
+        Respecter les obligations légales applicables.
+      </li>
+
+    </ul>
+
+    <p>
+      Selon le traitement concerné, nous pouvons nous appuyer
+      sur l'exécution du service demandé, votre consentement,
+      nos intérêts légitimes de sécurité ou nos obligations légales.
+    </p>
+
+  </section>
+
+
+  <section class="card">
+
+    <h2>4. Qui peut voir vos informations ?</h2>
+
+    <p>
+      Nous essayons de limiter l'accès à vos données
+      à ce qui est nécessaire.
+    </p>
+
+    <ul>
+
+      <li>
+        <strong>Autres membres :</strong>
+        peuvent voir les informations de votre profil
+        que la plateforme rend visibles, notamment votre nom
+        ou pseudonyme, âge, pays, ville, description,
+        informations de recherche et photo de profil.
+      </li>
+
+      <li>
+        <strong>Photo originale :</strong>
+        lorsqu'une photo originale est conservée séparément
+        après masquage du visage, elle n'est pas affichée
+        publiquement comme votre photo de profil.
+      </li>
+
+      <li>
+        <strong>Messages :</strong>
+        vos conversations sont destinées à vous et
+        à votre interlocuteur.
+      </li>
+
+      <li>
+        <strong>Modération :</strong>
+        l'équipe autorisée peut accéder à certaines informations
+        lorsque cela est nécessaire pour traiter un signalement,
+        assurer la sécurité ou lutter contre la fraude et les abus.
+      </li>
+
+    </ul>
+
+    <p>
+      Nous ne vendons pas vos données personnelles
+      à des annonceurs.
+    </p>
+
+  </section>
+
+
+  <section class="card">
+
+    <h2>5. Les services qui nous aident</h2>
+
+    <p>
+      Certains services techniques peuvent traiter
+      certaines informations pour permettre à Afrilova de fonctionner.
+    </p>
+
+    <ul>
+
+      <li>
+        <strong>Appwrite :</strong>
+        hébergement et gestion des données de la plateforme.
+      </li>
+
+      <li>
+        <strong>GitHub Pages :</strong>
+        hébergement du site web.
+      </li>
+
+      <li>
+        <strong>PayDunya :</strong>
+        traitement des paiements liés aux achats de points.
+      </li>
+
+      <li>
+        <strong>Google Gemini :</strong>
+        traitement du texte nécessaire à la fonctionnalité
+        d'Aide à la discussion lorsque vous utilisez cette fonction.
+      </li>
+
+    </ul>
+
+    <p>
+      Ces prestataires peuvent traiter certaines données
+      conformément à leurs propres conditions et politiques
+      de confidentialité.
+    </p>
+
+    <p>
+      Nous essayons de limiter les informations transmises
+      à ce qui est nécessaire au fonctionnement du service concerné.
+    </p>
+
+  </section>
+
+
+  <section class="card">
+
+    <h2>6. L'Aide à la discussion et l'intelligence artificielle</h2>
+
+    <p>
+      Afrilova peut proposer une fonctionnalité d'Aide à la discussion.
+      Cette fonctionnalité fournit uniquement des suggestions :
+      elle n'envoie pas automatiquement un message à votre place.
+    </p>
+
+    <p>
+      Lorsque vous utilisez cette fonctionnalité, le texte nécessaire
+      à la génération de suggestions peut être transmis au service
+      d'intelligence artificielle utilisé par Afrilova.
+    </p>
+
+    <p>
+      Évitez donc de saisir dans cette fonctionnalité
+      des informations extrêmement sensibles ou confidentielles
+      qui ne sont pas nécessaires à votre demande.
+    </p>
+
+  </section>
+
+
+  <section class="card">
+
+    <h2>7. Sécurité de vos données</h2>
+
+    <p>
+      Nous mettons en place différentes mesures destinées
+      à protéger vos informations contre les accès non autorisés,
+      la perte, la modification ou la divulgation.
+    </p>
+
+    <ul>
+
+      <li>
+        Connexion au site protégée par HTTPS.
+      </li>
+
+      <li>
+        Mots de passe protégés par le système d'authentification.
+      </li>
+
+      <li>
+        Accès aux données sensibles limité aux services
+        et personnes autorisés.
+      </li>
+
+      <li>
+        Protection des fichiers et photos stockés
+        sur notre infrastructure.
+      </li>
+
+      <li>
+        Système de signalement et de blocage
+        pour les comportements problématiques.
+      </li>
+
+    </ul>
+
+    <p>
+      Malgré ces mesures, aucun système informatique
+      ne peut garantir une sécurité absolue.
+    </p>
+
+  </section>
+
+
+  <section class="card">
+
+    <h2>8. Combien de temps conservons-nous vos données ?</h2>
+
+    <p>
+      Nous conservons vos données aussi longtemps que nécessaire
+      pour faire fonctionner votre compte et fournir le service.
+    </p>
+
+    <p>
+      Lorsque vous demandez la suppression de votre compte,
+      les données concernées sont supprimées dans un délai
+      pouvant aller jusqu'à 30 jours, sauf lorsqu'une conservation
+      est nécessaire pour respecter une obligation légale,
+      assurer la sécurité ou traiter un litige ou un signalement.
+    </p>
+
+  </section>
+
+
+  <section class="card">
+
+    <h2>9. Vos droits</h2>
+
+    <p>
+      Selon la législation applicable, vous pouvez notamment
+      demander :
+    </p>
+
+    <ul>
+
+      <li>
+        l'accès à vos données personnelles ;
+      </li>
+
+      <li>
+        une copie de certaines de vos données ;
+      </li>
+
+      <li>
+        la correction d'informations incorrectes ;
+      </li>
+
+      <li>
+        la suppression de votre compte et des données concernées ;
+      </li>
+
+      <li>
+        la limitation ou l'opposition à certains traitements ;
+      </li>
+
+      <li>
+        le retrait de votre consentement lorsque le traitement
+        repose sur celui-ci.
+      </li>
+
+    </ul>
+
+    <p>
+      Pour exercer vos droits, contactez-nous :
+    </p>
+
+    <p>
+      <a href="mailto:senomarket1@gmail.com">
+        senomarket1@gmail.com
+      </a>
+    </p>
+
+    <p>
+      Nous traiterons votre demande dans les délais prévus
+      par la réglementation applicable.
+    </p>
+
+  </section>
+
+
+  <section class="card">
+
+    <h2>10. Mineurs</h2>
+
+    <p>
+      Afrilova est actuellement réservé aux personnes
+      âgées de 18 ans ou plus.
+    </p>
+
+    <p>
+      Si nous découvrons qu'un compte appartient à une personne
+      n'ayant pas l'âge minimum requis, nous pouvons prendre
+      les mesures nécessaires, notamment la suppression du compte.
+    </p>
+
+  </section>
+
+
+  <section class="card">
+
+    <h2>11. Cookies et stockage local</h2>
+
+    <p>
+      Afrilova peut utiliser des mécanismes techniques nécessaires
+      au fonctionnement du site, notamment pour maintenir votre
+      session ou mémoriser certaines informations utiles.
+    </p>
+
+    <p>
+      Nous n'utilisons pas de cookies publicitaires destinés
+      à vendre ou transmettre votre profil à des annonceurs.
+    </p>
+
+  </section>
+
+
+  <section class="card">
+
+    <h2>12. Suppression de votre compte</h2>
+
+    <p>
+      Vous pouvez demander la suppression de votre compte.
+      La suppression entraîne la désactivation de votre profil
+      et la suppression des données concernées selon les délais
+      indiqués dans cette politique.
+    </p>
+
+    <p>
+      Certaines données peuvent toutefois être conservées
+      lorsque leur conservation est légalement nécessaire,
+      notamment pour les obligations comptables, les paiements,
+      la sécurité ou le traitement d'un litige.
+    </p>
+
+  </section>
+
+
+  <section class="card">
+
+    <h2>13. Modifications de cette politique</h2>
+
+    <p>
+      Cette politique peut être modifiée lorsque le fonctionnement
+      d'Afrilova évolue ou lorsque cela est nécessaire
+      pour respecter les exigences légales.
+    </p>
+
+    <p>
+      La date affichée en haut de cette page indique
+      la dernière mise à jour.
+    </p>
+
+    <p>
+      En cas de modification importante, nous pourrons
+      vous en informer directement sur la plateforme.
+    </p>
+
+  </section>
+
+
+  <section class="card">
+
+    <h2>14. Contact</h2>
+
+    <p>
+      Pour toute question concernant cette politique,
+      vos données ou l'exercice de vos droits :
+    </p>
+
+    <p>
+      📧
+      <a href="mailto:senomarket1@gmail.com">
+        senomarket1@gmail.com
+      </a>
+    </p>
+
+    <p>
+      Afrilova — Burkina Faso
+    </p>
+
+  </section>
+
+
+  <div class="footer">
+    💚 Afrilova — Trouvez l'amour qui vous correspond
+  </div>
 
 </main>
 
 </body>
-  </html>
+</html>
