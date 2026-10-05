@@ -2,589 +2,461 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Messagerie - Afrilova</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="theme-color" content="#20B486">
+<title>Afrilova — Messagerie</title>
 
 <style>
-*{box-sizing:border-box}
-
+*{box-sizing:border-box;margin:0;padding:0}
 body{
- margin:0;
- font-family:Arial,sans-serif;
- background:#F3FBF7;
- color:#17352d
+  font-family:Arial,sans-serif;
+  background:#F3FBF7;
+  color:#18352c;
+  min-height:100vh;
+}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer;border:0}
+
+:root{
+  --green:#20B486;
+  --green2:#55D3A8;
+  --dark:#087557;
+  --light:#E8F8F2;
+  --white:#fff;
+  --border:#d9eee6;
+  --danger:#dc3545;
 }
 
 header{
- background:linear-gradient(135deg,#20B486,#55D3A8);
- color:white;
- padding:13px 15px;
- text-align:center;
- position:relative
+  background:linear-gradient(135deg,var(--green),var(--green2));
+  color:white;
+  padding:16px;
+  position:sticky;
+  top:0;
+  z-index:20;
+  box-shadow:0 3px 15px #08755722;
 }
-
-header h2{margin:0;font-size:20px}
-
+.header-inner{
+  max-width:850px;
+  margin:auto;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+.logo{font-size:21px;font-weight:800}
 .points{
- position:absolute;
- right:12px;
- top:11px;
- background:white;
- color:#087557;
- padding:6px 9px;
- border-radius:18px;
- font-weight:bold;
- font-size:13px
+  background:#ffffff28;
+  padding:8px 12px;
+  border-radius:20px;
+  font-weight:bold;
 }
 
 main{
- padding:18px 13px 85px;
- max-width:600px;
- margin:auto
-}
-
-h1{
- text-align:center;
- color:#087557;
- margin:8px 0
-}
-
-.intro{
- text-align:center;
- color:#55736a;
- margin:8px 0 18px;
- font-size:14px
+  max-width:850px;
+  margin:auto;
+  padding:15px 12px 90px;
 }
 
 .tabs{
- display:flex;
- gap:7px;
- margin:15px 0
+  display:flex;
+  gap:8px;
+  margin-bottom:14px;
+}
+.tab{
+  flex:1;
+  padding:11px;
+  border-radius:12px;
+  background:white;
+  color:var(--dark);
+  border:1px solid var(--border);
+  font-weight:bold;
+}
+.tab.active{
+  background:var(--green);
+  color:white;
 }
 
-.tabs button{
- flex:1;
- border:0;
- padding:10px;
- border-radius:11px;
- background:#E0F7EE;
- color:#087557;
- font-weight:bold;
- cursor:pointer
-}
-
-.tabs button.active{
- background:#20B486;
- color:white
-}
+.section{display:none}
+.section.active{display:block}
 
 .card{
- background:white;
- border-radius:16px;
- padding:13px;
- margin-bottom:12px;
- box-shadow:0 3px 12px #0001;
- transition:transform .18s ease,box-shadow .18s ease
+  background:white;
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:14px;
+  margin-bottom:12px;
+  box-shadow:0 5px 18px #0875570b;
+  animation:fadeUp .3s ease;
 }
 
-.card:hover{
- transform:translateY(-2px);
- box-shadow:0 6px 16px #0002
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(7px)}
+  to{opacity:1;transform:translateY(0)}
 }
 
-.person{
- display:flex;
- gap:11px;
- align-items:center
+.profile-card{
+  display:flex;
+  align-items:center;
+  gap:12px;
 }
-
 .avatar{
- width:52px;
- height:52px;
- border-radius:50%;
- background:#E8F8F2;
- display:grid;
- place-items:center;
- font-size:24px;
- object-fit:cover
+  width:55px;
+  height:55px;
+  border-radius:50%;
+  object-fit:cover;
+  background:var(--light);
+  flex:none;
 }
-
-.info strong{color:#087557}
+.profile-info{flex:1}
+.profile-name{
+  font-weight:bold;
+  color:var(--dark);
+  margin-bottom:4px;
+}
+.muted{
+  color:#6f817a;
+  font-size:13px;
+}
 
 .actions{
- display:flex;
- gap:7px;
- margin-top:13px
+  display:flex;
+  gap:8px;
+  margin-top:12px;
 }
-
-.actions button{
- border:0;
- border-radius:10px;
- padding:9px;
- font-weight:bold;
- cursor:pointer
+.btn{
+  padding:10px 13px;
+  border-radius:11px;
+  font-weight:bold;
 }
-
-.accept{
- background:#20B486;
- color:white
+.btn-green{
+  background:var(--green);
+  color:white;
 }
-
-.refuse{
- background:#eee;
- color:#555
+.btn-light{
+  background:var(--light);
+  color:var(--dark);
 }
-
-.accept:disabled,
-.refuse:disabled{
- opacity:.6
+.btn-danger{
+  background:#fff0f1;
+  color:var(--danger);
+}
+.btn:disabled{
+  opacity:.55;
+  cursor:not-allowed;
 }
 
 .empty{
- text-align:center;
- padding:30px 10px;
- color:#6d8980
+  text-align:center;
+  padding:35px 15px;
+  color:#789089;
+  background:white;
+  border-radius:18px;
+  border:1px solid var(--border);
 }
 
-.login-needed{
- background:white;
- border-radius:16px;
- padding:25px 18px;
- text-align:center;
- box-shadow:0 3px 12px #0001
-}
-
-.login-needed a{
- display:inline-block;
- margin-top:10px;
- background:#20B486;
- color:white;
- text-decoration:none;
- padding:10px 17px;
- border-radius:10px;
- font-weight:bold
-}
-
-.bottom-nav{
- position:fixed;
- bottom:0;
- left:0;
- right:0;
- background:white;
- display:flex;
- box-shadow:0 -2px 12px #0001;
- z-index:10
-}
-
-.bottom-nav a{
- flex:1;
- text-align:center;
- padding:10px 4px;
- text-decoration:none;
- color:#52756a;
- font-size:13px
-}
-
-.bottom-nav a.active{
- color:#20B486;
- font-weight:bold
-}
-
-/* ==========================================
-   CHAT
-========================================== */
-
+/* CHAT */
 #chatArea{
- display:none;
- position:fixed;
- inset:0;
- background:#F3FBF7;
- z-index:20
+  display:none;
+  position:fixed;
+  inset:0;
+  background:#F3FBF7;
+  z-index:50;
 }
 
 .chat-head{
- background:linear-gradient(135deg,#20B486,#55D3A8);
- color:white;
- padding:12px;
- display:flex;
- align-items:center;
- gap:9px
+  height:64px;
+  background:white;
+  border-bottom:1px solid var(--border);
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:8px 12px;
+  box-shadow:0 2px 10px #00000008;
 }
-
-.chat-head button{
- background:none;
- border:0;
- color:white;
- font-size:22px;
- cursor:pointer
+.chat-back{
+  width:40px;
+  height:40px;
+  border-radius:50%;
+  background:var(--light);
+  color:var(--dark);
+  font-size:20px;
 }
-
-.chat-head .chat-name{
- flex:1;
- min-width:0
+.chat-peer{
+  flex:1;
+  min-width:0;
 }
-
-.chat-head .chat-name strong{
- font-size:15px
+.chat-peer-name{
+  font-weight:bold;
+  color:var(--dark);
 }
-
-.chat-head .chat-name small{
- opacity:.9
+.chat-peer-location{
+  font-size:12px;
+  color:#71847d;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
 }
-
-.chat-tools{
- display:flex;
- gap:2px
+.chat-head-actions{
+  display:flex;
+  gap:5px;
 }
-
-.chat-tools button{
- background:none;
- border:0;
- color:white;
- font-size:18px
+.icon-btn{
+  width:38px;
+  height:38px;
+  border-radius:50%;
+  background:#f2f7f5;
 }
-
-/* ==========================================
-   BULLE FLOTTANTE AIDE
-========================================== */
-
-.chat-ai-float{
- position:absolute;
- right:14px;
- bottom:76px;
- width:48px;
- height:48px;
- border:0;
- border-radius:50%;
- background:linear-gradient(135deg,#20B486,#159B72);
- color:white;
- font-size:21px;
- display:grid;
- place-items:center;
- cursor:pointer;
- box-shadow:0 5px 16px #08755745;
- z-index:5;
- animation:aideFloat 3s ease-in-out infinite
-}
-
-.chat-ai-float:hover{
- transform:scale(1.07)
-}
-
-@keyframes aideFloat{
- 0%,100%{transform:translateY(0)}
- 50%{transform:translateY(-4px)}
-}
-
-/* ==========================================
-   MESSAGES
-========================================== */
+.icon-btn.danger{color:var(--danger)}
 
 .messages{
- height:calc(100vh - 125px);
- overflow:auto;
- padding:13px
+  height:calc(100vh - 128px);
+  overflow-y:auto;
+  padding:15px 12px 90px;
+}
+.message-row{
+  display:flex;
+  margin:7px 0;
+}
+.message-row.mine{justify-content:flex-end}
+.bubble{
+  max-width:78%;
+  padding:10px 13px;
+  border-radius:16px;
+  line-height:1.4;
+  animation:msgIn .2s ease;
+  word-wrap:break-word;
+}
+@keyframes msgIn{
+  from{opacity:0;transform:scale(.97)}
+  to{opacity:1;transform:scale(1)}
+}
+.message-row.mine .bubble{
+  background:var(--green);
+  color:white;
+  border-bottom-right-radius:4px;
+}
+.message-row.theirs .bubble{
+  background:white;
+  color:#25463a;
+  border:1px solid var(--border);
+  border-bottom-left-radius:4px;
+}
+.msg-photo{
+  display:block;
+  max-width:220px;
+  width:100%;
+  border-radius:12px;
+  margin-top:5px;
+}
+.msg-time{
+  display:block;
+  font-size:10px;
+  opacity:.65;
+  margin-top:4px;
 }
 
-.msg{
- max-width:78%;
- padding:9px 12px;
- border-radius:14px;
- margin:7px 0;
- animation:messageIn .2s ease
+.chat-input-area{
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:0;
+  background:white;
+  border-top:1px solid var(--border);
+  padding:8px;
 }
-
-@keyframes messageIn{
- from{
-  opacity:0;
-  transform:translateY(5px)
- }
- to{
-  opacity:1;
-  transform:translateY(0)
- }
-}
-
-.msg img{
- max-width:100%;
- border-radius:10px;
- display:block
-}
-
-.received{
- background:white
-}
-
-.sent{
- background:#20B486;
- color:white;
- margin-left:auto
-}
-
-.chat-input{
- position:absolute;
- bottom:0;
- left:0;
- right:0;
- background:white;
- padding:8px;
- display:flex;
- gap:6px
-}
-
-.chat-input input{
- flex:1;
- border:1px solid #ccdcd6;
- border-radius:20px;
- padding:10px
-}
-
-.chat-input button{
- border:0;
- border-radius:50%;
- width:41px;
- background:#20B486;
- color:white;
- cursor:pointer
-}
-
-.chat-input .attach{
- background:#E8F8F2;
- color:#087557;
- font-size:17px
-}
-
 .chat-extra{
- padding:5px 13px;
- background:white
+  display:none;
+  margin-bottom:6px;
+  font-size:11px;
+  color:#71847d;
+}
+.chat-input{
+  display:flex;
+  gap:7px;
+}
+.chat-input textarea{
+  flex:1;
+  resize:none;
+  min-height:42px;
+  max-height:90px;
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:10px;
+  outline:none;
+}
+.chat-input textarea:focus{
+  border-color:var(--green);
+}
+.send-btn,.photo-btn{
+  width:43px;
+  height:43px;
+  border-radius:50%;
+}
+.send-btn{
+  background:var(--green);
+  color:white;
+}
+.photo-btn{
+  background:var(--light);
+  color:var(--dark);
 }
 
-.photos{
- text-align:center;
- font-size:11px;
- color:#678078
+/* BOUTON AIDE FLOTTANT */
+.chat-ai-float{
+  position:absolute;
+  right:15px;
+  bottom:76px;
+  width:50px;
+  height:50px;
+  border-radius:50%;
+  background:linear-gradient(135deg,var(--green),var(--green2));
+  color:white;
+  font-size:21px;
+  box-shadow:0 7px 20px #20B48655;
+  z-index:4;
+  animation:aideFloat 2.8s ease-in-out infinite;
+}
+@keyframes aideFloat{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-4px)}
 }
 
-.preview{
- display:flex;
- gap:7px;
- margin-top:7px
-}
-
-.preview img{
- width:52px;
- height:52px;
- object-fit:cover;
- border-radius:8px
-}
-
-/* ==========================================
-   MODALES
-========================================== */
-
+/* MODALES */
 .modal{
- display:none;
- position:fixed;
- inset:0;
- background:#0008;
- z-index:30;
- align-items:center;
- justify-content:center;
- padding:15px
+  display:none;
+  position:fixed;
+  inset:0;
+  background:#08291f88;
+  z-index:100;
+  align-items:center;
+  justify-content:center;
+  padding:15px;
 }
-
 .modal-box{
- background:white;
- border-radius:18px;
- padding:18px;
- width:100%;
- max-width:430px;
- max-height:90vh;
- overflow:auto;
- animation:modalIn .22s ease
+  width:100%;
+  max-width:480px;
+  max-height:90vh;
+  overflow-y:auto;
+  background:white;
+  border-radius:22px;
+  box-shadow:0 20px 60px #0004;
+  animation:modalIn .25s ease;
 }
-
 @keyframes modalIn{
- from{
-  opacity:0;
-  transform:translateY(12px) scale(.97)
- }
- to{
-  opacity:1;
-  transform:translateY(0) scale(1)
- }
-}
-
-.modal-box h2{
- margin:0 0 8px;
- color:#087557
-}
-
-.modal-box textarea{
- width:100%;
- min-height:90px;
- padding:11px;
- border:1px solid #ccdcd6;
- border-radius:12px;
- resize:none;
- font-family:inherit
-}
-
-.modal-actions{
- display:flex;
- gap:7px;
- margin-top:11px
-}
-
-.modal-actions button{
- flex:1;
- padding:10px;
- border:0;
- border-radius:10px;
- cursor:pointer;
- font-weight:bold
-}
-
-.primary{
- background:#20B486;
- color:white
-}
-
-.secondary{
- background:#eee;
- color:#555
-}
-
-.primary:disabled{
- opacity:.6
-}
-
-/* ==========================================
-   NOUVELLE INTERFACE AIDE
-========================================== */
-
-#aideModal .modal-box{
- padding:0;
- overflow:hidden
+  from{opacity:0;transform:translateY(15px) scale(.98)}
+  to{opacity:1;transform:none}
 }
 
 .aide-top{
- background:linear-gradient(135deg,#20B486,#55D3A8);
- color:white;
- padding:17px
+  background:linear-gradient(135deg,var(--green),var(--green2));
+  color:white;
+  padding:20px;
 }
-
-.aide-top h2{
- color:white;
- margin:0 0 4px;
- font-size:19px
+.aide-title{
+  font-size:20px;
+  font-weight:800;
 }
-
-.aide-top p{
- margin:0;
- font-size:12px;
- opacity:.92
+.aide-sub{
+  margin-top:5px;
+  opacity:.9;
+  font-size:13px;
 }
-
-.aide-body{
- padding:15px
-}
-
+.aide-body{padding:16px}
 .aide-info{
- display:flex;
- align-items:center;
- gap:9px;
- background:#E8F8F2;
- color:#087557;
- border-radius:11px;
- padding:9px;
- margin-bottom:11px;
- font-size:12px
+  background:var(--light);
+  color:var(--dark);
+  border-radius:13px;
+  padding:11px;
+  font-size:13px;
+  margin-bottom:12px;
 }
+.aide-body textarea{
+  width:100%;
+  min-height:100px;
+  resize:vertical;
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:12px;
+  outline:none;
+}
+.aide-body textarea:focus{border-color:var(--green)}
 
-.aide-icon{
- width:34px;
- height:34px;
- border-radius:50%;
- background:white;
- display:grid;
- place-items:center;
- font-size:17px;
- flex-shrink:0
+.modal-actions{
+  display:flex;
+  gap:8px;
+  margin-top:12px;
 }
-
-.aide-label{
- display:block;
- color:#52756a;
- font-size:12px;
- margin-bottom:5px
-}
-
-#aideModal textarea{
- min-height:82px;
- margin:0;
- outline:none
-}
-
-#aideModal textarea:focus{
- border-color:#20B486;
- box-shadow:0 0 0 2px #20B48618
-}
-
-.aide-buttons{
- display:flex;
- gap:7px;
- margin-top:10px
-}
-
-.aide-buttons button{
- flex:1;
- padding:10px;
- border:0;
- border-radius:10px;
- font-weight:bold;
- cursor:pointer
-}
-
-.aide-close{
- background:#f0f2f1;
- color:#555
-}
-
-.aide-send{
- background:#20B486;
- color:white
-}
+.modal-actions button{flex:1}
 
 .suggestion{
- background:#F3FBF7;
- border:1px solid #D7EEE5;
- padding:10px;
- border-radius:11px;
- margin-top:8px;
- font-size:13px;
- color:#55736A;
- line-height:1.45;
- animation:modalIn .2s ease
+  background:#f5fbf8;
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:12px;
+  margin-top:9px;
+  line-height:1.4;
 }
-
+.suggestion button{
+  margin-top:8px;
+  background:var(--light);
+  color:var(--dark);
+  border-radius:9px;
+  padding:7px 10px;
+  font-size:12px;
+}
 .help-note{
- text-align:center;
- font-size:11px;
- color:#789087;
- margin:9px 0 0
+  margin-top:12px;
+  padding:10px;
+  background:#fff9df;
+  border-radius:11px;
+  color:#765f16;
+  font-size:12px;
 }
 
-/* ==========================================
-   PETITS EFFETS
-========================================== */
+/* NAVIGATION */
+.bottom-nav{
+  position:fixed;
+  left:0;
+  right:0;
+  bottom:0;
+  background:white;
+  border-top:1px solid var(--border);
+  display:flex;
+  justify-content:center;
+  z-index:30;
+}
+.bottom-nav a{
+  width:25%;
+  max-width:170px;
+  text-align:center;
+  text-decoration:none;
+  color:#70817b;
+  padding:8px 2px;
+  font-size:11px;
+}
+.bottom-nav a span{
+  display:block;
+  font-size:20px;
+  margin-bottom:2px;
+}
+.bottom-nav a.active{color:var(--green);font-weight:bold}
 
-button{
- transition:transform .15s ease,opacity .15s ease
+.loading{
+  text-align:center;
+  color:#71847d;
+  padding:20px;
 }
 
-button:active{
- transform:scale(.97)
+.error{
+  background:#fff0f1;
+  color:#a32231;
+  padding:12px;
+  border-radius:12px;
+  font-size:13px;
+}
+
+@media(min-width:700px){
+  .messages{padding-left:calc((100% - 850px)/2);padding-right:calc((100% - 850px)/2)}
 }
 </style>
 </head>
@@ -592,2073 +464,1104 @@ button:active{
 <body>
 
 <header>
-<h2>💚 Afrilova</h2>
-
-<div class="points">
-💰 <span id="points">-</span> points
-</div>
+  <div class="header-inner">
+    <div class="logo">💚 Afrilova</div>
+    <div class="points">💰 <span id="soldePoints">0</span> point(s)</div>
+  </div>
 </header>
 
 <main>
 
-<div id="notConnecte" class="login-needed" style="display:none">
+  <div id="loginMessage" class="empty" style="display:none">
+    🔐 Connecte-toi pour accéder à ta messagerie.
+  </div>
 
-<h3>🔒 Connexion requise</h3>
+  <div id="messagerieContent">
 
-<p>
-Connectez-vous pour accéder à votre messagerie.
-</p>
+    <div class="tabs">
+      <button id="tabDemandes" class="tab active" onclick="afficherOnglet('demandes')">
+        💌 Demandes
+      </button>
+      <button id="tabDiscussions" class="tab" onclick="afficherOnglet('discussions')">
+        💬 Discussions
+      </button>
+    </div>
 
-<a href="profil.html">
-Aller à mon profil
-</a>
+    <section id="demandesSection" class="section active">
+      <div id="demandesList" class="loading">Chargement...</div>
+    </section>
 
-</div>
+    <section id="discussionsSection" class="section">
+      <div id="discussionsList" class="loading">Chargement...</div>
+    </section>
 
-<div id="contenuMessagerie" style="display:none">
-
-<h1>💬 Messagerie</h1>
-
-<p class="intro">
-Échangez simplement avec les personnes avec qui vous avez accepté de discuter.
-</p>
-
-<div class="tabs">
-
-<button
- id="tabDemandes"
- class="active"
- onclick="afficherOnglet('demandes')"
->
-📩 Demandes
-</button>
-
-<button
- id="tabDiscussions"
- onclick="afficherOnglet('discussions')"
->
-💬 Mes discussions
-</button>
-
-</div>
-
-<section id="demandes">
-<div class="empty">Chargement...</div>
-</section>
-
-<section id="discussions" style="display:none">
-<div class="empty">Chargement...</div>
-</section>
-
-</div>
-
+  </div>
 </main>
 
-<!-- ==========================================
-     CHAT
-========================================== -->
-
+<!-- CHAT -->
 <div id="chatArea">
 
-<div class="chat-head">
+  <div class="chat-head">
+    <button class="chat-back" onclick="fermerChat()">‹</button>
 
-<button onclick="fermerChat()">‹</button>
+    <div class="chat-peer">
+      <div id="chatPeerName" class="chat-peer-name">Discussion</div>
+      <div id="chatPeerLocation" class="chat-peer-location"></div>
+    </div>
 
-<div class="chat-name">
+    <div class="chat-head-actions">
+      <button class="icon-btn danger" onclick="ouvrirSignalement()" title="Signaler">⚠️</button>
+      <button class="icon-btn danger" onclick="ouvrirBlocage()" title="Bloquer">🚫</button>
+    </div>
+  </div>
 
-<strong id="nomChat">—</strong><br>
+  <div id="messagesList" class="messages"></div>
 
-<small id="lieuChat"></small>
+  <button class="chat-ai-float" onclick="ouvrirAide()" title="Aide à la discussion">
+    💡
+  </button>
 
+  <div class="chat-input-area">
+
+    <div id="chatExtra" class="chat-extra">
+      📷 Tu peux envoyer jusqu'à 2 photos à la fois.
+    </div>
+
+    <div class="chat-input">
+      <input
+        type="file"
+        id="photoInput"
+        accept="image/jpeg,image/png,image/webp"
+        multiple
+        hidden
+        onchange="selectionnerPhotos(event)"
+      >
+
+      <button class="photo-btn" onclick="document.getElementById('photoInput').click()">
+        📷
+      </button>
+
+      <textarea
+        id="messageInput"
+        placeholder="Écris ton message..."
+        onkeydown="gererEntree(event)"
+      ></textarea>
+
+      <button id="sendBtn" class="send-btn" onclick="envoyerMessage()">
+        ➤
+      </button>
+    </div>
+  </div>
 </div>
 
-<div class="chat-tools">
+<!-- AIDE IA -->
+<div id="aideModal" class="modal" onclick="fermerBackdrop(event,'aideModal')">
+  <div class="modal-box">
 
-<button onclick="ouvrirSignalement()">🚨</button>
+    <div class="aide-top">
+      <div class="aide-title">💡 Aide à la discussion</div>
+      <div class="aide-sub">
+        Une petite aide pour trouver les bons mots.
+      </div>
+    </div>
 
-<button onclick="ouvrirBlocage()">🚫</button>
+    <div class="aide-body">
 
+      <div class="aide-info">
+        💰 L'aide utilise <strong>1 point</strong> pour générer des suggestions.
+      </div>
+
+      <textarea
+        id="questionAide"
+        placeholder="Exemple : Je ne sais pas quoi lui répondre..."
+      ></textarea>
+
+      <div id="aideResultat"></div>
+
+      <div class="modal-actions">
+        <button class="btn btn-light" onclick="fermerModal('aideModal')">
+          Fermer
+        </button>
+        <button id="aideBtn" class="btn btn-green" onclick="demanderAide()">
+          ✨ Obtenir une idée
+        </button>
+      </div>
+
+    </div>
+  </div>
 </div>
 
+<!-- SIGNALEMENT -->
+<div id="signalementModal" class="modal" onclick="fermerBackdrop(event,'signalementModal')">
+  <div class="modal-box">
+    <div class="aide-top">
+      <div class="aide-title">⚠️ Signaler ce profil</div>
+      <div class="aide-sub">Ton signalement sera examiné.</div>
+    </div>
+
+    <div class="aide-body">
+      <select id="motifSignalement" style="width:100%;padding:12px;border:1px solid var(--border);border-radius:12px">
+        <option value="faux_profil">Faux profil</option>
+        <option value="harcelement">Harcèlement</option>
+        <option value="comportement_inapproprie">Comportement inapproprié</option>
+        <option value="profil_suspect">Profil suspect</option>
+        <option value="autre">Autre</option>
+      </select>
+
+      <div class="modal-actions">
+        <button class="btn btn-light" onclick="fermerModal('signalementModal')">Annuler</button>
+        <button id="signalerBtn" class="btn btn-danger" onclick="signaler()">Signaler</button>
+      </div>
+    </div>
+  </div>
 </div>
 
-<div
- class="messages"
- id="messages"
-></div>
+<!-- BLOCAGE -->
+<div id="blocageModal" class="modal" onclick="fermerBackdrop(event,'blocageModal')">
+  <div class="modal-box">
+    <div class="aide-top">
+      <div class="aide-title">🚫 Bloquer ce profil</div>
+      <div class="aide-sub">Cette personne ne pourra plus discuter avec toi.</div>
+    </div>
 
-<!-- Petite bulle flottante d'aide -->
-<button
- class="chat-ai-float"
- onclick="ouvrirAide()"
- aria-label="Aide à la discussion"
- title="Aide à la discussion"
->
-💡
-</button>
+    <div class="aide-body">
+      <p style="line-height:1.5">
+        Veux-tu vraiment bloquer cette personne ?
+      </p>
 
-<div class="chat-extra">
-
-<div class="photos">
-📷 2 photos maximum par conversation
-</div>
-
-<input
- type="file"
- id="photos"
- accept="image/jpeg,image/png,image/webp"
- multiple
- style="display:none"
- onchange="selectionnerPhotos(event)"
->
-
-<div
- class="preview"
- id="preview"
-></div>
-
-</div>
-
-<div class="chat-input">
-
-<button
- class="attach"
- aria-label="Envoyer une photo"
- onclick="document.getElementById('photos').click()"
->
-📷
-</button>
-
-<input
- id="messageInput"
- placeholder="Écrire un message..."
- onkeydown="if(event.key==='Enter')envoyerMessage()"
->
-
-<button onclick="envoyerMessage()">
-➤
-</button>
-
-</div>
-
-</div>
-
-<!-- ==========================================
-     AIDE À LA DISCUSSION
-========================================== -->
-
-<div
- class="modal"
- id="aideModal"
->
-
-<div class="modal-box">
-
-<div class="aide-top">
-
-<h2>💡 Aide à la discussion</h2>
-
-<p>
-Une petite aide pour trouver les bons mots.
-</p>
-
-</div>
-
-<div class="aide-body">
-
-<div class="aide-info">
-
-<div class="aide-icon">
-✨
-</div>
-
-<div>
-<strong>Besoin d'une idée ?</strong><br>
-L'aide utilise 1 point pour générer des suggestions.
-</div>
-
-</div>
-
-<label
- class="aide-label"
- for="questionAide"
->
-Que veux-tu répondre ?
-</label>
-
-<textarea
- id="questionAide"
- placeholder="Ex. Elle aime voyager. Que puis-je lui répondre ?"
-></textarea>
-
-<div class="aide-buttons">
-
-<button
- class="aide-close"
- onclick="fermerModal('aideModal')"
->
-Fermer
-</button>
-
-<button
- class="aide-send"
- onclick="demanderAide()"
->
-✨ Obtenir une idée
-</button>
-
-</div>
-
-<div id="helpResults"></div>
-
-</div>
-
-</div>
-
-</div>
-
-<!-- ==========================================
-     SIGNALER
-========================================== -->
-
-<div
- class="modal"
- id="signalementModal"
->
-
-<div class="modal-box">
-
-<h2>🚨 Signaler</h2>
-
-<select
- id="motif"
- style="width:100%;padding:11px;border-radius:10px"
->
-
-<option value="faux_profil">
-Faux profil
-</option>
-
-<option value="harcelement">
-Harcèlement ou comportement déplacé
-</option>
-
-<option value="comportement_inapproprie">
-Contenu ou comportement inapproprié
-</option>
-
-<option value="profil_suspect">
-Profil ou comportement suspect
-</option>
-
-<option value="autre">
-Autre raison
-</option>
-
-</select>
-
-<div class="modal-actions">
-
-<button
- class="secondary"
- onclick="fermerModal('signalementModal')"
->
-Annuler
-</button>
-
-<button
- class="primary"
- id="btnSignaler"
- onclick="signaler()"
->
-Signaler
-</button>
-
-</div>
-
-</div>
-
-</div>
-
-<!-- ==========================================
-     BLOQUER
-========================================== -->
-
-<div
- class="modal"
- id="blocageModal"
->
-
-<div class="modal-box">
-
-<h2>🚫 Bloquer</h2>
-
-<p>
-Voulez-vous vraiment bloquer cette personne ?
-Vous ne verrez plus votre conversation avec elle.
-</p>
-
-<div class="modal-actions">
-
-<button
- class="secondary"
- onclick="fermerModal('blocageModal')"
->
-Annuler
-</button>
-
-<button
- class="primary"
- id="btnBloquer"
- onclick="confirmerBlocage()"
->
-Bloquer
-</button>
-
-</div>
-
-</div>
-
+      <div class="modal-actions">
+        <button class="btn btn-light" onclick="fermerModal('blocageModal')">Annuler</button>
+        <button id="bloquerBtn" class="btn btn-danger" onclick="confirmerBlocage()">Bloquer</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <nav class="bottom-nav">
-
-<a href="index.html">
-🏠<br>Accueil
-</a>
-
-<a href="explorer.html">
-🔎<br>Explorer
-</a>
-
-<a
- href="messagerie.html"
- class="active"
->
-💬<br>Messagerie
-</a>
-
-<a href="profil.html">
-👤<br>Profil
-</a>
-
+  <a href="index.html"><span>🏠</span>Accueil</a>
+  <a href="explorer.html"><span>🔎</span>Explorer</a>
+  <a href="messagerie.html" class="active"><span>💬</span>Messagerie</a>
+  <a href="profil.html"><span>👤</span>Profil</a>
 </nav>
-
 <script src="https://cdn.jsdelivr.net/npm/appwrite@20.0.0"></script>
 
 <script>
-const APPWRITE_ENDPOINT =
- "https://fra.cloud.appwrite.io/v1";
+const APPWRITE_ENDPOINT="https://fra.cloud.appwrite.io/v1";
+const APPWRITE_PROJECT_ID="6aac203e00209ccb3014";
+const APPWRITE_DATABASE_ID="6aac2a200000e6be5877";
+const APPWRITE_BUCKET_PHOTOS="6aad2a754e0e095d6a9a";
+const ADMIN_TEAM_ID="6aacffe749b1978e61bf";
+const FUNCTION_ID="6aaf8d3fdb99e41f0aaf";
 
-const APPWRITE_PROJECT_ID =
- "6aac203e00209ccb3014";
+const TABLE_PROFILS="6aac2b35002a0debbb85";
+const TABLE_PAYS="pays";
+const TABLE_VILLES="villes";
+const TABLE_POINTS="points";
+const TABLE_DEMANDES="demandes";
+const TABLE_CONVERSATIONS="conversations";
+const TABLE_MESSAGES="messages";
+const TABLE_SIGNALEMENTS="signalements";
+const TABLE_BLOCAGES="blocages";
 
-const APPWRITE_DATABASE_ID =
- "6aac2a200000e6be5877";
+const client=new Appwrite.Client();
+client.setEndpoint(APPWRITE_ENDPOINT).setProject(APPWRITE_PROJECT_ID);
 
-const APPWRITE_BUCKET_PHOTOS =
- "6aad2a754e0e095d6a9a";
+const account=new Appwrite.Account(client);
+const tablesDB=new Appwrite.TablesDB(client);
+const storage=new Appwrite.Storage(client);
+const functions=new Appwrite.Functions(client);
 
-const ADMIN_TEAM_ID =
- "6aacffe749b1978e61bf";
-
-const FUNCTION_ID =
- "6aaf8d3fdb99e41f0aaf";
-
-const TABLE_PROFILS =
- "6aac2b35002a0debbb85";
-
-const TABLE_PAYS = "pays";
-const TABLE_VILLES = "villes";
-const TABLE_POINTS = "points";
-const TABLE_DEMANDES = "demandes";
-const TABLE_CONVERSATIONS = "conversations";
-const TABLE_MESSAGES = "messages";
-const TABLE_SIGNALEMENTS = "signalements";
-const TABLE_BLOCAGES = "blocages";
-
-const client =
- new Appwrite.Client();
-
-client
- .setEndpoint(APPWRITE_ENDPOINT)
- .setProject(APPWRITE_PROJECT_ID);
-
-const account =
- new Appwrite.Account(client);
-
-const tablesDB =
- new Appwrite.TablesDB(client);
-
-const storage =
- new Appwrite.Storage(client);
-
-const functions =
- new Appwrite.Functions(client);
-
-let utilisateurConnecte = null;
-let paysDisponibles = [];
-let villesDisponibles = [];
-let profilsCache = {};
-let blocagesEmis = [];
-let conversationActuelle = null;
-let peerActuel = null;
-let messagesActuels = [];
+let utilisateurConnecte=null;
+let paysDisponibles=[];
+let villesDisponibles=[];
+let profilsCache={};
+let blocagesEmis=[];
+let conversationActuelle=null;
+let peerActuel=null;
+let messagesActuels=[];
 
 function permLireUtilisateur(id){
- return 'read("user:'+id+'")';
+  return 'read("user:'+id+'")';
 }
 
 function permModifierUtilisateur(id){
- return 'update("user:'+id+'")';
+  return 'update("user:'+id+'")';
 }
 
 function permLireEquipe(id){
- return 'read("team:'+id+'")';
+  return 'read("team:'+id+'")';
 }
 
 async function appelerFonction(donnees){
-
- const execution =
-  await functions.createExecution({
-   functionId:FUNCTION_ID,
-   body:JSON.stringify(donnees),
-   method:"POST"
+  const execution=await functions.createExecution({
+    functionId:FUNCTION_ID,
+    body:JSON.stringify(donnees),
+    method:"POST"
   });
 
- let resultat;
+  let resultat;
+  try{
+    resultat=JSON.parse(execution.responseBody||"{}");
+  }catch(e){
+    throw new Error("Réponse invalide du serveur.");
+  }
 
- try{
-  resultat =
-   JSON.parse(execution.responseBody);
- }catch(e){
-  throw new Error(
-   "Réponse invalide du serveur."
-  );
- }
+  if(!resultat.ok){
+    throw new Error(resultat.message||"Une erreur est survenue.");
+  }
 
- if(!resultat.ok){
-  throw new Error(
-   resultat.message ||
-   "Une erreur est survenue."
-  );
- }
-
- return resultat;
+  return resultat;
 }
 
 async function chargerPaysEtVilles(){
+  const [p,v]=await Promise.all([
+    tablesDB.listRows({
+      databaseId:APPWRITE_DATABASE_ID,
+      tableId:TABLE_PAYS,
+      queries:[Appwrite.Query.limit(50)]
+    }),
+    tablesDB.listRows({
+      databaseId:APPWRITE_DATABASE_ID,
+      tableId:TABLE_VILLES,
+      queries:[Appwrite.Query.limit(200)]
+    })
+  ]);
 
- try{
-
-  const reponsePays =
-   await tablesDB.listRows({
-    databaseId:APPWRITE_DATABASE_ID,
-    tableId:TABLE_PAYS,
-    queries:[
-     Appwrite.Query.limit(50)
-    ]
-   });
-
-  paysDisponibles =
-   reponsePays.rows;
-
-  const reponseVilles =
-   await tablesDB.listRows({
-    databaseId:APPWRITE_DATABASE_ID,
-    tableId:TABLE_VILLES,
-    queries:[
-     Appwrite.Query.limit(200)
-    ]
-   });
-
-  villesDisponibles =
-   reponseVilles.rows;
-
- }catch(erreur){
-
-  console.error(
-   "Erreur chargement pays/villes :",
-   erreur
-  );
-
- }
-
+  paysDisponibles=p.rows||[];
+  villesDisponibles=v.rows||[];
 }
 
-function nomPays(paysId){
-
- const p =
-  paysDisponibles.find(
-   x => x.$id === paysId
-  );
-
- return p ? p.nom : "";
+function nomPays(id){
+  const p=paysDisponibles.find(x=>x.$id===id);
+  return p?p.nom:"";
 }
 
-function nomVille(villeId){
-
- const v =
-  villesDisponibles.find(
-   x => x.$id === villeId
-  );
-
- return v ? v.nom : "";
+function nomVille(id){
+  const v=villesDisponibles.find(x=>x.$id===id);
+  return v?v.nom:"";
 }
 
 async function chargerProfilParUserId(userId){
+  if(!userId)return null;
+  if(profilsCache[userId])return profilsCache[userId];
 
- if(profilsCache[userId]){
-  return profilsCache[userId];
- }
-
- try{
-
-  const reponse =
-   await tablesDB.listRows({
+  const r=await tablesDB.listRows({
     databaseId:APPWRITE_DATABASE_ID,
     tableId:TABLE_PROFILS,
     queries:[
-     Appwrite.Query.equal(
-      "userId",
-      userId
-     ),
-     Appwrite.Query.limit(1)
+      Appwrite.Query.equal("userId",userId),
+      Appwrite.Query.limit(1)
     ]
-   });
+  });
 
-  const profil =
-   reponse.total > 0
-    ? reponse.rows[0]
-    : null;
-
-  profilsCache[userId] =
-   profil;
-
+  const profil=r.rows&&r.rows[0]?r.rows[0]:null;
+  profilsCache[userId]=profil;
   return profil;
-
- }catch(erreur){
-
-  console.error(
-   "Erreur chargement profil :",
-   erreur
-  );
-
-  return null;
- }
-
 }
 
 function urlPhoto(photoId){
-
- if(!photoId){
-
-  return "https://via.placeholder.com/200/E8F8F2/087557?text=Afrilova";
-
- }
-
- return storage.getFileView({
-  bucketId:APPWRITE_BUCKET_PHOTOS,
-  fileId:photoId
- });
-
+  if(!photoId)return "";
+  return storage.getFileView({
+    bucketId:APPWRITE_BUCKET_PHOTOS,
+    fileId:photoId
+  }).toString();
 }
- async function chargerEtatConnexion(){
 
+async function chargerEtatConnexion(){
   try{
+    utilisateurConnecte=await account.get();
 
-    utilisateurConnecte =
-      await account.get();
-
-    document.getElementById(
-      "notConnecte"
-    ).style.display = "none";
-
-    document.getElementById(
-      "contenuMessagerie"
-    ).style.display = "block";
+    document.getElementById("loginMessage").style.display="none";
+    document.getElementById("messagerieContent").style.display="block";
 
     try{
-
-      await appelerFonction({
-        action:"expirerDemandes"
-      });
-
-    }catch(e){
-
-      console.error(
-        "Erreur expiration demandes :",
-        e
-      );
-
-    }
+      await appelerFonction({action:"expirerDemandes"});
+    }catch(e){}
 
     await chargerSoldePoints();
     await chargerBlocagesEmis();
     await chargerDemandes();
     await chargerDiscussions();
 
-  }catch(erreur){
-
-    console.error(
-      "Erreur état connexion :",
-      erreur
-    );
-
-    document.getElementById(
-      "notConnecte"
-    ).style.display = "block";
-
-    document.getElementById(
-      "contenuMessagerie"
-    ).style.display = "none";
-
+  }catch(e){
+    utilisateurConnecte=null;
+    document.getElementById("loginMessage").style.display="block";
+    document.getElementById("messagerieContent").style.display="none";
   }
-
 }
-
 
 async function chargerSoldePoints(){
+  if(!utilisateurConnecte)return;
 
   try{
+    const r=await tablesDB.listRows({
+      databaseId:APPWRITE_DATABASE_ID,
+      tableId:TABLE_POINTS,
+      queries:[
+        Appwrite.Query.equal("userId",utilisateurConnecte.$id),
+        Appwrite.Query.limit(1)
+      ]
+    });
 
-    const reponse =
-      await tablesDB.listRows({
-        databaseId:APPWRITE_DATABASE_ID,
-        tableId:TABLE_POINTS,
-        queries:[
-          Appwrite.Query.equal(
-            "userId",
-            utilisateurConnecte.$id
-          ),
-          Appwrite.Query.limit(1)
-        ]
-      });
-
-    const solde =
-      reponse.total > 0
-        ? reponse.rows[0].solde
-        : 0;
-
-    document.getElementById(
-      "points"
-    ).textContent = solde || 0;
-
-  }catch(erreur){
-
-    document.getElementById(
-      "points"
-    ).textContent = 0;
-
+    const solde=r.rows&&r.rows[0]?Number(r.rows[0].solde||0):0;
+    document.getElementById("soldePoints").textContent=solde;
+  }catch(e){
+    document.getElementById("soldePoints").textContent="0";
   }
-
 }
-
 
 function afficherOnglet(onglet){
+  const demandes=onglet==="demandes";
 
-  document.getElementById(
-    "demandes"
-  ).style.display =
-    onglet === "demandes"
-      ? "block"
-      : "none";
+  document.getElementById("demandesSection").classList.toggle("active",demandes);
+  document.getElementById("discussionsSection").classList.toggle("active",!demandes);
 
-  document.getElementById(
-    "discussions"
-  ).style.display =
-    onglet === "discussions"
-      ? "block"
-      : "none";
-
-  document.getElementById(
-    "tabDemandes"
-  ).classList.toggle(
-    "active",
-    onglet === "demandes"
-  );
-
-  document.getElementById(
-    "tabDiscussions"
-  ).classList.toggle(
-    "active",
-    onglet === "discussions"
-  );
-
+  document.getElementById("tabDemandes").classList.toggle("active",demandes);
+  document.getElementById("tabDiscussions").classList.toggle("active",!demandes);
 }
-
 
 async function chargerBlocagesEmis(){
+  if(!utilisateurConnecte)return;
 
-  try{
+  const r=await tablesDB.listRows({
+    databaseId:APPWRITE_DATABASE_ID,
+    tableId:TABLE_BLOCAGES,
+    queries:[
+      Appwrite.Query.equal("bloqueurId",utilisateurConnecte.$id),
+      Appwrite.Query.limit(100)
+    ]
+  });
 
-    const reponse =
-      await tablesDB.listRows({
-        databaseId:APPWRITE_DATABASE_ID,
-        tableId:TABLE_BLOCAGES,
-        queries:[
-          Appwrite.Query.equal(
-            "bloqueurId",
-            utilisateurConnecte.$id
-          ),
-          Appwrite.Query.limit(100)
-        ]
-      });
-
-    blocagesEmis =
-      reponse.rows.map(
-        b => b.bloqueId
-      );
-
-  }catch(erreur){
-
-    blocagesEmis = [];
-
-  }
-
+  blocagesEmis=(r.rows||[]).map(x=>x.bloqueId);
 }
 
-
 async function chargerDemandes(){
+  const zone=document.getElementById("demandesList");
 
-  const section =
-    document.getElementById(
-      "demandes"
-    );
+  if(!utilisateurConnecte){
+    zone.innerHTML='<div class="empty">Connecte-toi pour voir tes demandes.</div>';
+    return;
+  }
+
+  zone.innerHTML='<div class="loading">Chargement des demandes...</div>';
 
   try{
+    const r=await tablesDB.listRows({
+      databaseId:APPWRITE_DATABASE_ID,
+      tableId:TABLE_DEMANDES,
+      queries:[
+        Appwrite.Query.equal("destinataireId",utilisateurConnecte.$id),
+        Appwrite.Query.limit(50)
+      ]
+    });
 
-    console.log(
-      "ID utilisateur connecté :",
-      utilisateurConnecte.$id
-    );
+    const demandes=(r.rows||[]).filter(x=>x.statut==="en_attente");
 
-    const reponse =
-      await tablesDB.listRows({
-        databaseId:APPWRITE_DATABASE_ID,
-        tableId:TABLE_DEMANDES,
-        queries:[
-          Appwrite.Query.equal(
-            "destinataireId",
-            utilisateurConnecte.$id
-          ),
-          Appwrite.Query.limit(50)
-        ]
-      });
-
-    console.log(
-      "Demandes trouvées :",
-      reponse.total
-    );
-
-    console.log(
-      "Demandes :",
-      reponse.rows
-    );
-
-    const demandesEnAttente =
-      reponse.rows.filter(
-        function(demande){
-
-          return demande.statut ===
-            "en_attente";
-
-        }
-      );
-
-    console.log(
-      "Demandes en attente :",
-      demandesEnAttente.length
-    );
-
-    if(
-      demandesEnAttente.length === 0
-    ){
-
-      section.innerHTML = `
-        <div class="empty">
-          Aucune nouvelle demande pour le moment.
-        </div>
-      `;
-
+    if(!demandes.length){
+      zone.innerHTML='<div class="empty">💚 Aucune nouvelle demande pour le moment.</div>';
       return;
-
     }
 
-    let html = "";
+    let html="";
 
-    for(
-      const demande of demandesEnAttente
-    ){
+    for(const d of demandes){
+      const profil=await chargerProfilParUserId(d.expediteurId);
 
-      const profil =
-        await chargerProfilParUserId(
-          demande.expediteurId
-        );
+      if(!profil)continue;
 
-      const nom =
-        profil
-          ? profil.nom
-          : "Utilisateur";
+      const photo=urlPhoto(profil.photoPrincipale);
 
-      const age =
-        profil && profil.age
-          ? ", " + profil.age + " ans"
-          : "";
+      html+=`
+        <div class="card">
+          <div class="profile-card">
+            ${
+              photo
+              ? `<img class="avatar" src="${photo}" alt="">`
+              : `<div class="avatar"></div>`
+            }
 
-      const lieu =
-        profil
-          ? nomVille(profil.villeId)
-            + ", "
-            + nomPays(profil.paysId)
-          : "";
+            <div class="profile-info">
+              <div class="profile-name">
+                ${echapperHTML(profil.nom||"Profil")}
+                ${profil.age?`, ${profil.age}`:""}
+              </div>
 
-      const photo =
-        profil
-          ? urlPhoto(
-              profil.photoPrincipale
-            )
-          : urlPhoto(null);
-
-      html += `
-        <div
-          class="card"
-          id="demande-${demande.$id}"
-        >
-
-          <div class="person">
-
-            <img
-              class="avatar"
-              src="${photo}"
-              alt="${nom}"
-            >
-
-            <div class="info">
-
-              <strong>${nom}</strong>${age}<br>
-
-              ${lieu}
-
+              <div class="muted">
+                ${echapperHTML(nomVille(profil.villeId)||"")}
+                ${nomPays(profil.paysId)?" • "+echapperHTML(nomPays(profil.paysId)):""}
+              </div>
             </div>
-
           </div>
 
           <div class="actions">
-
             <button
-              class="accept"
-              onclick="accepterDemande(
-                '${demande.$id}',
-                '${demande.expediteurId}',
-                this
-              )"
+              class="btn btn-green"
+              onclick="accepterDemande('${d.$id}','${d.expediteurId}',this)"
             >
-              ✓ Accepter
+              💚 Accepter
             </button>
 
             <button
-              class="refuse"
-              onclick="refuserDemande(
-                '${demande.$id}',
-                this
-              )"
+              class="btn btn-danger"
+              onclick="refuserDemande('${d.$id}',this)"
             >
-              ✕ Refuser
+              Refuser
             </button>
-
           </div>
-
         </div>
       `;
-
     }
 
-    section.innerHTML = html;
+    zone.innerHTML=html||'<div class="empty">Aucune demande disponible.</div>';
 
-  }catch(erreur){
-
-    console.error(
-      "Erreur chargement demandes :",
-      erreur
-    );
-
-    section.innerHTML = `
-      <div class="empty">
-        Impossible de charger les demandes.
-      </div>
-    `;
-
+  }catch(e){
+    zone.innerHTML=`<div class="error">${echapperHTML(e.message)}</div>`;
   }
-
 }
 
+async function accepterDemande(demandeId,expediteurId,button){
+  const card=button.closest(".card");
+  const boutons=card.querySelectorAll("button");
 
-async function accepterDemande(
-  demandeId,
-  expediteurId,
-  boutonElement
-){
-
-  const carte =
-    boutonElement.closest(".card");
-
-  carte
-    .querySelectorAll("button")
-    .forEach(
-      b => b.disabled = true
-    );
+  boutons.forEach(b=>b.disabled=true);
 
   try{
-
     await tablesDB.updateRow({
       databaseId:APPWRITE_DATABASE_ID,
       tableId:TABLE_DEMANDES,
       rowId:demandeId,
       data:{
         statut:"accepte",
-        dateReponse:
-          new Date().toISOString()
+        dateReponse:new Date().toISOString()
       }
     });
 
-    await creerOuRecupererConversation(
-      expediteurId
-    );
+    await creerOuRecupererConversation(expediteurId);
 
-    carte.remove();
-
+    card.remove();
     await chargerDiscussions();
 
-    alert(
-      "Demande acceptée. La conversation est disponible dans « Mes discussions »."
-    );
+    alert("💚 Demande acceptée !");
 
-  }catch(erreur){
-
-    console.error(
-      "Erreur acceptation demande :",
-      erreur
-    );
-
-    alert(
-      "Impossible d'accepter cette demande pour le moment : "
-      + erreur.message
-    );
-
-    carte
-      .querySelectorAll("button")
-      .forEach(
-        b => b.disabled = false
-      );
-
+  }catch(e){
+    boutons.forEach(b=>b.disabled=false);
+    alert(e.message||"Impossible d'accepter la demande.");
   }
-
 }
 
-
-async function refuserDemande(
-  demandeId,
-  boutonElement
-){
-
-  const carte =
-    boutonElement.closest(".card");
-
-  carte
-    .querySelectorAll("button")
-    .forEach(
-      b => b.disabled = true
-    );
+async function refuserDemande(demandeId,button){
+  button.disabled=true;
 
   try{
-
     await appelerFonction({
       action:"refuserDemande",
-      demandeId:demandeId
+      demandeId
     });
 
-    carte.remove();
+    const card=button.closest(".card");
+    if(card)card.remove();
 
-  }catch(erreur){
+    await chargerSoldePoints();
 
-    console.error(
-      "Erreur refus demande :",
-      erreur
-    );
-
-    alert(
-      "Impossible de refuser la demande pour le moment."
-    );
-
-    carte
-      .querySelectorAll("button")
-      .forEach(
-        b => b.disabled = false
-      );
-
+  }catch(e){
+    button.disabled=false;
+    alert(e.message||"Impossible de refuser la demande.");
   }
-
 }
 
-
-/* ==========================================
-   CONVERSATIONS
-========================================== */
-
-async function creerOuRecupererConversation(
-  peerId
-){
-
-  const resultat =
-    await appelerFonction({
-      action:"creerConversation",
-      peerId:peerId
-    });
+async function creerOuRecupererConversation(peerId){
+  const resultat=await appelerFonction({
+    action:"creerConversation",
+    peerId
+  });
 
   return resultat.conversation;
-
 }
-
-
-/* ==========================================
-   CHARGEMENT DES DISCUSSIONS
-========================================== */
 
 async function chargerDiscussions(){
+  const zone=document.getElementById("discussionsList");
 
-  const section =
-    document.getElementById(
-      "discussions"
-    );
-
-  const moi =
-    utilisateurConnecte.$id;
-
-  try{
-
-    const q1 =
-      await tablesDB.listRows({
-        databaseId:APPWRITE_DATABASE_ID,
-        tableId:TABLE_CONVERSATIONS,
-        queries:[
-          Appwrite.Query.equal(
-            "utilisateur1Id",
-            moi
-          ),
-          Appwrite.Query.limit(100)
-        ]
-      });
-
-    const q2 =
-      await tablesDB.listRows({
-        databaseId:APPWRITE_DATABASE_ID,
-        tableId:TABLE_CONVERSATIONS,
-        queries:[
-          Appwrite.Query.equal(
-            "utilisateur2Id",
-            moi
-          ),
-          Appwrite.Query.limit(100)
-        ]
-      });
-
-    let conversations =
-      q1.rows.concat(
-        q2.rows
-      );
-
-    conversations =
-      conversations.filter(
-        function(conv){
-
-          const peerId =
-            conv.utilisateur1Id === moi
-              ? conv.utilisateur2Id
-              : conv.utilisateur1Id;
-
-          return !blocagesEmis.includes(
-            peerId
-          );
-
-        }
-      );
-
-    if(
-      conversations.length === 0
-    ){
-
-      section.innerHTML = `
-        <div class="empty">
-          Vous n'avez pas encore de discussion.
-        </div>
-      `;
-
-      return;
-
-    }
-
-    let html = "";
-
-    for(
-      const conv of conversations
-    ){
-
-      const peerId =
-        conv.utilisateur1Id === moi
-          ? conv.utilisateur2Id
-          : conv.utilisateur1Id;
-
-      const profil =
-        await chargerProfilParUserId(
-          peerId
-        );
-
-      const nom =
-        profil
-          ? profil.nom
-          : "Utilisateur";
-
-      const age =
-        profil && profil.age
-          ? ", " + profil.age + " ans"
-          : "";
-
-      const lieu =
-        profil
-          ? nomVille(profil.villeId)
-            + ", "
-            + nomPays(profil.paysId)
-          : "";
-
-      const photo =
-        profil
-          ? urlPhoto(
-              profil.photoPrincipale
-            )
-          : urlPhoto(null);
-
-      html += `
-        <div
-          class="card"
-          onclick="ouvrirConversation(
-            '${conv.$id}',
-            '${peerId}'
-          )"
-        >
-
-          <div class="person">
-
-            <img
-              class="avatar"
-              src="${photo}"
-              alt="${nom}"
-            >
-
-            <div class="info">
-
-              <strong>${nom}</strong>${age}<br>
-
-              ${lieu}
-
-            </div>
-
-          </div>
-
-          <p>
-            Appuyez pour ouvrir la conversation.
-          </p>
-
-        </div>
-      `;
-
-    }
-
-    section.innerHTML = html;
-
-  }catch(erreur){
-
-    console.error(
-      "Erreur chargement discussions :",
-      erreur
-    );
-
-    section.innerHTML = `
-      <div class="empty">
-        Impossible de charger vos discussions.
-      </div>
-    `;
-
+  if(!utilisateurConnecte){
+    zone.innerHTML='<div class="empty">Connecte-toi pour voir tes discussions.</div>';
+    return;
   }
 
+  zone.innerHTML='<div class="loading">Chargement des discussions...</div>';
+
+  try{
+    const [a,b]=await Promise.all([
+      tablesDB.listRows({
+        databaseId:APPWRITE_DATABASE_ID,
+        tableId:TABLE_CONVERSATIONS,
+        queries:[
+          Appwrite.Query.equal("utilisateur1Id",utilisateurConnecte.$id),
+          Appwrite.Query.limit(100)
+        ]
+      }),
+      tablesDB.listRows({
+        databaseId:APPWRITE_DATABASE_ID,
+        tableId:TABLE_CONVERSATIONS,
+        queries:[
+          Appwrite.Query.equal("utilisateur2Id",utilisateurConnecte.$id),
+          Appwrite.Query.limit(100)
+        ]
+      })
+    ]);
+
+    const conversations=[
+      ...(a.rows||[]),
+      ...(b.rows||[])
+    ];
+
+    const uniques=[
+      ...new Map(conversations.map(x=>[x.$id,x])).values()
+    ];
+
+    const visibles=uniques.filter(c=>{
+      const peer=c.utilisateur1Id===utilisateurConnecte.$id
+        ?c.utilisateur2Id
+        :c.utilisateur1Id;
+
+      return !blocagesEmis.includes(peer);
+    });
+
+    if(!visibles.length){
+      zone.innerHTML='<div class="empty">💬 Tes discussions apparaîtront ici.</div>';
+      return;
+    }
+
+    let html="";
+
+    for(const c of visibles){
+      const peer=c.utilisateur1Id===utilisateurConnecte.$id
+        ?c.utilisateur2Id
+        :c.utilisateur1Id;
+
+      const profil=await chargerProfilParUserId(peer);
+      if(!profil)continue;
+
+      const photo=urlPhoto(profil.photoPrincipale);
+
+      html+=`
+        <div
+          class="card profile-card"
+          onclick="ouvrirConversation('${c.$id}','${peer}')"
+          style="cursor:pointer"
+        >
+          ${
+            photo
+            ? `<img class="avatar" src="${photo}" alt="">`
+            : `<div class="avatar"></div>`
+          }
+
+          <div class="profile-info">
+            <div class="profile-name">
+              ${echapperHTML(profil.nom||"Profil")}
+            </div>
+
+            <div class="muted">
+              ${echapperHTML(nomVille(profil.villeId)||"")}
+              ${nomPays(profil.paysId)?" • "+echapperHTML(nomPays(profil.paysId)):""}
+            </div>
+          </div>
+
+          <div style="font-size:22px;color:#20B486">›</div>
+        </div>
+      `;
+    }
+
+    zone.innerHTML=html||'<div class="empty">Aucune discussion disponible.</div>';
+
+  }catch(e){
+    zone.innerHTML=`<div class="error">${echapperHTML(e.message)}</div>`;
+  }
 }
+ async function ouvrirConversation(conversationId,peerId){
+  conversationActuelle=conversationId;
+  peerActuel=peerId;
 
+  const profil=await chargerProfilParUserId(peerId);
 
-/* ==========================================
-   OUVERTURE DE CONVERSATION
-========================================== */
+  document.getElementById("chatPeerName").textContent=
+    profil?.nom||"Discussion";
 
-async function ouvrirConversation(
-  conversationId,
-  peerId
-){
+  const ville=profil?nomVille(profil.villeId):"";
+  const pays=profil?nomPays(profil.paysId):"";
 
-  conversationActuelle =
-    conversationId;
+  document.getElementById("chatPeerLocation").textContent=
+    [ville,pays].filter(Boolean).join(" • ");
 
-  peerActuel =
-    peerId;
-
-  const profil =
-    await chargerProfilParUserId(
-      peerId
-    );
-
-  document.getElementById(
-    "nomChat"
-  ).textContent =
-    profil
-      ? profil.nom
-      : "Utilisateur";
-
-  document.getElementById(
-    "lieuChat"
-  ).textContent =
-    profil
-      ? nomVille(profil.villeId)
-        + ", "
-        + nomPays(profil.paysId)
-      : "";
-
-  document.getElementById(
-    "chatArea"
-  ).style.display = "block";
+  document.getElementById("chatArea").style.display="block";
+  document.getElementById("chatExtra").style.display="block";
 
   await chargerMessages();
 
+  setTimeout(()=>{
+    document.getElementById("messageInput").focus();
+  },100);
 }
-
 
 function fermerChat(){
-
-  document.getElementById(
-    "chatArea"
-  ).style.display = "none";
-
-  conversationActuelle =
-    null;
-
-  peerActuel =
-    null;
-
-  messagesActuels =
-    [];
-
+  document.getElementById("chatArea").style.display="none";
+  conversationActuelle=null;
+  peerActuel=null;
+  messagesActuels=[];
 }
 
-
-/* ==========================================
-   MESSAGES
-========================================== */
-
 async function chargerMessages(){
+  const zone=document.getElementById("messagesList");
 
-  if(!conversationActuelle){
+  if(!conversationActuelle)return;
+
+  zone.innerHTML='<div class="loading">Chargement...</div>';
+
+  try{
+    const r=await tablesDB.listRows({
+      databaseId:APPWRITE_DATABASE_ID,
+      tableId:TABLE_MESSAGES,
+      queries:[
+        Appwrite.Query.equal("conversationId",conversationActuelle),
+        Appwrite.Query.orderAsc("dateEnvoi"),
+        Appwrite.Query.limit(200)
+      ]
+    });
+
+    messagesActuels=r.rows||[];
+    afficherMessages();
+
+  }catch(e){
+    zone.innerHTML=`<div class="error">${echapperHTML(e.message)}</div>`;
+  }
+}
+
+function afficherMessages(){
+  const zone=document.getElementById("messagesList");
+
+  if(!messagesActuels.length){
+    zone.innerHTML=`
+      <div class="empty">
+        💚 Commencez la conversation.<br>
+        <span class="muted">Un premier message peut tout changer.</span>
+      </div>
+    `;
     return;
   }
 
-  try{
+  let html="";
 
-    const reponse =
-      await tablesDB.listRows({
-        databaseId:APPWRITE_DATABASE_ID,
-        tableId:TABLE_MESSAGES,
-        queries:[
-          Appwrite.Query.equal(
-            "conversationId",
-            conversationActuelle
-          ),
-          Appwrite.Query.orderAsc(
-            "dateEnvoi"
-          ),
-          Appwrite.Query.limit(200)
+  for(const message of messagesActuels){
+    const mine=message.expediteurId===utilisateurConnecte.$id;
+
+    const photo=message.photoId
+      ?urlPhoto(message.photoId)
+      :"";
+
+    const contenu=message.contenu
+      ?`<div>${echapperHTML(message.contenu)}</div>`
+      :"";
+
+    const image=photo
+      ?`<img class="msg-photo" src="${photo}" alt="Photo envoyée">`
+      :"";
+
+    const heure=message.dateEnvoi
+      ?new Date(message.dateEnvoi).toLocaleTimeString("fr-FR",{
+        hour:"2-digit",
+        minute:"2-digit"
+      })
+      :"";
+
+    html+=`
+      <div class="message-row ${mine?"mine":"theirs"}">
+        <div class="bubble">
+          ${contenu}
+          ${image}
+          <span class="msg-time">${heure}</span>
+        </div>
+      </div>
+    `;
+  }
+
+  zone.innerHTML=html;
+  zone.scrollTop=zone.scrollHeight;
+}
+
+async function envoyerMessage(){
+  const input=document.getElementById("messageInput");
+  const bouton=document.getElementById("sendBtn");
+
+  const contenu=input.value.trim();
+
+  if(!contenu||!conversationActuelle||!peerActuel)return;
+
+  input.disabled=true;
+  bouton.disabled=true;
+
+  try{
+    await appelerFonction({
+      action:"envoyerMessage",
+      conversationId:conversationActuelle,
+      peerId:peerActuel,
+      contenu
+    });
+
+    input.value="";
+    await chargerMessages();
+
+  }catch(e){
+    alert(e.message||"Impossible d'envoyer le message.");
+
+  }finally{
+    input.disabled=false;
+    bouton.disabled=false;
+    input.focus();
+  }
+}
+
+function gererEntree(event){
+  if(event.key==="Enter"&&!event.shiftKey){
+    event.preventDefault();
+    envoyerMessage();
+  }
+}
+
+/* PHOTOS */
+
+function compresserImage(fichier,tailleMaxOctets=500*1024,largeurMax=1024){
+  return new Promise((resolve,reject)=>{
+    const reader=new FileReader();
+
+    reader.onload=e=>{
+      const img=new Image();
+
+      img.onload=()=>{
+        let largeur=img.width;
+        let hauteur=img.height;
+
+        if(largeur>largeurMax){
+          hauteur=Math.round(hauteur*largeurMax/largeur);
+          largeur=largeurMax;
+        }
+
+        const canvas=document.createElement("canvas");
+        canvas.width=largeur;
+        canvas.height=hauteur;
+
+        const ctx=canvas.getContext("2d");
+        ctx.drawImage(img,0,0,largeur,hauteur);
+
+        let qualite=.85;
+
+        const produire=()=>{
+          canvas.toBlob(blob=>{
+            if(!blob)return reject(new Error("Compression impossible."));
+
+            if(blob.size<=tailleMaxOctets||qualite<=.35){
+              resolve(blob);
+              return;
+            }
+
+            qualite-=.08;
+            produire();
+          },"image/jpeg",qualite);
+        };
+
+        produire();
+      };
+
+      img.onerror=()=>reject(new Error("Image invalide."));
+      img.src=e.target.result;
+    };
+
+    reader.onerror=()=>reject(new Error("Lecture de l'image impossible."));
+    reader.readAsDataURL(fichier);
+  });
+}
+
+async function selectionnerPhotos(event){
+  const fichiers=Array.from(event.target.files||[]).slice(0,2);
+
+  event.target.value="";
+
+  if(!conversationActuelle||!peerActuel){
+    alert("Aucune conversation ouverte.");
+    return;
+  }
+
+  if(!fichiers.length)return;
+
+  try{
+    for(const fichier of fichiers){
+
+      const blob=await compresserImage(
+        fichier,
+        500*1024,
+        1024
+      );
+
+      const nouveauFichier=new File(
+        [blob],
+        "photo.jpg",
+        {type:"image/jpeg"}
+      );
+
+      const fileId=Appwrite.ID.unique();
+
+      await storage.createFile({
+        bucketId:APPWRITE_BUCKET_PHOTOS,
+        fileId,
+        file:nouveauFichier,
+        permissions:[
+          permLireUtilisateur(utilisateurConnecte.$id)
         ]
       });
 
-    messagesActuels =
-      reponse.rows;
-
-    afficherMessages();
-
-  }catch(erreur){
-
-    console.error(
-      "Erreur chargement messages :",
-      erreur
-    );
-
-    document.getElementById(
-      "messages"
-    ).innerHTML = `
-      <div class="empty">
-        Impossible de charger les messages.
-      </div>
-    `;
-
-  }
-
-}
-
-
-function afficherMessages(){
-
-  const zone =
-    document.getElementById(
-      "messages"
-    );
-
-  if(
-    messagesActuels.length === 0
-  ){
-
-    zone.innerHTML = `
-      <div class="empty">
-        Aucun message pour le moment.
-        Commencez la discussion 💚
-      </div>
-    `;
-
-    return;
-
-  }
-
-  let html = "";
-
-  for(
-    const message of messagesActuels
-  ){
-
-    const estMoi =
-      message.expediteurId ===
-      utilisateurConnecte.$id;
-
-    const classe =
-      estMoi
-        ? "sent"
-        : "received";
-
-    html += `
-      <div class="msg ${classe}">
-    `;
-
-    if(message.photoId){
-
-      html += `
-        <img
-          src="${urlPhoto(message.photoId)}"
-          alt="Photo envoyée"
-        >
-      `;
-
-    }
-
-    if(message.contenu){
-
-      html += `
-        <div>
-          ${echapperHTML(
-            message.contenu
-          )}
-        </div>
-      `;
-
-    }
-
-    html += `
-      </div>
-    `;
-
-  }
-
-  zone.innerHTML =
-    html;
-
-  zone.scrollTop =
-    zone.scrollHeight;
-
-}
-
-
-/* ==========================================
-   ENVOI MESSAGE
-========================================== */
-
-async function envoyerMessage(){
-
-  const input =
-    document.getElementById(
-      "messageInput"
-    );
-
-  const contenu =
-    input.value.trim();
-
-  if(
-    !contenu ||
-    !conversationActuelle ||
-    !peerActuel
-  ){
-    return;
-  }
-
-  input.disabled = true;
-
-  try{
-
-    await appelerFonction({
-      action:"envoyerMessage",
-      conversationId:
-        conversationActuelle,
-      peerId:
-        peerActuel,
-      contenu:
-        contenu
-    });
-
-    input.value = "";
-
-    await chargerMessages();
-
-  }catch(erreur){
-
-    console.error(
-      "Erreur envoi message :",
-      erreur
-    );
-
-    alert(
-      "Impossible d'envoyer le message : "
-      + erreur.message
-    );
-
-  }finally{
-
-    input.disabled = false;
-    input.focus();
-
-  }
-
-}
-
-
-/* ==========================================
-   COMPRESSION PHOTO
-========================================== */
-
-function compresserImage(
-  fichier,
-  tailleMaxOctets,
-  largeurMax
-){
-
-  return new Promise(
-    (resolve,reject)=>{
-
-      const lecteur =
-        new FileReader();
-
-      lecteur.onload =
-        function(){
-
-          const image =
-            new Image();
-
-          image.onload =
-            function(){
-
-              let largeur =
-                image.width;
-
-              let hauteur =
-                image.height;
-
-              if(
-                largeur > largeurMax
-              ){
-
-                hauteur =
-                  hauteur *
-                  largeurMax /
-                  largeur;
-
-                largeur =
-                  largeurMax;
-
-              }
-
-              const canvas =
-                document.createElement(
-                  "canvas"
-                );
-
-              canvas.width =
-                largeur;
-
-              canvas.height =
-                hauteur;
-
-              const contexte =
-                canvas.getContext(
-                  "2d"
-                );
-
-              contexte.drawImage(
-                image,
-                0,
-                0,
-                largeur,
-                hauteur
-              );
-
-              let qualite =
-                0.85;
-
-              function convertir(){
-
-                canvas.toBlob(
-                  function(blob){
-
-                    if(!blob){
-
-                      reject(
-                        new Error(
-                          "Compression impossible."
-                        )
-                      );
-
-                      return;
-
-                    }
-
-                    if(
-                      blob.size <=
-                      tailleMaxOctets ||
-                      qualite <= 0.35
-                    ){
-
-                      resolve(blob);
-                      return;
-
-                    }
-
-                    qualite -= 0.08;
-                    convertir();
-
-                  },
-                  "image/jpeg",
-                  qualite
-                );
-
-              }
-
-              convertir();
-
-            };
-
-          image.onerror =
-            reject;
-
-          image.src =
-            lecteur.result;
-
-        };
-
-      lecteur.onerror =
-        reject;
-
-      lecteur.readAsDataURL(
-        fichier
-      );
-
-    }
-  );
-
-}
-
-
-/* ==========================================
-   SÉLECTION PHOTOS
-========================================== */
-
-async function selectionnerPhotos(
-  event
-){
-
-  const fichiers =
-    Array.from(
-      event.target.files
-    );
-
-  const preview =
-    document.getElementById(
-      "preview"
-    );
-
-  preview.innerHTML = "";
-
-  if(
-    !conversationActuelle ||
-    !peerActuel
-  ){
-    return;
-  }
-
-  const selection =
-    fichiers.slice(0,2);
-
-  try{
-
-    for(
-      const fichier of selection
-    ){
-
-      const blob =
-        await compresserImage(
-          fichier,
-          500 * 1024,
-          1024
-        );
-
-      const fichierFinal =
-        new File(
-          [blob],
-          "photo.jpg",
-          {
-            type:"image/jpeg"
-          }
-        );
-
-      const imagePreview =
-        document.createElement(
-          "img"
-        );
-
-      imagePreview.src =
-        URL.createObjectURL(
-          fichierFinal
-        );
-
-      preview.appendChild(
-        imagePreview
-      );
-
-      const fichierStocke =
-        await storage.createFile({
-          bucketId:
-            APPWRITE_BUCKET_PHOTOS,
-          fileId:
-            Appwrite.ID.unique(),
-          file:
-            fichierFinal,
-          permissions:[
-            Appwrite.Permission.read(
-              "user:" +
-              utilisateurConnecte.$id
-            )
-          ]
-        });
-
       await appelerFonction({
         action:"envoyerMessage",
-        conversationId:
-          conversationActuelle,
-        peerId:
-          peerActuel,
+        conversationId:conversationActuelle,
+        peerId:peerActuel,
         contenu:"",
-        photoId:
-          fichierStocke.$id
+        photoId:fileId
       });
-
     }
-
-    event.target.value = "";
 
     await chargerMessages();
 
-  }catch(erreur){
-
-    console.error(
-      "Erreur envoi photo :",
-      erreur
-    );
-
-    alert(
-      "Impossible d'envoyer la photo pour le moment."
-    );
-
+  }catch(e){
+    alert(e.message||"Impossible d'envoyer la photo.");
   }
-
 }
 
-
-/* ==========================================
-   AIDE À LA DISCUSSION
-========================================== */
+/* AIDE IA */
 
 function ouvrirAide(){
+  document.getElementById("aideModal").style.display="flex";
+  document.getElementById("questionAide").value="";
+  document.getElementById("aideResultat").innerHTML="";
 
-  document.getElementById(
-    "aideModal"
-  ).style.display = "flex";
-
-  document.getElementById(
-    "helpResults"
-  ).innerHTML = "";
-
-  document.getElementById(
-    "questionAide"
-  ).value = "";
-
-  setTimeout(
-    function(){
-
-      document.getElementById(
-        "questionAide"
-      ).focus();
-
-    },
-    150
-  );
-
+  setTimeout(()=>{
+    document.getElementById("questionAide").focus();
+  },150);
 }
 
-
 async function demanderAide(){
+  const champ=document.getElementById("questionAide");
+  const zone=document.getElementById("aideResultat");
+  const bouton=document.getElementById("aideBtn");
 
-  const question =
-    document.getElementById(
-      "questionAide"
-    ).value.trim();
+  const question=champ.value.trim();
 
   if(!question){
-
-    alert(
-      "Décris d'abord ce que tu veux répondre."
-    );
-
+    zone.innerHTML=`
+      <div class="error">
+        Écris d'abord ce que tu aimerais améliorer ou demander.
+      </div>
+    `;
     return;
-
   }
 
   if(!conversationActuelle){
-
-    alert(
-      "Aucune conversation ouverte."
-    );
-
+    zone.innerHTML=`
+      <div class="error">
+        Ouvre une conversation avant d'utiliser l'aide.
+      </div>
+    `;
     return;
-
   }
 
-  const resultats =
-    document.getElementById(
-      "helpResults"
-    );
+  bouton.disabled=true;
 
-  resultats.innerHTML = `
-    <div class="suggestion">
-      🤖 Gemini prépare des suggestions...
-      <br>
-      <small>
-        Cette opération coûte 1 point.
-      </small>
+  zone.innerHTML=`
+    <div class="loading">
+      🤖 Gemini prépare des suggestions...<br>
+      <span class="muted">Cette opération coûte 1 point.</span>
     </div>
   `;
 
   try{
+    const resultat=await appelerFonction({
+      action:"aideDiscussion",
+      question,
+      conversationId:conversationActuelle
+    });
 
-    const resultat =
-      await appelerFonction({
-        action:"aideDiscussion",
-        question:
-          question,
-        conversationId:
-          conversationActuelle
-      });
-
-    if(
-      !resultat.suggestions ||
-      !Array.isArray(
-        resultat.suggestions
-      )
-    ){
-
-      throw new Error(
-        "Aucune suggestion reçue."
-      );
-
+    if(!Array.isArray(resultat.suggestions)||!resultat.suggestions.length){
+      throw new Error("Aucune suggestion n'a été générée.");
     }
 
-    let html = "";
+    let html="";
 
-    resultat.suggestions
-      .slice(0,3)
-      .forEach(
-        function(suggestion){
+    resultat.suggestions.slice(0,3).forEach((suggestion,index)=>{
+      const texte=String(suggestion||"").trim();
 
-          html += `
-            <div class="suggestion">
-              ${echapperHTML(
-    
- /* ==========================================
-   SIGNALEMENT
-========================================== */
+      if(!texte)return;
 
-function ouvrirSignalement(){
+      html+=`
+        <div class="suggestion">
+          <strong>Suggestion ${index+1}</strong>
+          <div style="margin-top:5px">
+            ${echapperHTML(texte)}
+          </div>
 
-  document.getElementById(
-    "signalementModal"
-  ).style.display = "flex";
-
-}
-
-
-async function signaler(){
-
-  if(
-    !utilisateurConnecte ||
-    !peerActuel ||
-    !conversationActuelle
-  ){
-    return;
-  }
-
-  const bouton =
-    document.getElementById(
-      "btnSignaler"
-    );
-
-  const motif =
-    document.getElementById(
-      "motif"
-    ).value;
-
-  bouton.disabled = true;
-
-  try{
-
-    await tablesDB.createRow({
-      databaseId:
-        APPWRITE_DATABASE_ID,
-
-      tableId:
-        TABLE_SIGNALEMENTS,
-
-      rowId:
-        Appwrite.ID.unique(),
-
-      data:{
-        signaleurId:
-          utilisateurConnecte.$id,
-
-        signaleId:
-          peerActuel,
-
-        conversationId:
-          conversationActuelle,
-
-        motif:
-          motif,
-
-        dateCreation:
-          new Date().toISOString()
-      },
-
-      permissions:[
-        Appwrite.Permission.read(
-          "user:" +
-          utilisateurConnecte.$id
-        )
-      ]
+          <button onclick="utiliserSuggestion(${JSON.stringify(texte)})">
+            ✍️ Utiliser cette idée
+          </button>
+        </div>
+      `;
     });
 
-    alert(
-      "Merci. Votre signalement a bien été envoyé."
-    );
+    html+=`
+      <div class="help-note">
+        💡 Ces réponses sont seulement des suggestions.
+        Tu peux les modifier avant de les envoyer.
+      </div>
+    `;
 
-    fermerModal(
-      "signalementModal"
-    );
+    zone.innerHTML=html;
 
-  }catch(erreur){
+    await chargerSoldePoints();
 
-    console.error(
-      "Erreur signalement :",
-      erreur
-    );
+  }catch(e){
 
-    alert(
-      "Impossible d'envoyer le signalement pour le moment."
-    );
+    zone.innerHTML=`
+      <div class="error">
+        ${echapperHTML(e.message||"Impossible de générer une suggestion.")}
+      </div>
+    `;
 
   }finally{
-
-    bouton.disabled = false;
-
+    bouton.disabled=false;
   }
-
 }
 
-
-/* ==========================================
-   BLOCAGE
-========================================== */
-
-function ouvrirBlocage(){
-
-  document.getElementById(
-    "blocageModal"
-  ).style.display = "flex";
-
+function utiliserSuggestion(texte){
+  document.getElementById("messageInput").value=texte;
+  fermerModal("aideModal");
+  document.getElementById("messageInput").focus();
 }
 
+/* SIGNALEMENT */
 
-async function confirmerBlocage(){
+function ouvrirSignalement(){
+  if(!peerActuel||!conversationActuelle)return;
+  document.getElementById("signalementModal").style.display="flex";
+}
 
-  if(
-    !utilisateurConnecte ||
-    !peerActuel
-  ){
-    return;
-  }
+async function signaler(){
+  if(!utilisateurConnecte||!peerActuel||!conversationActuelle)return;
 
-  const bouton =
-    document.getElementById(
-      "btnBloquer"
-    );
+  const bouton=document.getElementById("signalerBtn");
+  const motif=document.getElementById("motifSignalement").value;
 
-  bouton.disabled = true;
+  bouton.disabled=true;
 
   try{
-
     await tablesDB.createRow({
-      databaseId:
-        APPWRITE_DATABASE_ID,
-
-      tableId:
-        TABLE_BLOCAGES,
-
-      rowId:
-        Appwrite.ID.unique(),
-
+      databaseId:APPWRITE_DATABASE_ID,
+      tableId:TABLE_SIGNALEMENTS,
+      rowId:Appwrite.ID.unique(),
       data:{
-        bloqueurId:
-          utilisateurConnecte.$id,
-
-        bloqueId:
-          peerActuel,
-
-        dateCreation:
-          new Date().toISOString()
+        signaleurId:utilisateurConnecte.$id,
+        signaleId:peerActuel,
+        conversationId:conversationActuelle,
+        motif,
+        dateCreation:new Date().toISOString()
       },
-
       permissions:[
-        Appwrite.Permission.read(
-          "user:" +
-          utilisateurConnecte.$id
-        )
+        permLireUtilisateur(utilisateurConnecte.$id)
       ]
     });
 
-    blocagesEmis.push(
-      peerActuel
-    );
+    fermerModal("signalementModal");
+    alert("✅ Signalement envoyé. Merci.");
 
-    alert(
-      "Cette personne a été bloquée."
-    );
+  }catch(e){
+    alert(e.message||"Impossible d'envoyer le signalement.");
 
-    fermerModal(
-      "blocageModal"
-    );
+  }finally{
+    bouton.disabled=false;
+  }
+}
 
+/* BLOCAGE */
+
+function ouvrirBlocage(){
+  if(!peerActuel)return;
+  document.getElementById("blocageModal").style.display="flex";
+}
+
+async function confirmerBlocage(){
+  if(!utilisateurConnecte||!peerActuel)return;
+
+  const bouton=document.getElementById("bloquerBtn");
+  bouton.disabled=true;
+
+  try{
+    await tablesDB.createRow({
+      databaseId:APPWRITE_DATABASE_ID,
+      tableId:TABLE_BLOCAGES,
+      rowId:Appwrite.ID.unique(),
+      data:{
+        bloqueurId:utilisateurConnecte.$id,
+        bloqueId:peerActuel,
+        dateCreation:new Date().toISOString()
+      },
+      permissions:[
+        permLireUtilisateur(utilisateurConnecte.$id)
+      ]
+    });
+
+    blocagesEmis.push(peerActuel);
+
+    fermerModal("blocageModal");
     fermerChat();
 
     await chargerDiscussions();
 
-  }catch(erreur){
+    alert("🚫 Profil bloqué.");
 
-    console.error(
-      "Erreur blocage :",
-      erreur
-    );
-
-    alert(
-      "Impossible de bloquer cette personne pour le moment."
-    );
+  }catch(e){
+    alert(e.message||"Impossible de bloquer ce profil.");
 
   }finally{
-
-    bouton.disabled = false;
-
+    bouton.disabled=false;
   }
-
 }
 
-
-/* ==========================================
-   MODALES
-========================================== */
+/* MODALES */
 
 function fermerModal(id){
-
-  document.getElementById(
-    id
-  ).style.display = "none";
-
+  document.getElementById(id).style.display="none";
 }
 
-
-document
-  .querySelectorAll(".modal")
-  .forEach(
-    modal => {
-
-      modal.addEventListener(
-        "click",
-        e => {
-
-          if(
-            e.target === modal
-          ){
-
-            modal.style.display =
-              "none";
-
-          }
-
-        }
-      );
-
-    }
-  );
-
-
-/* ==========================================
-   INITIALISATION
-========================================== */
-
-document.addEventListener(
-  "DOMContentLoaded",
-  async function(){
-
-    await chargerPaysEtVilles();
-
-    await chargerEtatConnexion();
-
+function fermerBackdrop(event,id){
+  if(event.target.id===id){
+    fermerModal(id);
   }
-);
+}
 
+/* SÉCURITÉ HTML */
+
+function echapperHTML(texte){
+  return String(texte??"")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+}
+
+/* DÉMARRAGE */
+
+document.addEventListener("DOMContentLoaded",async()=>{
+  try{
+    await chargerPaysEtVilles();
+  }catch(e){
+    console.error("Pays/villes:",e);
+  }
+
+  await chargerEtatConnexion();
+});
 </script>
 
 </body>
