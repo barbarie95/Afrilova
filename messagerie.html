@@ -7,151 +7,584 @@
 
 <style>
 *{box-sizing:border-box}
+
 body{
- margin:0;font-family:Arial,sans-serif;
- background:#F3FBF7;color:#17352d
+ margin:0;
+ font-family:Arial,sans-serif;
+ background:#F3FBF7;
+ color:#17352d
 }
+
 header{
- background:linear-gradient(135deg,#0B8F6A,#3DBB91);
- color:white;padding:15px;text-align:center;
+ background:linear-gradient(135deg,#20B486,#55D3A8);
+ color:white;
+ padding:13px 15px;
+ text-align:center;
  position:relative
 }
-header h2{margin:0}
+
+header h2{margin:0;font-size:20px}
+
 .points{
- position:absolute;right:15px;top:15px;
- background:white;color:#087557;
- padding:6px 10px;border-radius:20px;font-weight:bold
+ position:absolute;
+ right:12px;
+ top:11px;
+ background:white;
+ color:#087557;
+ padding:6px 9px;
+ border-radius:18px;
+ font-weight:bold;
+ font-size:13px
 }
-main{padding:20px 15px 90px;max-width:600px;margin:auto}
-h1{text-align:center;color:#087557}
-.intro{text-align:center;color:#55736a}
-.tabs{display:flex;gap:8px;margin:20px 0}
+
+main{
+ padding:18px 13px 85px;
+ max-width:600px;
+ margin:auto
+}
+
+h1{
+ text-align:center;
+ color:#087557;
+ margin:8px 0
+}
+
+.intro{
+ text-align:center;
+ color:#55736a;
+ margin:8px 0 18px;
+ font-size:14px
+}
+
+.tabs{
+ display:flex;
+ gap:7px;
+ margin:15px 0
+}
+
 .tabs button{
- flex:1;border:0;padding:12px;border-radius:12px;
- background:#E0F7EE;color:#087557;font-weight:bold
+ flex:1;
+ border:0;
+ padding:10px;
+ border-radius:11px;
+ background:#E0F7EE;
+ color:#087557;
+ font-weight:bold;
+ cursor:pointer
 }
-.tabs button.active{background:#0B8F6A;color:white}
+
+.tabs button.active{
+ background:#20B486;
+ color:white
+}
+
 .card{
- background:white;border-radius:18px;padding:15px;
- margin-bottom:15px;box-shadow:0 3px 12px #0001
+ background:white;
+ border-radius:16px;
+ padding:13px;
+ margin-bottom:12px;
+ box-shadow:0 3px 12px #0001;
+ transition:transform .18s ease,box-shadow .18s ease
 }
-.person{display:flex;gap:12px;align-items:center}
+
+.card:hover{
+ transform:translateY(-2px);
+ box-shadow:0 6px 16px #0002
+}
+
+.person{
+ display:flex;
+ gap:11px;
+ align-items:center
+}
+
 .avatar{
- width:55px;height:55px;border-radius:50%;
- background:#E0F7EE;display:grid;place-items:center;font-size:25px;
+ width:52px;
+ height:52px;
+ border-radius:50%;
+ background:#E8F8F2;
+ display:grid;
+ place-items:center;
+ font-size:24px;
  object-fit:cover
 }
+
 .info strong{color:#087557}
-.actions{display:flex;gap:8px;margin-top:15px}
-.actions button,.chat-btn{
- border:0;border-radius:10px;padding:10px;
- font-weight:bold;cursor:pointer
+
+.actions{
+ display:flex;
+ gap:7px;
+ margin-top:13px
 }
-.accept{background:#0B8F6A;color:white}
-.refuse{background:#eee;color:#555}
-.accept:disabled,.refuse:disabled{opacity:.6}
-.empty{text-align:center;padding:35px 10px;color:#6d8980}
+
+.actions button{
+ border:0;
+ border-radius:10px;
+ padding:9px;
+ font-weight:bold;
+ cursor:pointer
+}
+
+.accept{
+ background:#20B486;
+ color:white
+}
+
+.refuse{
+ background:#eee;
+ color:#555
+}
+
+.accept:disabled,
+.refuse:disabled{
+ opacity:.6
+}
+
+.empty{
+ text-align:center;
+ padding:30px 10px;
+ color:#6d8980
+}
+
 .login-needed{
- background:white;border-radius:18px;padding:30px 20px;
- text-align:center;box-shadow:0 3px 12px #0001
+ background:white;
+ border-radius:16px;
+ padding:25px 18px;
+ text-align:center;
+ box-shadow:0 3px 12px #0001
 }
+
 .login-needed a{
- display:inline-block;margin-top:12px;background:#0B8F6A;
- color:white;text-decoration:none;padding:11px 18px;
- border-radius:10px;font-weight:bold
+ display:inline-block;
+ margin-top:10px;
+ background:#20B486;
+ color:white;
+ text-decoration:none;
+ padding:10px 17px;
+ border-radius:10px;
+ font-weight:bold
 }
+
 .bottom-nav{
- position:fixed;bottom:0;left:0;right:0;
- background:white;display:flex;
- box-shadow:0 -2px 12px #0001;z-index:10
+ position:fixed;
+ bottom:0;
+ left:0;
+ right:0;
+ background:white;
+ display:flex;
+ box-shadow:0 -2px 12px #0001;
+ z-index:10
 }
+
 .bottom-nav a{
- flex:1;text-align:center;padding:12px 4px;
- text-decoration:none;color:#52756a;font-size:13px
+ flex:1;
+ text-align:center;
+ padding:10px 4px;
+ text-decoration:none;
+ color:#52756a;
+ font-size:13px
 }
-.bottom-nav a.active{color:#0B8F6A;font-weight:bold}
 
-/* CHAT */
+.bottom-nav a.active{
+ color:#20B486;
+ font-weight:bold
+}
+
+/* ==========================================
+   CHAT
+========================================== */
+
 #chatArea{
- display:none;position:fixed;inset:0;
- background:#F3FBF7;z-index:20
+ display:none;
+ position:fixed;
+ inset:0;
+ background:#F3FBF7;
+ z-index:20
 }
-.chat-head{
- background:#0B8F6A;color:white;padding:14px;
- display:flex;align-items:center;gap:10px
-}
-.chat-head button{
- background:none;border:0;color:white;font-size:22px
-}
-.chat-head .chat-name{flex:1}
-.chat-tools button{
- background:none;border:0;color:white;font-size:19px
-}
-/* AJOUT : bouton Aide IA bien visible */
-.chat-head .chat-ai-btn{
- background:#FFD54A;color:#5A3D00;border:0;border-radius:20px;
- padding:8px 12px;font-weight:bold;font-size:13px;
- white-space:nowrap;box-shadow:0 2px 6px rgba(0,0,0,.25)
-}
-.messages{
- height:calc(100vh - 145px);
- overflow:auto;padding:15px
-}
-.msg{
- max-width:78%;padding:10px 13px;
- border-radius:15px;margin:8px 0
-}
-.msg img{max-width:100%;border-radius:10px;display:block}
-.received{background:white}
-.sent{background:#0B8F6A;color:white;margin-left:auto}
-.chat-input{
- position:absolute;bottom:0;left:0;right:0;
- background:white;padding:10px;display:flex;gap:7px
-}
-.chat-input input{
- flex:1;border:1px solid #ccdcd6;border-radius:20px;padding:11px
-}
-.chat-input button{
- border:0;border-radius:50%;width:42px;
- background:#0B8F6A;color:white
-}
-/* AJOUT : style du bouton photo dans la barre de saisie */
-.chat-input .attach{
- background:#E0F7EE;color:#087557;font-size:18px
-}
-.chat-extra{padding:8px 15px;background:white}
-.chat-btn{
- background:#E0F7EE;color:#087557;width:100%
-}
-.photos{text-align:center;margin-top:7px;font-size:12px;color:#678078}
-.preview{display:flex;gap:8px;margin-top:8px}
-.preview img{width:55px;height:55px;object-fit:cover;border-radius:8px}
 
-/* MODALES */
+.chat-head{
+ background:linear-gradient(135deg,#20B486,#55D3A8);
+ color:white;
+ padding:12px;
+ display:flex;
+ align-items:center;
+ gap:9px
+}
+
+.chat-head button{
+ background:none;
+ border:0;
+ color:white;
+ font-size:22px;
+ cursor:pointer
+}
+
+.chat-head .chat-name{
+ flex:1;
+ min-width:0
+}
+
+.chat-head .chat-name strong{
+ font-size:15px
+}
+
+.chat-head .chat-name small{
+ opacity:.9
+}
+
+.chat-tools{
+ display:flex;
+ gap:2px
+}
+
+.chat-tools button{
+ background:none;
+ border:0;
+ color:white;
+ font-size:18px
+}
+
+/* ==========================================
+   BULLE FLOTTANTE AIDE
+========================================== */
+
+.chat-ai-float{
+ position:absolute;
+ right:14px;
+ bottom:76px;
+ width:48px;
+ height:48px;
+ border:0;
+ border-radius:50%;
+ background:linear-gradient(135deg,#20B486,#159B72);
+ color:white;
+ font-size:21px;
+ display:grid;
+ place-items:center;
+ cursor:pointer;
+ box-shadow:0 5px 16px #08755745;
+ z-index:5;
+ animation:aideFloat 3s ease-in-out infinite
+}
+
+.chat-ai-float:hover{
+ transform:scale(1.07)
+}
+
+@keyframes aideFloat{
+ 0%,100%{transform:translateY(0)}
+ 50%{transform:translateY(-4px)}
+}
+
+/* ==========================================
+   MESSAGES
+========================================== */
+
+.messages{
+ height:calc(100vh - 125px);
+ overflow:auto;
+ padding:13px
+}
+
+.msg{
+ max-width:78%;
+ padding:9px 12px;
+ border-radius:14px;
+ margin:7px 0;
+ animation:messageIn .2s ease
+}
+
+@keyframes messageIn{
+ from{
+  opacity:0;
+  transform:translateY(5px)
+ }
+ to{
+  opacity:1;
+  transform:translateY(0)
+ }
+}
+
+.msg img{
+ max-width:100%;
+ border-radius:10px;
+ display:block
+}
+
+.received{
+ background:white
+}
+
+.sent{
+ background:#20B486;
+ color:white;
+ margin-left:auto
+}
+
+.chat-input{
+ position:absolute;
+ bottom:0;
+ left:0;
+ right:0;
+ background:white;
+ padding:8px;
+ display:flex;
+ gap:6px
+}
+
+.chat-input input{
+ flex:1;
+ border:1px solid #ccdcd6;
+ border-radius:20px;
+ padding:10px
+}
+
+.chat-input button{
+ border:0;
+ border-radius:50%;
+ width:41px;
+ background:#20B486;
+ color:white;
+ cursor:pointer
+}
+
+.chat-input .attach{
+ background:#E8F8F2;
+ color:#087557;
+ font-size:17px
+}
+
+.chat-extra{
+ padding:5px 13px;
+ background:white
+}
+
+.photos{
+ text-align:center;
+ font-size:11px;
+ color:#678078
+}
+
+.preview{
+ display:flex;
+ gap:7px;
+ margin-top:7px
+}
+
+.preview img{
+ width:52px;
+ height:52px;
+ object-fit:cover;
+ border-radius:8px
+}
+
+/* ==========================================
+   MODALES
+========================================== */
+
 .modal{
- display:none;position:fixed;inset:0;background:#0008;
- z-index:30;align-items:center;justify-content:center;padding:20px
+ display:none;
+ position:fixed;
+ inset:0;
+ background:#0008;
+ z-index:30;
+ align-items:center;
+ justify-content:center;
+ padding:15px
 }
+
 .modal-box{
- background:white;border-radius:18px;padding:20px;
- width:100%;max-width:430px
+ background:white;
+ border-radius:18px;
+ padding:18px;
+ width:100%;
+ max-width:430px;
+ max-height:90vh;
+ overflow:auto;
+ animation:modalIn .22s ease
 }
-.modal-box h2{margin-top:0;color:#087557}
+
+@keyframes modalIn{
+ from{
+  opacity:0;
+  transform:translateY(12px) scale(.97)
+ }
+ to{
+  opacity:1;
+  transform:translateY(0) scale(1)
+ }
+}
+
+.modal-box h2{
+ margin:0 0 8px;
+ color:#087557
+}
+
 .modal-box textarea{
- width:100%;min-height:100px;padding:12px;
- border:1px solid #ccdcd6;border-radius:12px;resize:none
+ width:100%;
+ min-height:90px;
+ padding:11px;
+ border:1px solid #ccdcd6;
+ border-radius:12px;
+ resize:none;
+ font-family:inherit
 }
-.modal-actions{display:flex;gap:8px;margin-top:12px}
+
+.modal-actions{
+ display:flex;
+ gap:7px;
+ margin-top:11px
+}
+
 .modal-actions button{
- flex:1;padding:11px;border:0;border-radius:10px
+ flex:1;
+ padding:10px;
+ border:0;
+ border-radius:10px;
+ cursor:pointer;
+ font-weight:bold
 }
-.primary{background:#0B8F6A;color:white}
-.secondary{background:#eee}
-.primary:disabled{opacity:.6}
+
+.primary{
+ background:#20B486;
+ color:white
+}
+
+.secondary{
+ background:#eee;
+ color:#555
+}
+
+.primary:disabled{
+ opacity:.6
+}
+
+/* ==========================================
+   NOUVELLE INTERFACE AIDE
+========================================== */
+
+#aideModal .modal-box{
+ padding:0;
+ overflow:hidden
+}
+
+.aide-top{
+ background:linear-gradient(135deg,#20B486,#55D3A8);
+ color:white;
+ padding:17px
+}
+
+.aide-top h2{
+ color:white;
+ margin:0 0 4px;
+ font-size:19px
+}
+
+.aide-top p{
+ margin:0;
+ font-size:12px;
+ opacity:.92
+}
+
+.aide-body{
+ padding:15px
+}
+
+.aide-info{
+ display:flex;
+ align-items:center;
+ gap:9px;
+ background:#E8F8F2;
+ color:#087557;
+ border-radius:11px;
+ padding:9px;
+ margin-bottom:11px;
+ font-size:12px
+}
+
+.aide-icon{
+ width:34px;
+ height:34px;
+ border-radius:50%;
+ background:white;
+ display:grid;
+ place-items:center;
+ font-size:17px;
+ flex-shrink:0
+}
+
+.aide-label{
+ display:block;
+ color:#52756a;
+ font-size:12px;
+ margin-bottom:5px
+}
+
+#aideModal textarea{
+ min-height:82px;
+ margin:0;
+ outline:none
+}
+
+#aideModal textarea:focus{
+ border-color:#20B486;
+ box-shadow:0 0 0 2px #20B48618
+}
+
+.aide-buttons{
+ display:flex;
+ gap:7px;
+ margin-top:10px
+}
+
+.aide-buttons button{
+ flex:1;
+ padding:10px;
+ border:0;
+ border-radius:10px;
+ font-weight:bold;
+ cursor:pointer
+}
+
+.aide-close{
+ background:#f0f2f1;
+ color:#555
+}
+
+.aide-send{
+ background:#20B486;
+ color:white
+}
+
 .suggestion{
- background:#F3FBF7;border:1px solid #D7EEE5;
- padding:12px;border-radius:12px;margin-top:10px;font-size:13px;
- color:#55736A;line-height:1.5
+ background:#F3FBF7;
+ border:1px solid #D7EEE5;
+ padding:10px;
+ border-radius:11px;
+ margin-top:8px;
+ font-size:13px;
+ color:#55736A;
+ line-height:1.45;
+ animation:modalIn .2s ease
+}
+
+.help-note{
+ text-align:center;
+ font-size:11px;
+ color:#789087;
+ margin:9px 0 0
+}
+
+/* ==========================================
+   PETITS EFFETS
+========================================== */
+
+button{
+ transition:transform .15s ease,opacity .15s ease
+}
+
+button:active{
+ transform:scale(.97)
 }
 </style>
 </head>
@@ -160,32 +593,53 @@ h1{text-align:center;color:#087557}
 
 <header>
 <h2>💚 Afrilova</h2>
-<div class="points">💰 <span id="points">-</span> points</div>
+
+<div class="points">
+💰 <span id="points">-</span> points
+</div>
 </header>
 
 <main>
 
 <div id="notConnecte" class="login-needed" style="display:none">
+
 <h3>🔒 Connexion requise</h3>
-<p>Connectez-vous pour accéder à votre messagerie.</p>
-<a href="profil.html">Aller à mon profil</a>
+
+<p>
+Connectez-vous pour accéder à votre messagerie.
+</p>
+
+<a href="profil.html">
+Aller à mon profil
+</a>
+
 </div>
 
 <div id="contenuMessagerie" style="display:none">
 
 <h1>💬 Messagerie</h1>
+
 <p class="intro">
 Échangez simplement avec les personnes avec qui vous avez accepté de discuter.
 </p>
 
 <div class="tabs">
-<button id="tabDemandes" class="active" onclick="afficherOnglet('demandes')">
+
+<button
+ id="tabDemandes"
+ class="active"
+ onclick="afficherOnglet('demandes')"
+>
 📩 Demandes
 </button>
 
-<button id="tabDiscussions" onclick="afficherOnglet('discussions')">
+<button
+ id="tabDiscussions"
+ onclick="afficherOnglet('discussions')"
+>
 💬 Mes discussions
 </button>
+
 </div>
 
 <section id="demandes">
@@ -200,7 +654,10 @@ h1{text-align:center;color:#087557}
 
 </main>
 
-<!-- CHAT -->
+<!-- ==========================================
+     CHAT
+========================================== -->
+
 <div id="chatArea">
 
 <div class="chat-head">
@@ -208,31 +665,44 @@ h1{text-align:center;color:#087557}
 <button onclick="fermerChat()">‹</button>
 
 <div class="chat-name">
+
 <strong id="nomChat">—</strong><br>
+
 <small id="lieuChat"></small>
+
 </div>
- 
-<button class="chat-ai-btn" onclick="ouvrirAide()">✨ Aide IA</button>
+
 <div class="chat-tools">
+
 <button onclick="ouvrirSignalement()">🚨</button>
+
 <button onclick="ouvrirBlocage()">🚫</button>
-</div>
 
 </div>
 
-<div class="messages" id="messages"></div>
+</div>
+
+<div
+ class="messages"
+ id="messages"
+></div>
+
+<!-- Petite bulle flottante d'aide -->
+<button
+ class="chat-ai-float"
+ onclick="ouvrirAide()"
+ aria-label="Aide à la discussion"
+ title="Aide à la discussion"
+>
+💡
+</button>
 
 <div class="chat-extra">
-
-<button class="chat-btn" onclick="ouvrirAide()">
-💡 Aide à la discussion
-</button>
 
 <div class="photos">
 📷 2 photos maximum par conversation
 </div>
 
-<!-- AJOUT : champ de fichier caché, il est déclenché par le bouton 📷 de la barre de saisie -->
 <input
  type="file"
  id="photos"
@@ -242,18 +712,22 @@ h1{text-align:center;color:#087557}
  onchange="selectionnerPhotos(event)"
 >
 
-<div class="preview" id="preview"></div>
+<div
+ class="preview"
+ id="preview"
+></div>
 
 </div>
 
 <div class="chat-input">
 
-<!-- AJOUT : bouton photo visible dans la barre de saisie -->
 <button
  class="attach"
  aria-label="Envoyer une photo"
  onclick="document.getElementById('photos').click()"
->📷</button>
+>
+📷
+</button>
 
 <input
  id="messageInput"
@@ -261,43 +735,76 @@ h1{text-align:center;color:#087557}
  onkeydown="if(event.key==='Enter')envoyerMessage()"
 >
 
-<button onclick="envoyerMessage()">➤</button>
+<button onclick="envoyerMessage()">
+➤
+</button>
 
 </div>
 
 </div>
 
-<!-- AIDE -->
-<div class="modal" id="aideModal">
+<!-- ==========================================
+     AIDE À LA DISCUSSION
+========================================== -->
+
+<div
+ class="modal"
+ id="aideModal"
+>
 
 <div class="modal-box">
+
+<div class="aide-top">
 
 <h2>💡 Aide à la discussion</h2>
 
 <p>
-Décris ce que tu veux répondre.
-L'aide coûtera <strong>1 point</strong> une fois disponible.
+Une petite aide pour trouver les bons mots.
 </p>
+
+</div>
+
+<div class="aide-body">
+
+<div class="aide-info">
+
+<div class="aide-icon">
+✨
+</div>
+
+<div>
+<strong>Besoin d'une idée ?</strong><br>
+L'aide utilise 1 point pour générer des suggestions.
+</div>
+
+</div>
+
+<label
+ class="aide-label"
+ for="questionAide"
+>
+Que veux-tu répondre ?
+</label>
 
 <textarea
  id="questionAide"
- placeholder="Ex. Elle aime voyager, que puis-je lui répondre ?"
+ placeholder="Ex. Elle aime voyager. Que puis-je lui répondre ?"
 ></textarea>
 
-<div class="modal-actions">
+<div class="aide-buttons">
 
 <button
- class="secondary"
+ class="aide-close"
  onclick="fermerModal('aideModal')"
 >
 Fermer
 </button>
 
 <button
- class="primary"
+ class="aide-send"
  onclick="demanderAide()"
 >
-Voir
+✨ Obtenir une idée
 </button>
 
 </div>
@@ -305,10 +812,19 @@ Voir
 <div id="helpResults"></div>
 
 </div>
+
 </div>
 
-<!-- SIGNALER -->
-<div class="modal" id="signalementModal">
+</div>
+
+<!-- ==========================================
+     SIGNALER
+========================================== -->
+
+<div
+ class="modal"
+ id="signalementModal"
+>
 
 <div class="modal-box">
 
@@ -316,19 +832,25 @@ Voir
 
 <select
  id="motif"
- style="width:100%;padding:12px;border-radius:10px"
+ style="width:100%;padding:11px;border-radius:10px"
 >
 
-<option value="faux_profil">Faux profil</option>
+<option value="faux_profil">
+Faux profil
+</option>
+
 <option value="harcelement">
 Harcèlement ou comportement déplacé
 </option>
+
 <option value="comportement_inapproprie">
 Contenu ou comportement inapproprié
 </option>
+
 <option value="profil_suspect">
 Profil ou comportement suspect
 </option>
+
 <option value="autre">
 Autre raison
 </option>
@@ -355,10 +877,17 @@ Signaler
 </div>
 
 </div>
+
 </div>
 
-<!-- BLOQUER -->
-<div class="modal" id="blocageModal">
+<!-- ==========================================
+     BLOQUER
+========================================== -->
+
+<div
+ class="modal"
+ id="blocageModal"
+>
 
 <div class="modal-box">
 
@@ -389,6 +918,7 @@ Bloquer
 </div>
 
 </div>
+
 </div>
 
 <nav class="bottom-nav">
@@ -401,7 +931,10 @@ Bloquer
 🔎<br>Explorer
 </a>
 
-<a href="messagerie.html" class="active">
+<a
+ href="messagerie.html"
+ class="active"
+>
 💬<br>Messagerie
 </a>
 
@@ -409,24 +942,32 @@ Bloquer
 👤<br>Profil
 </a>
 
- </nav>
- <!-- SDK APPWRITE -->
+</nav>
+
 <script src="https://cdn.jsdelivr.net/npm/appwrite@20.0.0"></script>
 
 <script>
+const APPWRITE_ENDPOINT =
+ "https://fra.cloud.appwrite.io/v1";
 
-/* ==========================================
-   CONFIGURATION
-========================================== */
+const APPWRITE_PROJECT_ID =
+ "6aac203e00209ccb3014";
 
-const APPWRITE_ENDPOINT = "https://fra.cloud.appwrite.io/v1";
-const APPWRITE_PROJECT_ID = "6aac203e00209ccb3014";
-const APPWRITE_DATABASE_ID = "6aac2a200000e6be5877";
-const APPWRITE_BUCKET_PHOTOS = "6aad2a754e0e095d6a9a";
-const ADMIN_TEAM_ID = "6aacffe749b1978e61bf";
-const FUNCTION_ID = "6aaf8d3fdb99e41f0aaf";
+const APPWRITE_DATABASE_ID =
+ "6aac2a200000e6be5877";
 
-const TABLE_PROFILS = "6aac2b35002a0debbb85";
+const APPWRITE_BUCKET_PHOTOS =
+ "6aad2a754e0e095d6a9a";
+
+const ADMIN_TEAM_ID =
+ "6aacffe749b1978e61bf";
+
+const FUNCTION_ID =
+ "6aaf8d3fdb99e41f0aaf";
+
+const TABLE_PROFILS =
+ "6aac2b35002a0debbb85";
+
 const TABLE_PAYS = "pays";
 const TABLE_VILLES = "villes";
 const TABLE_POINTS = "points";
@@ -436,22 +977,24 @@ const TABLE_MESSAGES = "messages";
 const TABLE_SIGNALEMENTS = "signalements";
 const TABLE_BLOCAGES = "blocages";
 
-
-/* ==========================================
-   APPWRITE
-========================================== */
-
-const client = new Appwrite.Client();
+const client =
+ new Appwrite.Client();
 
 client
-  .setEndpoint(APPWRITE_ENDPOINT)
-  .setProject(APPWRITE_PROJECT_ID);
+ .setEndpoint(APPWRITE_ENDPOINT)
+ .setProject(APPWRITE_PROJECT_ID);
 
-const account = new Appwrite.Account(client);
-const tablesDB = new Appwrite.TablesDB(client);
-const storage = new Appwrite.Storage(client);
-const functions = new Appwrite.Functions(client);
+const account =
+ new Appwrite.Account(client);
 
+const tablesDB =
+ new Appwrite.TablesDB(client);
+
+const storage =
+ new Appwrite.Storage(client);
+
+const functions =
+ new Appwrite.Functions(client);
 
 let utilisateurConnecte = null;
 let paysDisponibles = [];
@@ -462,189 +1005,192 @@ let conversationActuelle = null;
 let peerActuel = null;
 let messagesActuels = [];
 
-
-/* ==========================================
-   PERMISSIONS
-========================================== */
-
-function permLireUtilisateur(id) {
-  return 'read("user:' + id + '")';
+function permLireUtilisateur(id){
+ return 'read("user:'+id+'")';
 }
 
-function permModifierUtilisateur(id) {
-  return 'update("user:' + id + '")';
+function permModifierUtilisateur(id){
+ return 'update("user:'+id+'")';
 }
 
-function permLireEquipe(id) {
-  return 'read("team:' + id + '")';
+function permLireEquipe(id){
+ return 'read("team:'+id+'")';
 }
 
+async function appelerFonction(donnees){
 
-/* ==========================================
-   APPEL FONCTION BACKEND
-========================================== */
-
-async function appelerFonction(donnees) {
-
-  const execution = await functions.createExecution({
-    functionId: FUNCTION_ID,
-    body: JSON.stringify(donnees),
-    method: "POST"
+ const execution =
+  await functions.createExecution({
+   functionId:FUNCTION_ID,
+   body:JSON.stringify(donnees),
+   method:"POST"
   });
 
-  let resultat;
+ let resultat;
 
-  try {
-    resultat = JSON.parse(execution.responseBody);
-  } catch (e) {
-    throw new Error("Réponse invalide du serveur.");
-  }
+ try{
+  resultat =
+   JSON.parse(execution.responseBody);
+ }catch(e){
+  throw new Error(
+   "Réponse invalide du serveur."
+  );
+ }
 
-  if (!resultat.ok) {
-    throw new Error(
-      resultat.message || "Une erreur est survenue."
-    );
-  }
+ if(!resultat.ok){
+  throw new Error(
+   resultat.message ||
+   "Une erreur est survenue."
+  );
+ }
 
-  return resultat;
+ return resultat;
 }
 
+async function chargerPaysEtVilles(){
 
-/* ==========================================
-   PAYS / VILLES / PROFILS
-========================================== */
+ try{
 
-async function chargerPaysEtVilles() {
+  const reponsePays =
+   await tablesDB.listRows({
+    databaseId:APPWRITE_DATABASE_ID,
+    tableId:TABLE_PAYS,
+    queries:[
+     Appwrite.Query.limit(50)
+    ]
+   });
 
-  try {
+  paysDisponibles =
+   reponsePays.rows;
 
-    const reponsePays = await tablesDB.listRows({
-      databaseId: APPWRITE_DATABASE_ID,
-      tableId: TABLE_PAYS,
-      queries: [
-        Appwrite.Query.limit(50)
-      ]
-    });
+  const reponseVilles =
+   await tablesDB.listRows({
+    databaseId:APPWRITE_DATABASE_ID,
+    tableId:TABLE_VILLES,
+    queries:[
+     Appwrite.Query.limit(200)
+    ]
+   });
 
-    paysDisponibles = reponsePays.rows;
+  villesDisponibles =
+   reponseVilles.rows;
 
+ }catch(erreur){
 
-    const reponseVilles = await tablesDB.listRows({
-      databaseId: APPWRITE_DATABASE_ID,
-      tableId: TABLE_VILLES,
-      queries: [
-        Appwrite.Query.limit(200)
-      ]
-    });
-
-    villesDisponibles = reponseVilles.rows;
-
-  } catch (erreur) {
-
-    console.error(
-      "Erreur chargement pays/villes :",
-      erreur
-    );
-
-  }
-
-}
-
-
-function nomPays(paysId) {
-
-  const p = paysDisponibles.find(
-    x => x.$id === paysId
+  console.error(
+   "Erreur chargement pays/villes :",
+   erreur
   );
 
-  return p ? p.nom : "";
+ }
+
 }
 
+function nomPays(paysId){
 
-function nomVille(villeId) {
-
-  const v = villesDisponibles.find(
-    x => x.$id === villeId
+ const p =
+  paysDisponibles.find(
+   x => x.$id === paysId
   );
 
-  return v ? v.nom : "";
+ return p ? p.nom : "";
 }
 
+function nomVille(villeId){
 
-async function chargerProfilParUserId(userId) {
+ const v =
+  villesDisponibles.find(
+   x => x.$id === villeId
+  );
 
-  if (profilsCache[userId]) {
-    return profilsCache[userId];
-  }
+ return v ? v.nom : "";
+}
 
-  try {
+async function chargerProfilParUserId(userId){
 
-    const reponse = await tablesDB.listRows({
-      databaseId: APPWRITE_DATABASE_ID,
-      tableId: TABLE_PROFILS,
-      queries: [
-        Appwrite.Query.equal("userId", userId),
-        Appwrite.Query.limit(1)
-      ]
-    });
+ if(profilsCache[userId]){
+  return profilsCache[userId];
+ }
 
-    const profil =
-      reponse.total > 0
-        ? reponse.rows[0]
-        : null;
+ try{
 
-    profilsCache[userId] = profil;
+  const reponse =
+   await tablesDB.listRows({
+    databaseId:APPWRITE_DATABASE_ID,
+    tableId:TABLE_PROFILS,
+    queries:[
+     Appwrite.Query.equal(
+      "userId",
+      userId
+     ),
+     Appwrite.Query.limit(1)
+    ]
+   });
 
-    return profil;
+  const profil =
+   reponse.total > 0
+    ? reponse.rows[0]
+    : null;
 
-  } catch (erreur) {
+  profilsCache[userId] =
+   profil;
 
-    console.error(
-      "Erreur chargement profil :",
-      erreur
-    );
+  return profil;
 
-    return null;
-  }
+ }catch(erreur){
+
+  console.error(
+   "Erreur chargement profil :",
+   erreur
+  );
+
+  return null;
+ }
 
 }
 
+function urlPhoto(photoId){
 
-function urlPhoto(photoId) {
+ if(!photoId){
 
-  if (!photoId) {
-    return "https://via.placeholder.com/200/E0F7EE/087557?text=Afrilova";
-  }
+  return "https://via.placeholder.com/200/E8F8F2/087557?text=Afrilova";
 
-  return storage.getFileView({
-    bucketId: APPWRITE_BUCKET_PHOTOS,
-    fileId: photoId
-  });
+ }
+
+ return storage.getFileView({
+  bucketId:APPWRITE_BUCKET_PHOTOS,
+  fileId:photoId
+ });
 
 }
+ async function chargerEtatConnexion(){
 
+  try{
 
-/* ==========================================
-   ÉTAT DE CONNEXION
-========================================== */
+    utilisateurConnecte =
+      await account.get();
 
-async function chargerEtatConnexion() {
+    document.getElementById(
+      "notConnecte"
+    ).style.display = "none";
 
-  try {
+    document.getElementById(
+      "contenuMessagerie"
+    ).style.display = "block";
 
-    utilisateurConnecte = await account.get();
+    try{
 
-    document.getElementById("notConnecte").style.display =
-      "none";
+      await appelerFonction({
+        action:"expirerDemandes"
+      });
 
-    document.getElementById("contenuMessagerie").style.display =
-      "block";
+    }catch(e){
 
-    // AJOUT : expiration des demandes sans réponse après 7 jours (point recrédité)
-    try {
-      await appelerFonction({ action: "expirerDemandes" });
-    } catch (e) {
-      console.error("Erreur expiration demandes :", e);
+      console.error(
+        "Erreur expiration demandes :",
+        e
+      );
+
     }
 
     await chargerSoldePoints();
@@ -652,114 +1198,119 @@ async function chargerEtatConnexion() {
     await chargerDemandes();
     await chargerDiscussions();
 
-  } catch (erreur) {
+  }catch(erreur){
 
     console.error(
       "Erreur état connexion :",
       erreur
     );
 
-    document.getElementById("notConnecte").style.display =
-      "block";
+    document.getElementById(
+      "notConnecte"
+    ).style.display = "block";
 
-    document.getElementById("contenuMessagerie").style.display =
-      "none";
+    document.getElementById(
+      "contenuMessagerie"
+    ).style.display = "none";
 
   }
 
 }
 
 
-async function chargerSoldePoints() {
+async function chargerSoldePoints(){
 
-  try {
+  try{
 
-    const reponse = await tablesDB.listRows({
-      databaseId: APPWRITE_DATABASE_ID,
-      tableId: TABLE_POINTS,
-      queries: [
-        Appwrite.Query.equal(
-          "userId",
-          utilisateurConnecte.$id
-        ),
-        Appwrite.Query.limit(1)
-      ]
-    });
+    const reponse =
+      await tablesDB.listRows({
+        databaseId:APPWRITE_DATABASE_ID,
+        tableId:TABLE_POINTS,
+        queries:[
+          Appwrite.Query.equal(
+            "userId",
+            utilisateurConnecte.$id
+          ),
+          Appwrite.Query.limit(1)
+        ]
+      });
 
     const solde =
       reponse.total > 0
         ? reponse.rows[0].solde
         : 0;
 
-    document.getElementById("points").textContent =
-      solde || 0;
+    document.getElementById(
+      "points"
+    ).textContent = solde || 0;
 
-  } catch (erreur) {
+  }catch(erreur){
 
-    document.getElementById("points").textContent = 0;
+    document.getElementById(
+      "points"
+    ).textContent = 0;
 
   }
 
 }
 
 
-/* ==========================================
-   ONGLETS
-========================================== */
+function afficherOnglet(onglet){
 
-function afficherOnglet(onglet) {
-
-  document.getElementById("demandes").style.display =
+  document.getElementById(
+    "demandes"
+  ).style.display =
     onglet === "demandes"
       ? "block"
       : "none";
 
-  document.getElementById("discussions").style.display =
+  document.getElementById(
+    "discussions"
+  ).style.display =
     onglet === "discussions"
       ? "block"
       : "none";
 
-  document.getElementById("tabDemandes")
-    .classList.toggle(
-      "active",
-      onglet === "demandes"
-    );
+  document.getElementById(
+    "tabDemandes"
+  ).classList.toggle(
+    "active",
+    onglet === "demandes"
+  );
 
-  document.getElementById("tabDiscussions")
-    .classList.toggle(
-      "active",
-      onglet === "discussions"
-    );
+  document.getElementById(
+    "tabDiscussions"
+  ).classList.toggle(
+    "active",
+    onglet === "discussions"
+  );
 
 }
 
 
-/* ==========================================
-   BLOCAGES ÉMIS
-========================================== */
+async function chargerBlocagesEmis(){
 
-async function chargerBlocagesEmis() {
+  try{
 
-  try {
-
-    const reponse = await tablesDB.listRows({
-      databaseId: APPWRITE_DATABASE_ID,
-      tableId: TABLE_BLOCAGES,
-      queries: [
-        Appwrite.Query.equal(
-          "bloqueurId",
-          utilisateurConnecte.$id
-        ),
-        Appwrite.Query.limit(100)
-      ]
-    });
+    const reponse =
+      await tablesDB.listRows({
+        databaseId:APPWRITE_DATABASE_ID,
+        tableId:TABLE_BLOCAGES,
+        queries:[
+          Appwrite.Query.equal(
+            "bloqueurId",
+            utilisateurConnecte.$id
+          ),
+          Appwrite.Query.limit(100)
+        ]
+      });
 
     blocagesEmis =
       reponse.rows.map(
         b => b.bloqueId
       );
 
-  } catch (erreur) {
+  }catch(erreur){
 
     blocagesEmis = [];
 
@@ -768,36 +1319,32 @@ async function chargerBlocagesEmis() {
 }
 
 
-/* ==========================================
-   DEMANDES
-   VERSION DE TEST
-========================================== */
-
-async function chargerDemandes() {
+async function chargerDemandes(){
 
   const section =
-    document.getElementById("demandes");
+    document.getElementById(
+      "demandes"
+    );
 
-  try {
+  try{
 
     console.log(
       "ID utilisateur connecté :",
       utilisateurConnecte.$id
     );
 
-
-    const reponse = await tablesDB.listRows({
-      databaseId: APPWRITE_DATABASE_ID,
-      tableId: TABLE_DEMANDES,
-      queries: [
-        Appwrite.Query.equal(
-          "destinataireId",
-          utilisateurConnecte.$id
-        ),
-        Appwrite.Query.limit(50)
-      ]
-    });
-
+    const reponse =
+      await tablesDB.listRows({
+        databaseId:APPWRITE_DATABASE_ID,
+        tableId:TABLE_DEMANDES,
+        queries:[
+          Appwrite.Query.equal(
+            "destinataireId",
+            utilisateurConnecte.$id
+          ),
+          Appwrite.Query.limit(50)
+        ]
+      });
 
     console.log(
       "Demandes trouvées :",
@@ -809,22 +1356,24 @@ async function chargerDemandes() {
       reponse.rows
     );
 
-
     const demandesEnAttente =
-      reponse.rows.filter(function(demande) {
+      reponse.rows.filter(
+        function(demande){
 
-        return demande.statut === "en_attente";
+          return demande.statut ===
+            "en_attente";
 
-      });
-
+        }
+      );
 
     console.log(
       "Demandes en attente :",
       demandesEnAttente.length
     );
 
-
-    if (demandesEnAttente.length === 0) {
+    if(
+      demandesEnAttente.length === 0
+    ){
 
       section.innerHTML = `
         <div class="empty">
@@ -833,31 +1382,29 @@ async function chargerDemandes() {
       `;
 
       return;
-    }
 
+    }
 
     let html = "";
 
-
-    for (const demande of demandesEnAttente) {
+    for(
+      const demande of demandesEnAttente
+    ){
 
       const profil =
         await chargerProfilParUserId(
           demande.expediteurId
         );
 
-
       const nom =
         profil
           ? profil.nom
           : "Utilisateur";
 
-
       const age =
         profil && profil.age
           ? ", " + profil.age + " ans"
           : "";
-
 
       const lieu =
         profil
@@ -866,12 +1413,12 @@ async function chargerDemandes() {
             + nomPays(profil.paysId)
           : "";
 
-
       const photo =
         profil
-          ? urlPhoto(profil.photoPrincipale)
+          ? urlPhoto(
+              profil.photoPrincipale
+            )
           : urlPhoto(null);
-
 
       html += `
         <div
@@ -897,7 +1444,6 @@ async function chargerDemandes() {
 
           </div>
 
-
           <div class="actions">
 
             <button
@@ -910,7 +1456,6 @@ async function chargerDemandes() {
             >
               ✓ Accepter
             </button>
-
 
             <button
               class="refuse"
@@ -929,11 +1474,9 @@ async function chargerDemandes() {
 
     }
 
-
     section.innerHTML = html;
 
-
-  } catch (erreur) {
+  }catch(erreur){
 
     console.error(
       "Erreur chargement demandes :",
@@ -951,15 +1494,11 @@ async function chargerDemandes() {
 }
 
 
-/* ==========================================
-   ACCEPTATION DEMANDE
-========================================== */
-
 async function accepterDemande(
   demandeId,
   expediteurId,
   boutonElement
-) {
+){
 
   const carte =
     boutonElement.closest(".card");
@@ -970,37 +1509,32 @@ async function accepterDemande(
       b => b.disabled = true
     );
 
-
-  try {
+  try{
 
     await tablesDB.updateRow({
-      databaseId: APPWRITE_DATABASE_ID,
-      tableId: TABLE_DEMANDES,
-      rowId: demandeId,
-      data: {
-        statut: "accepte",
+      databaseId:APPWRITE_DATABASE_ID,
+      tableId:TABLE_DEMANDES,
+      rowId:demandeId,
+      data:{
+        statut:"accepte",
         dateReponse:
           new Date().toISOString()
       }
     });
 
-
     await creerOuRecupererConversation(
       expediteurId
     );
-
 
     carte.remove();
 
     await chargerDiscussions();
 
-
     alert(
       "Demande acceptée. La conversation est disponible dans « Mes discussions »."
     );
 
-
-  } catch (erreur) {
+  }catch(erreur){
 
     console.error(
       "Erreur acceptation demande :",
@@ -1023,11 +1557,10 @@ async function accepterDemande(
 }
 
 
-/* MODIFIÉ : le refus passe par le serveur, qui recrédite le point à l'expéditeur */
 async function refuserDemande(
   demandeId,
   boutonElement
-) {
+){
 
   const carte =
     boutonElement.closest(".card");
@@ -1038,19 +1571,16 @@ async function refuserDemande(
       b => b.disabled = true
     );
 
-
-  try {
+  try{
 
     await appelerFonction({
-      action: "refuserDemande",
-      demandeId: demandeId
+      action:"refuserDemande",
+      demandeId:demandeId
     });
-
 
     carte.remove();
 
-
-  } catch (erreur) {
+  }catch(erreur){
 
     console.error(
       "Erreur refus demande :",
@@ -1058,7 +1588,7 @@ async function refuserDemande(
     );
 
     alert(
-      "Impossible de refuser cette demande pour le moment."
+      "Impossible de refuser la demande pour le moment."
     );
 
     carte
@@ -1075,12 +1605,15 @@ async function refuserDemande(
 /* ==========================================
    CONVERSATIONS
 ========================================== */
-async function creerOuRecupererConversation(peerId) {
+
+async function creerOuRecupererConversation(
+  peerId
+){
 
   const resultat =
     await appelerFonction({
-      action: "creerConversation",
-      peerId: peerId
+      action:"creerConversation",
+      peerId:peerId
     });
 
   return resultat.conversation;
@@ -1092,21 +1625,23 @@ async function creerOuRecupererConversation(peerId) {
    CHARGEMENT DES DISCUSSIONS
 ========================================== */
 
-async function chargerDiscussions() {
+async function chargerDiscussions(){
 
   const section =
-    document.getElementById("discussions");
+    document.getElementById(
+      "discussions"
+    );
 
   const moi =
     utilisateurConnecte.$id;
 
-  try {
+  try{
 
     const q1 =
       await tablesDB.listRows({
-        databaseId: APPWRITE_DATABASE_ID,
-        tableId: TABLE_CONVERSATIONS,
-        queries: [
+        databaseId:APPWRITE_DATABASE_ID,
+        tableId:TABLE_CONVERSATIONS,
+        queries:[
           Appwrite.Query.equal(
             "utilisateur1Id",
             moi
@@ -1117,9 +1652,9 @@ async function chargerDiscussions() {
 
     const q2 =
       await tablesDB.listRows({
-        databaseId: APPWRITE_DATABASE_ID,
-        tableId: TABLE_CONVERSATIONS,
-        queries: [
+        databaseId:APPWRITE_DATABASE_ID,
+        tableId:TABLE_CONVERSATIONS,
+        queries:[
           Appwrite.Query.equal(
             "utilisateur2Id",
             moi
@@ -1129,21 +1664,29 @@ async function chargerDiscussions() {
       });
 
     let conversations =
-      q1.rows.concat(q2.rows);
+      q1.rows.concat(
+        q2.rows
+      );
 
     conversations =
-      conversations.filter(function(conv) {
+      conversations.filter(
+        function(conv){
 
-        const peerId =
-          conv.utilisateur1Id === moi
-            ? conv.utilisateur2Id
-            : conv.utilisateur1Id;
+          const peerId =
+            conv.utilisateur1Id === moi
+              ? conv.utilisateur2Id
+              : conv.utilisateur1Id;
 
-        return !blocagesEmis.includes(peerId);
+          return !blocagesEmis.includes(
+            peerId
+          );
 
-      });
+        }
+      );
 
-    if (conversations.length === 0) {
+    if(
+      conversations.length === 0
+    ){
 
       section.innerHTML = `
         <div class="empty">
@@ -1152,11 +1695,14 @@ async function chargerDiscussions() {
       `;
 
       return;
+
     }
 
     let html = "";
 
-    for (const conv of conversations) {
+    for(
+      const conv of conversations
+    ){
 
       const peerId =
         conv.utilisateur1Id === moi
@@ -1164,7 +1710,9 @@ async function chargerDiscussions() {
           : conv.utilisateur1Id;
 
       const profil =
-        await chargerProfilParUserId(peerId);
+        await chargerProfilParUserId(
+          peerId
+        );
 
       const nom =
         profil
@@ -1185,7 +1733,9 @@ async function chargerDiscussions() {
 
       const photo =
         profil
-          ? urlPhoto(profil.photoPrincipale)
+          ? urlPhoto(
+              profil.photoPrincipale
+            )
           : urlPhoto(null);
 
       html += `
@@ -1226,7 +1776,7 @@ async function chargerDiscussions() {
 
     section.innerHTML = html;
 
-  } catch (erreur) {
+  }catch(erreur){
 
     console.error(
       "Erreur chargement discussions :",
@@ -1242,14 +1792,16 @@ async function chargerDiscussions() {
   }
 
 }
+
+
 /* ==========================================
-   CHAT
+   OUVERTURE DE CONVERSATION
 ========================================== */
 
 async function ouvrirConversation(
   conversationId,
   peerId
-) {
+){
 
   conversationActuelle =
     conversationId;
@@ -1258,71 +1810,78 @@ async function ouvrirConversation(
     peerId;
 
   const profil =
-    await chargerProfilParUserId(peerId);
+    await chargerProfilParUserId(
+      peerId
+    );
 
-  document.getElementById("nomChat").textContent =
+  document.getElementById(
+    "nomChat"
+  ).textContent =
     profil
       ? profil.nom
       : "Utilisateur";
 
-  document.getElementById("lieuChat").textContent =
+  document.getElementById(
+    "lieuChat"
+  ).textContent =
     profil
       ? nomVille(profil.villeId)
+        + ", "
+        + nomPays(profil.paysId)
       : "";
 
-  document.getElementById("preview").innerHTML =
-    "";
-
-  document.getElementById("photos").value =
-    "";
-
-  document.getElementById("chatArea").style.display =
-    "block";
+  document.getElementById(
+    "chatArea"
+  ).style.display = "block";
 
   await chargerMessages();
 
 }
 
 
-function fermerChat() {
+function fermerChat(){
 
-  document.getElementById("chatArea").style.display =
-    "none";
+  document.getElementById(
+    "chatArea"
+  ).style.display = "none";
 
-  conversationActuelle = null;
-  peerActuel = null;
-  messagesActuels = [];
+  conversationActuelle =
+    null;
+
+  peerActuel =
+    null;
+
+  messagesActuels =
+    [];
 
 }
 
 
-async function chargerMessages() {
+/* ==========================================
+   MESSAGES
+========================================== */
 
-  const zone =
-    document.getElementById("messages");
+async function chargerMessages(){
 
-  zone.innerHTML =
-    `<div class="empty">Chargement...</div>`;
+  if(!conversationActuelle){
+    return;
+  }
 
-  try {
+  try{
 
     const reponse =
       await tablesDB.listRows({
-        databaseId: APPWRITE_DATABASE_ID,
-        tableId: TABLE_MESSAGES,
-        queries: [
-
+        databaseId:APPWRITE_DATABASE_ID,
+        tableId:TABLE_MESSAGES,
+        queries:[
           Appwrite.Query.equal(
             "conversationId",
             conversationActuelle
           ),
-
           Appwrite.Query.orderAsc(
             "dateEnvoi"
           ),
-
           Appwrite.Query.limit(200)
-
         ]
       });
 
@@ -1331,78 +1890,98 @@ async function chargerMessages() {
 
     afficherMessages();
 
-  } catch (erreur) {
+  }catch(erreur){
 
     console.error(
       "Erreur chargement messages :",
       erreur
     );
 
-    zone.innerHTML =
-      `<div class="empty">
+    document.getElementById(
+      "messages"
+    ).innerHTML = `
+      <div class="empty">
         Impossible de charger les messages.
-      </div>`;
+      </div>
+    `;
 
   }
 
 }
 
 
-function afficherMessages() {
+function afficherMessages(){
 
   const zone =
-    document.getElementById("messages");
+    document.getElementById(
+      "messages"
+    );
 
-  const moi =
-    utilisateurConnecte.$id;
+  if(
+    messagesActuels.length === 0
+  ){
 
-  if (messagesActuels.length === 0) {
-
-    zone.innerHTML =
-      `<div class="empty">
-        Dites bonjour 👋
-      </div>`;
+    zone.innerHTML = `
+      <div class="empty">
+        Aucun message pour le moment.
+        Commencez la discussion 💚
+      </div>
+    `;
 
     return;
 
   }
 
+  let html = "";
+
+  for(
+    const message of messagesActuels
+  ){
+
+    const estMoi =
+      message.expediteurId ===
+      utilisateurConnecte.$id;
+
+    const classe =
+      estMoi
+        ? "sent"
+        : "received";
+
+    html += `
+      <div class="msg ${classe}">
+    `;
+
+    if(message.photoId){
+
+      html += `
+        <img
+          src="${urlPhoto(message.photoId)}"
+          alt="Photo envoyée"
+        >
+      `;
+
+    }
+
+    if(message.contenu){
+
+      html += `
+        <div>
+          ${echapperHTML(
+            message.contenu
+          )}
+        </div>
+      `;
+
+    }
+
+    html += `
+      </div>
+    `;
+
+  }
+
   zone.innerHTML =
-    messagesActuels
-      .map(function(m) {
-
-        const classe =
-          m.expediteurId === moi
-            ? "sent"
-            : "received";
-
-        let contenuHTML = "";
-
-        if (m.photoId) {
-
-          contenuHTML +=
-            `<img
-              src="${urlPhoto(m.photoId)}"
-              alt="Photo"
-            >`;
-
-        }
-
-        if (m.contenu) {
-
-          contenuHTML +=
-            `<div>${m.contenu}</div>`;
-
-        }
-
-        return `
-          <div class="msg ${classe}">
-            ${contenuHTML}
-          </div>
-        `;
-
-      })
-      .join("");
+    html;
 
   zone.scrollTop =
     zone.scrollHeight;
@@ -1411,46 +1990,46 @@ function afficherMessages() {
 
 
 /* ==========================================
-   ENVOYER MESSAGE
+   ENVOI MESSAGE
 ========================================== */
 
-async function envoyerMessage() {
+async function envoyerMessage(){
 
   const input =
-    document.getElementById("messageInput");
+    document.getElementById(
+      "messageInput"
+    );
 
-  const texte =
+  const contenu =
     input.value.trim();
 
-  if (
-    !texte ||
-    !conversationActuelle
-  ) {
+  if(
+    !contenu ||
+    !conversationActuelle ||
+    !peerActuel
+  ){
     return;
   }
 
-  input.value = "";
+  input.disabled = true;
 
-  try {
+  try{
 
     await appelerFonction({
-
-      action: "envoyerMessage",
-
+      action:"envoyerMessage",
       conversationId:
         conversationActuelle,
-
       peerId:
         peerActuel,
-
       contenu:
-        texte
-
+        contenu
     });
+
+    input.value = "";
 
     await chargerMessages();
 
-  } catch (erreur) {
+  }catch(erreur){
 
     console.error(
       "Erreur envoi message :",
@@ -1458,9 +2037,14 @@ async function envoyerMessage() {
     );
 
     alert(
-      "Le message n'a pas pu être envoyé : "
+      "Impossible d'envoyer le message : "
       + erreur.message
     );
+
+  }finally{
+
+    input.disabled = false;
+    input.focus();
 
   }
 
@@ -1468,35 +2052,29 @@ async function envoyerMessage() {
 
 
 /* ==========================================
-   PHOTOS DANS LE CHAT
+   COMPRESSION PHOTO
 ========================================== */
 
 function compresserImage(
   fichier,
   tailleMaxOctets,
   largeurMax
-) {
-
-  tailleMaxOctets =
-    tailleMaxOctets || 500000;
-
-  largeurMax =
-    largeurMax || 1024;
+){
 
   return new Promise(
-    function(resolve, reject) {
+    (resolve,reject)=>{
 
       const lecteur =
         new FileReader();
 
       lecteur.onload =
-        function(e) {
+        function(){
 
           const image =
             new Image();
 
           image.onload =
-            function() {
+            function(){
 
               let largeur =
                 image.width;
@@ -1504,16 +2082,14 @@ function compresserImage(
               let hauteur =
                 image.height;
 
-              if (
-                largeur >
-                largeurMax
-              ) {
+              if(
+                largeur > largeurMax
+              ){
 
                 hauteur =
-                  Math.round(
-                    (hauteur * largeurMax)
-                    / largeur
-                  );
+                  hauteur *
+                  largeurMax /
+                  largeur;
 
                 largeur =
                   largeurMax;
@@ -1532,7 +2108,9 @@ function compresserImage(
                 hauteur;
 
               const contexte =
-                canvas.getContext("2d");
+                canvas.getContext(
+                  "2d"
+                );
 
               contexte.drawImage(
                 image,
@@ -1542,10 +2120,48 @@ function compresserImage(
                 hauteur
               );
 
-              essayerQualite(
-                canvas,
-                0.85
-              );
+              let qualite =
+                0.85;
+
+              function convertir(){
+
+                canvas.toBlob(
+                  function(blob){
+
+                    if(!blob){
+
+                      reject(
+                        new Error(
+                          "Compression impossible."
+                        )
+                      );
+
+                      return;
+
+                    }
+
+                    if(
+                      blob.size <=
+                      tailleMaxOctets ||
+                      qualite <= 0.35
+                    ){
+
+                      resolve(blob);
+                      return;
+
+                    }
+
+                    qualite -= 0.08;
+                    convertir();
+
+                  },
+                  "image/jpeg",
+                  qualite
+                );
+
+              }
+
+              convertir();
 
             };
 
@@ -1553,7 +2169,7 @@ function compresserImage(
             reject;
 
           image.src =
-            e.target.result;
+            lecteur.result;
 
         };
 
@@ -1564,321 +2180,218 @@ function compresserImage(
         fichier
       );
 
-      function essayerQualite(
-        canvas,
-        qualite
-      ) {
-
-        canvas.toBlob(
-          function(blob) {
-
-            if (!blob) {
-
-              reject(
-                new Error(
-                  "Compression impossible."
-                )
-              );
-
-              return;
-
-            }
-
-            if (
-              blob.size <=
-              tailleMaxOctets
-              ||
-              qualite <= 0.4
-            ) {
-
-              resolve(
-                new File(
-                  [blob],
-                  "photo.jpg",
-                  {
-                    type:
-                      "image/jpeg"
-                  }
-                )
-              );
-
-            } else {
-
-              essayerQualite(
-                canvas,
-                qualite - 0.1
-              );
-
-            }
-
-          },
-          "image/jpeg",
-          qualite
-        );
-
-      }
-
     }
   );
 
 }
 
 
-async function selectionnerPhotos(event) {
+/* ==========================================
+   SÉLECTION PHOTOS
+========================================== */
+
+async function selectionnerPhotos(
+  event
+){
 
   const fichiers =
-    [...event.target.files];
-
-  if (
-    fichiers.length === 0
-  ) {
-    return;
-  }
-
-  const photosExistantes =
-    messagesActuels.filter(
-      m => m.photoId
-    ).length;
-
-  const placesRestantes =
-    2 - photosExistantes;
-
-  if (
-    placesRestantes <= 0
-  ) {
-
-    alert(
-      "2 photos maximum par conversation. Aucune place disponible."
+    Array.from(
+      event.target.files
     );
-
-    event.target.value =
-      "";
-
-    return;
-
-  }
-
-  const fichiersAEnvoyer =
-    fichiers.slice(
-      0,
-      placesRestantes
-    );
-
-  if (
-    fichiers.length >
-    placesRestantes
-  ) {
-
-    alert(
-      "2 photos maximum par conversation. Seules les "
-      + placesRestantes
-      + " premières seront envoyées."
-    );
-
-  }
 
   const preview =
     document.getElementById(
       "preview"
     );
 
-  preview.innerHTML =
-    "";
+  preview.innerHTML = "";
 
-  for (
-    const fichier
-    of fichiersAEnvoyer
-  ) {
+  if(
+    !conversationActuelle ||
+    !peerActuel
+  ){
+    return;
+  }
 
-    const typesAutorises = [
-      "image/jpeg",
-      "image/png",
-      "image/webp"
-    ];
+  const selection =
+    fichiers.slice(0,2);
 
-    if (
-      !typesAutorises.includes(
-        fichier.type
-      )
-    ) {
+  try{
 
-      alert(
-        "Format non autorisé. Utilisez JPG, PNG ou WEBP."
-      );
+    for(
+      const fichier of selection
+    ){
 
-      continue;
+      const blob =
+        await compresserImage(
+          fichier,
+          500 * 1024,
+          1024
+        );
 
-    }
+      const fichierFinal =
+        new File(
+          [blob],
+          "photo.jpg",
+          {
+            type:"image/jpeg"
+          }
+        );
 
-    try {
-
-      let fichierFinal =
-        fichier;
-
-      if (
-        fichier.size >
-        500000
-      ) {
-
-        fichierFinal =
-          await compresserImage(
-            fichier
-          );
-
-      }
-
-      const apercu =
+      const imagePreview =
         document.createElement(
           "img"
         );
 
-      apercu.src =
+      imagePreview.src =
         URL.createObjectURL(
           fichierFinal
         );
 
       preview.appendChild(
-        apercu
+        imagePreview
       );
 
-      const fichierUploade =
+      const fichierStocke =
         await storage.createFile({
-
           bucketId:
             APPWRITE_BUCKET_PHOTOS,
-
           fileId:
             Appwrite.ID.unique(),
-
           file:
             fichierFinal,
-
-          permissions: [
-            permLireUtilisateur(
+          permissions:[
+            Appwrite.Permission.read(
+              "user:" +
               utilisateurConnecte.$id
             )
           ]
-
         });
 
       await appelerFonction({
-
-        action:
-          "envoyerMessage",
-
+        action:"envoyerMessage",
         conversationId:
           conversationActuelle,
-
         peerId:
           peerActuel,
-
+        contenu:"",
         photoId:
-          fichierUploade.$id
-
+          fichierStocke.$id
       });
-
-    } catch (erreur) {
-
-      console.error(
-        "Erreur envoi photo :",
-        erreur
-      );
-
-      alert(
-        "Une photo n'a pas pu être envoyée : "
-        + erreur.message
-      );
 
     }
 
+    event.target.value = "";
+
+    await chargerMessages();
+
+  }catch(erreur){
+
+    console.error(
+      "Erreur envoi photo :",
+      erreur
+    );
+
+    alert(
+      "Impossible d'envoyer la photo pour le moment."
+    );
+
   }
 
-  event.target.value =
-    "";
-
-  await chargerMessages();
-
 }
+
 
 /* ==========================================
-   AIDE À LA DISCUSSION — GEMINI
+   AIDE À LA DISCUSSION
 ========================================== */
 
-function ouvrirAide() {
+function ouvrirAide(){
 
-  document.getElementById("aideModal").style.display = "flex";
+  document.getElementById(
+    "aideModal"
+  ).style.display = "flex";
 
-  document.getElementById("helpResults").innerHTML = "";
+  document.getElementById(
+    "helpResults"
+  ).innerHTML = "";
 
-  document.getElementById("questionAide").value = "";
+  document.getElementById(
+    "questionAide"
+  ).value = "";
 
-  document.getElementById("questionAide").focus();
+  setTimeout(
+    function(){
+
+      document.getElementById(
+        "questionAide"
+      ).focus();
+
+    },
+    150
+  );
 
 }
 
 
-async function demanderAide() {
+async function demanderAide(){
 
   const question =
-    document.getElementById("questionAide")
-      .value
-      .trim();
+    document.getElementById(
+      "questionAide"
+    ).value.trim();
 
-  const zone =
-    document.getElementById("helpResults");
+  if(!question){
 
-  if (!question) {
-
-    alert("Écris d'abord ta question.");
-
-    return;
-  }
-
-
-  /* Vérification de la conversation */
-
-  if (!conversationActuelle) {
-
-    zone.innerHTML = `
-      <div class="suggestion">
-        ❌ Ouvre d'abord une conversation.
-      </div>
-    `;
+    alert(
+      "Décris d'abord ce que tu veux répondre."
+    );
 
     return;
+
   }
 
+  if(!conversationActuelle){
 
-  /* Affichage du chargement */
+    alert(
+      "Aucune conversation ouverte."
+    );
 
-  zone.innerHTML = `
+    return;
+
+  }
+
+  const resultats =
+    document.getElementById(
+      "helpResults"
+    );
+
+  resultats.innerHTML = `
     <div class="suggestion">
       🤖 Gemini prépare des suggestions...
       <br>
-      <small>Cette opération coûte 1 point.</small>
+      <small>
+        Cette opération coûte 1 point.
+      </small>
     </div>
   `;
 
-
-  try {
+  try{
 
     const resultat =
       await appelerFonction({
-
-        action: "aideDiscussion",
-
-        question: question,
-
+        action:"aideDiscussion",
+        question:
+          question,
         conversationId:
           conversationActuelle
-
       });
 
-
-    if (
-      !resultat ||
-      !Array.isArray(resultat.suggestions)
-    ) {
+    if(
+      !resultat.suggestions ||
+      !Array.isArray(
+        resultat.suggestions
+      )
+    ){
 
       throw new Error(
         "Aucune suggestion reçue."
@@ -1886,100 +2399,55 @@ async function demanderAide() {
 
     }
 
+    let html = "";
 
-    const suggestions =
-      resultat.suggestions;
+    resultat.suggestions
+      .slice(0,3)
+      .forEach(
+        function(suggestion){
 
-
-    zone.innerHTML = `
-      <div class="suggestion">
-        <strong>🤖 Voici 3 idées de réponse :</strong>
-      </div>
-
-      ${suggestions.map(
-        (suggestion, index) => `
-          <div class="suggestion">
-            <strong>${index + 1}.</strong>
-            ${echapperHTML(suggestion)}
-          </div>
-        `
-      ).join("")}
-
-      <div class="suggestion">
-        <small>
-          💡 Ces réponses sont seulement des suggestions.
-          Tu peux les modifier avant de les envoyer.
-        </small>
-      </div>
-    `;
-
-
-  } catch (erreur) {
-
-    console.error(
-      "Erreur aide à la discussion :",
-      erreur
-    );
-
-
-    zone.innerHTML = `
-      <div class="suggestion">
-        ❌ ${
-          echapperHTML(
-            erreur.message ||
-            "Impossible de générer les suggestions."
-          )
-        }
-      </div>
-    `;
-
-  }
-
-}
-
-
-/* Protection du texte généré par l'IA */
-
-function echapperHTML(texte) {
-
-  return String(texte || "")
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
-
-}
-
-
-/* ==========================================
+          html += `
+            <div class="suggestion">
+              ${echapperHTML(
+    
+ /* ==========================================
    SIGNALEMENT
 ========================================== */
 
-function ouvrirSignalement() {
+function ouvrirSignalement(){
 
   document.getElementById(
     "signalementModal"
-  ).style.display =
-    "flex";
+  ).style.display = "flex";
 
 }
 
 
-async function signaler() {
+async function signaler(){
+
+  if(
+    !utilisateurConnecte ||
+    !peerActuel ||
+    !conversationActuelle
+  ){
+    return;
+  }
 
   const bouton =
     document.getElementById(
       "btnSignaler"
     );
 
-  bouton.disabled =
-    true;
+  const motif =
+    document.getElementById(
+      "motif"
+    ).value;
 
-  try {
+  bouton.disabled = true;
+
+  try{
 
     await tablesDB.createRow({
-
       databaseId:
         APPWRITE_DATABASE_ID,
 
@@ -1989,8 +2457,7 @@ async function signaler() {
       rowId:
         Appwrite.ID.unique(),
 
-      data: {
-
+      data:{
         signaleurId:
           utilisateurConnecte.$id,
 
@@ -2001,32 +2468,29 @@ async function signaler() {
           conversationActuelle,
 
         motif:
-          document.getElementById(
-            "motif"
-          ).value,
+          motif,
 
         dateCreation:
           new Date().toISOString()
-
       },
 
-      permissions: [
-        permLireUtilisateur(
+      permissions:[
+        Appwrite.Permission.read(
+          "user:" +
           utilisateurConnecte.$id
         )
       ]
-
     });
 
     alert(
-      "Votre signalement a bien été enregistré. Notre équipe va l'examiner."
+      "Merci. Votre signalement a bien été envoyé."
     );
 
     fermerModal(
       "signalementModal"
     );
 
-  } catch (erreur) {
+  }catch(erreur){
 
     console.error(
       "Erreur signalement :",
@@ -2034,14 +2498,12 @@ async function signaler() {
     );
 
     alert(
-      "Le signalement n'a pas pu être enregistré : "
-      + erreur.message
+      "Impossible d'envoyer le signalement pour le moment."
     );
 
-  } finally {
+  }finally{
 
-    bouton.disabled =
-      false;
+    bouton.disabled = false;
 
   }
 
@@ -2052,30 +2514,34 @@ async function signaler() {
    BLOCAGE
 ========================================== */
 
-function ouvrirBlocage() {
+function ouvrirBlocage(){
 
   document.getElementById(
     "blocageModal"
-  ).style.display =
-    "flex";
+  ).style.display = "flex";
 
 }
 
 
-async function confirmerBlocage() {
+async function confirmerBlocage(){
+
+  if(
+    !utilisateurConnecte ||
+    !peerActuel
+  ){
+    return;
+  }
 
   const bouton =
     document.getElementById(
       "btnBloquer"
     );
 
-  bouton.disabled =
-    true;
+  bouton.disabled = true;
 
-  try {
+  try{
 
     await tablesDB.createRow({
-
       databaseId:
         APPWRITE_DATABASE_ID,
 
@@ -2085,8 +2551,7 @@ async function confirmerBlocage() {
       rowId:
         Appwrite.ID.unique(),
 
-      data: {
-
+      data:{
         bloqueurId:
           utilisateurConnecte.$id,
 
@@ -2095,15 +2560,14 @@ async function confirmerBlocage() {
 
         dateCreation:
           new Date().toISOString()
-
       },
 
-      permissions: [
-        permLireUtilisateur(
+      permissions:[
+        Appwrite.Permission.read(
+          "user:" +
           utilisateurConnecte.$id
         )
       ]
-
     });
 
     blocagesEmis.push(
@@ -2122,7 +2586,7 @@ async function confirmerBlocage() {
 
     await chargerDiscussions();
 
-  } catch (erreur) {
+  }catch(erreur){
 
     console.error(
       "Erreur blocage :",
@@ -2130,14 +2594,12 @@ async function confirmerBlocage() {
     );
 
     alert(
-      "Le blocage n'a pas pu être enregistré : "
-      + erreur.message
+      "Impossible de bloquer cette personne pour le moment."
     );
 
-  } finally {
+  }finally{
 
-    bouton.disabled =
-      false;
+    bouton.disabled = false;
 
   }
 
@@ -2148,12 +2610,11 @@ async function confirmerBlocage() {
    MODALES
 ========================================== */
 
-function fermerModal(id) {
+function fermerModal(id){
 
   document.getElementById(
     id
-  ).style.display =
-    "none";
+  ).style.display = "none";
 
 }
 
@@ -2167,9 +2628,9 @@ document
         "click",
         e => {
 
-          if (
+          if(
             e.target === modal
-          ) {
+          ){
 
             modal.style.display =
               "none";
@@ -2189,7 +2650,7 @@ document
 
 document.addEventListener(
   "DOMContentLoaded",
-  async function() {
+  async function(){
 
     await chargerPaysEtVilles();
 
