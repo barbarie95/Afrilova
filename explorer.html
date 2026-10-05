@@ -1,949 +1,771 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Explorer - Afrilova</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- AJOUT : la barre de statut d'Android prend la couleur du site -->
+<meta name="theme-color" content="#159b72">
+<title>Explorer - Afrilova</title>
+<link rel="icon" href="logo.png">
 
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+<style>
+/* ===== Style commun avec l'accueil (index.html) ===== */
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--v:#159b72;--v2:#20b486;--m:#55d3a8;--p:#e8f8f2;--f:#f7fcfa;--t:#17352b;--g:#687b74;--b:#dcefe8}
+html{scroll-behavior:smooth}
+body{
+ font-family:Arial,sans-serif;background:var(--f);color:var(--t);
+ padding-bottom:calc(88px + env(safe-area-inset-bottom));
+ -webkit-tap-highlight-color:transparent
+}
+/* Confort Android : pas de flash gris au toucher, pas de délai au toucher */
+button,select,a{font:inherit;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+button{cursor:pointer}
 
-    body {
-      font-family: Arial, sans-serif;
-      background: #F3FBF7;
-      color: #17352C;
-      padding-bottom: 80px;
-    }
+@keyframes in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes apparition{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+@keyframes brillance{from{background-position:200% 0}to{background-position:-200% 0}}
 
-    button,
-    select {
-      font-family: inherit;
-    }
+/* ===== En-tête ===== */
+header{
+ background:linear-gradient(135deg,var(--v2),var(--m));color:#fff;
+ padding:18px 15px 22px;border-radius:0 0 27px 27px;
+ box-shadow:0 7px 22px #159b7225
+}
+.top{display:flex;justify-content:space-between;align-items:center}
+.brand{display:flex;align-items:center;gap:10px}
+.logo-img{width:42px;height:42px;border-radius:12px;object-fit:cover;background:#fff;display:block}
+.logo{font-size:24px;font-weight:800}
+.solde{
+ background:#ffffff30;border:1px solid #ffffff45;padding:7px 12px;
+ border-radius:20px;font-size:13px;font-weight:bold;white-space:nowrap
+}
 
-    button {
-      cursor: pointer;
-    }
+/* ===== Contenu ===== */
+.container{width:100%;max-width:700px;margin:auto;padding:18px 14px 30px}
+h1{font-size:24px;margin-bottom:8px;color:#087557;animation:in .5s}
+.intro{color:var(--g);font-size:14px;line-height:1.5;margin-bottom:18px}
 
-    header {
-      background: linear-gradient(135deg, #0B8F6A, #3DBB91);
-      color: white;
-      padding: 18px 16px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.08);
-    }
+.search-box{
+ background:#fff;border:1px solid var(--b);padding:15px;border-radius:19px;
+ box-shadow:0 8px 25px #159b7215;margin-bottom:20px;animation:in .6s
+}
+.field{margin-bottom:12px}
+.field label{display:block;font-size:12px;font-weight:bold;color:var(--g);margin-bottom:5px}
+.field select{
+ width:100%;min-height:46px;border:1px solid var(--b);background:#fff;
+ border-radius:12px;padding:10px 12px;font-size:16px;color:var(--t);outline:none;
+ transition:border-color .2s,box-shadow .2s
+}
+.field select:focus{border-color:var(--v);box-shadow:0 0 0 3px #159b7220}
+.field select:disabled{background:var(--f);color:var(--g);opacity:.7}
+.search-button{
+ width:100%;min-height:48px;border:0;background:var(--v);color:#fff;
+ padding:12px;border-radius:12px;font-weight:bold;font-size:15px;
+ transition:transform .15s,background .2s
+}
+.search-button:active{transform:scale(.97)}
 
-    .logo {
-      font-size: 20px;
-      font-weight: bold;
-    }
+.profiles-title{color:#087557;font-size:19px;margin-bottom:12px}
 
-    .points {
-      background: rgba(255,255,255,0.18);
-      padding: 8px 12px;
-      border-radius: 20px;
-      font-size: 14px;
-      font-weight: bold;
-    }
+/* ===== Fil de profils (une carte par profil, comme sur l'accueil) ===== */
+#profilesSection{display:flex;flex-direction:column;gap:16px;max-width:600px;margin:0 auto}
 
-    .container {
-      width: 100%;
-      max-width: 700px;
-      margin: auto;
-      padding: 18px 14px 30px;
-    }
+.profile-card{
+ background:#fff;border:1px solid var(--b);border-radius:16px;overflow:hidden;
+ box-shadow:0 4px 16px #159b7214;opacity:0;transition:box-shadow .25s
+}
+.profile-card:hover{box-shadow:0 10px 28px #159b7226}
+.profile-card.visible{animation:apparition .55s ease both}
 
-    h1 {
-      font-size: 24px;
-      margin-bottom: 8px;
-      color: #087557;
-    }
+.post-head{display:flex;align-items:center;gap:10px;padding:12px 14px}
+.avatar{
+ width:46px;height:46px;border-radius:50%;object-fit:cover;background:var(--p);
+ flex-shrink:0;display:flex;align-items:center;justify-content:center;
+ font-size:22px;border:2px solid var(--p)
+}
+.who{min-width:0}
+.profile-name{font-size:15px;line-height:1.25;color:var(--t)}
+.profile-location{font-size:12px;color:var(--g);margin-top:2px}
+.chip{
+ display:inline-block;margin:0 14px 8px;background:var(--p);color:#087557;
+ font-size:12px;font-weight:bold;padding:5px 11px;border-radius:20px
+}
+.profile-description{
+ padding:0 14px 12px;font-size:14px;color:#3f564f;line-height:1.5;
+ display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden
+}
 
-    .intro {
-      color: #55736A;
-      font-size: 14px;
-      line-height: 1.5;
-      margin-bottom: 18px;
-    }
+.photo-wrap{background:var(--p);overflow:hidden}
+.profile-photo{
+ width:100%;aspect-ratio:4/5;object-fit:cover;display:block;
+ opacity:0;transition:opacity .6s ease,transform .7s ease
+}
+.profile-photo.loaded{opacity:1}
+.profile-card:hover .profile-photo{transform:scale(1.03)}
+.photo-empty{
+ width:100%;aspect-ratio:4/5;display:flex;align-items:center;
+ justify-content:center;font-size:56px;background:var(--p)
+}
 
-    .search-box {
-      background: white;
-      padding: 15px;
-      border-radius: 16px;
-      box-shadow: 0 2px 9px rgba(0,0,0,0.06);
-      margin-bottom: 18px;
-    }
+.post-actions{border-top:1px solid #e6f3ee;padding:10px 14px}
+.profile-button{
+ display:block;text-align:center;text-decoration:none;background:var(--v);color:#fff;
+ padding:14px;border-radius:12px;font-size:14px;font-weight:bold;min-height:48px;
+ transition:transform .15s,background .2s
+}
+.profile-button:hover{background:var(--v2)}
+.profile-button:active{transform:scale(.97)}
 
-    .field {
-      margin-bottom: 10px;
-    }
+/* Cartes grises animées pendant le chargement */
+.skeleton{background:#fff;border:1px solid var(--b);border-radius:16px;overflow:hidden}
+.sk-head{display:flex;gap:10px;padding:12px 14px;align-items:center}
+.sk-circle,.sk-line,.sk-photo{
+ background:linear-gradient(90deg,#e8f8f2 25%,#f6fcf9 50%,#e8f8f2 75%);
+ background-size:200% 100%;animation:brillance 1.3s linear infinite
+}
+.sk-circle{width:46px;height:46px;border-radius:50%;flex-shrink:0}
+.sk-lines{flex:1}
+.sk-line{height:10px;border-radius:6px;margin-bottom:7px}
+.w60{width:60%}.w40{width:40%}
+.sk-photo{width:100%;aspect-ratio:4/5}
 
-    .field:last-of-type {
-      margin-bottom: 12px;
-    }
+.empty{
+ background:#fff;border:1px solid var(--b);border-radius:16px;padding:35px 20px;
+ text-align:center;color:var(--g);box-shadow:0 4px 16px #159b7212
+}
+.empty-icon{font-size:40px;margin-bottom:10px}
+.empty h3{color:#087557;margin-bottom:7px}
+.empty p{font-size:14px;line-height:1.5}
 
-    .field label {
-      display: block;
-      font-size: 12px;
-      font-weight: bold;
-      color: #55736A;
-      margin-bottom: 5px;
-    }
+/* ===== Barre du bas (même style que l'accueil) ===== */
+.bottom-nav{
+ position:fixed;bottom:0;left:0;right:0;z-index:40;background:#fffffff5;
+ border-top:1px solid var(--b);display:grid;grid-template-columns:repeat(4,1fr);
+ padding:7px 6px calc(7px + env(safe-area-inset-bottom));
+ box-shadow:0 -7px 22px #159b7210
+}
+.bottom-nav a{
+ text-decoration:none;text-align:center;color:var(--g);font-size:11px;
+ font-weight:bold;padding:6px 4px;border-radius:12px;min-height:48px;
+ transition:background .2s,color .2s,transform .15s
+}
+.bottom-nav a:active{transform:scale(.95)}
+.bottom-nav a span{display:block;font-size:20px;line-height:1;margin-bottom:3px}
+.bottom-nav a.active,.bottom-nav a:hover{color:var(--v);background:var(--p)}
 
-    .field select {
-      width: 100%;
-      border: 1px solid #cce5dc;
-      background: white;
-      border-radius: 10px;
-      padding: 11px;
-      font-size: 14px;
-      color: #17352C;
-      outline: none;
-    }
-
-    .field select:focus {
-      border-color: #0B8F6A;
-    }
-
-    .search-button {
-      width: 100%;
-      border: none;
-      background: #0B8F6A;
-      color: white;
-      padding: 12px;
-      border-radius: 10px;
-      font-weight: bold;
-      font-size: 14px;
-    }
-
-    .profiles-title {
-      color: #087557;
-      font-size: 18px;
-      margin-bottom: 12px;
-    }
-
-    .profile-card {
-      background: white;
-      border-radius: 16px;
-      overflow: hidden;
-      margin-bottom: 14px;
-      box-shadow: 0 2px 9px rgba(0,0,0,0.06);
-    }
-
-    .profile-photo {
-      width: 100%;
-      height: 300px;
-      object-fit: cover;
-      display: block;
-      background: #E0F7EE;
-    }
-
-    .profile-content {
-      padding: 15px;
-    }
-
-    .profile-name {
-      color: #17352C;
-      font-size: 19px;
-      margin-bottom: 5px;
-    }
-
-    .profile-location {
-      color: #668078;
-      font-size: 13px;
-      margin-bottom: 10px;
-    }
-
-    .profile-description {
-      color: #55736A;
-      font-size: 14px;
-      line-height: 1.5;
-      margin-bottom: 10px;
-    }
-
-    .research-box {
-      background: #F3FBF7;
-      border-radius: 10px;
-      padding: 10px;
-      color: #087557;
-      font-size: 12px;
-      margin-bottom: 12px;
-    }
-
-    .profile-button {
-      display: block;
-      text-align: center;
-      text-decoration: none;
-      background: #0B8F6A;
-      color: white;
-      padding: 11px;
-      border-radius: 10px;
-      font-size: 13px;
-      font-weight: bold;
-    }
-
-    .empty {
-      background: white;
-      border-radius: 16px;
-      padding: 35px 20px;
-      text-align: center;
-      color: #668078;
-      box-shadow: 0 2px 9px rgba(0,0,0,0.05);
-    }
-
-    .empty-icon {
-      font-size: 40px;
-      margin-bottom: 10px;
-    }
-
-    .empty h3 {
-      color: #087557;
-      margin-bottom: 7px;
-    }
-
-    .empty p {
-      font-size: 14px;
-      line-height: 1.5;
-    }
-
-    .bottom-nav {
-      position: fixed;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      height: 68px;
-      background: white;
-      border-top: 1px solid #dcefe7;
-      display: flex;
-      z-index: 40;
-      box-shadow: 0 -2px 10px rgba(0,0,0,0.06);
-    }
-
-    .bottom-nav a {
-      flex: 1;
-      text-decoration: none;
-      color: #668078;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 3px;
-      font-size: 11px;
-      font-weight: bold;
-    }
-
-    .bottom-nav a span {
-      font-size: 20px;
-      line-height: 1;
-    }
-
-    .bottom-nav a.active {
-      color: #0B8F6A;
-    }
-
-    @media (min-width: 700px) {
-      .bottom-nav {
-        max-width: 700px;
-        left: 50%;
-        transform: translateX(-50%);
-        border-radius: 16px 16px 0 0;
-      }
-
-      .profile-photo {
-        height: 360px;
-      }
-    }
-  </style>
+/* Respect des personnes qui ont désactivé les animations */
+@media(prefers-reduced-motion:reduce){
+ *{animation:none!important;transition:none!important}
+ .profile-card,.profile-photo{opacity:1!important}
+}
+</style>
 </head>
 
 <body>
 
-  <header>
-    <div class="logo">💚 Afrilova</div>
+<header>
+ <div class="top">
+  <div class="brand">
+   <img class="logo-img" src="logo.png" alt="Logo Afrilova" onerror="this.style.display='none'">
+   <div class="logo">Afrilova ❤️</div>
+  </div>
+  <!-- MODIFIÉ : solde affiché avec 💎, comme sur l'accueil (rempli par le script) -->
+  <div class="solde" id="pointsBalance">💎 — point</div>
+ </div>
+</header>
 
-    <div class="points">
-      <!-- MODIFIÉ : le solde réel est chargé par le script (avant : 3 écrit en dur) -->
-      ⭐ <span id="pointsBalance">-</span> points
-    </div>
-  </header>
+<main class="container">
 
-  <main class="container">
+ <h1>🔎 Explorer</h1>
 
-    <h1>🔎 Explorer</h1>
+ <p class="intro">
+  Découvrez des personnes à travers l'Afrique et trouvez celle qui pourrait vous correspondre.
+ </p>
 
-    <p class="intro">
-      Découvrez des personnes à travers l'Afrique et trouvez celle qui pourrait vous correspondre.
-    </p>
+ <div class="search-box">
 
-    <div class="search-box">
+  <div class="field">
+   <label for="countrySelect">Pays</label>
+   <select id="countrySelect" onchange="chargerVilles(this.value)">
+    <option value="">Tous les pays</option>
+   </select>
+  </div>
 
-      <div class="field">
-        <label for="countrySelect">Pays</label>
+  <div class="field">
+   <label for="citySelect">Ville</label>
+   <select id="citySelect" disabled>
+    <option value="">Toutes les villes</option>
+   </select>
+  </div>
 
-        <select id="countrySelect" onchange="chargerVilles(this.value)">
-          <option value="">Tous les pays</option>
-        </select>
-      </div>
+  <button type="button" class="search-button" onclick="rechercherProfils()">
+   🔎 Rechercher
+  </button>
 
-      <div class="field">
-        <label for="citySelect">Ville</label>
+ </div>
 
-        <select id="citySelect" disabled>
-          <option value="">Toutes les villes</option>
-        </select>
-      </div>
+ <h2 class="profiles-title">❤️ Profils</h2>
 
-      <button
-        type="button"
-        class="search-button"
-        onclick="rechercherProfils()"
-      >
-        🔎 Rechercher
-      </button>
+ <!-- MODIFIÉ : cartes grises animées pendant le chargement -->
+ <section id="profilesSection">
+  <div class="skeleton"><div class="sk-head"><div class="sk-circle"></div><div class="sk-lines"><div class="sk-line w60"></div><div class="sk-line w40"></div></div></div><div class="sk-photo"></div></div>
+  <div class="skeleton"><div class="sk-head"><div class="sk-circle"></div><div class="sk-lines"><div class="sk-line w60"></div><div class="sk-line w40"></div></div></div><div class="sk-photo"></div></div>
+ </section>
 
-    </div>
+</main>
 
-    <h2 class="profiles-title">
-      ❤️ Profils
-    </h2>
+<nav class="bottom-nav">
+ <a href="index.html"><span>🏠</span>Accueil</a>
+ <a href="explorer.html" class="active"><span>🔎</span>Explorer</a>
+ <a href="messagerie.html"><span>💬</span>Messagerie</a>
+ <a href="profil.html"><span>👤</span>Profil</a>
+</nav>
 
-    <section id="profilesSection">
+<!-- SDK APPWRITE (CDN) -->
+<script src="https://cdn.jsdelivr.net/npm/appwrite@20.0.0"></script>
 
-      <div class="empty" id="emptyState">
+<script>
 
-        <div class="empty-icon">
-          💚
-        </div>
+/* ==========================================
+   CONFIGURATION APPWRITE
+========================================== */
+
+const APPWRITE_ENDPOINT = "https://fra.cloud.appwrite.io/v1";
+const APPWRITE_PROJECT_ID = "6aac203e00209ccb3014";
+const APPWRITE_DATABASE_ID = "6aac2a200000e6be5877";
+const APPWRITE_BUCKET_PHOTOS = "6aad2a754e0e095d6a9a";
+
+const TABLE_PAYS = "pays";
+const TABLE_VILLES = "villes";
+const TABLE_PROFILS = "6aac2b35002a0debbb85";
+const TABLE_POINTS = "points";
+const TABLE_BLOCAGES = "blocages";
+
+const client = new Appwrite.Client();
+
+client
+  .setEndpoint(APPWRITE_ENDPOINT)
+  .setProject(APPWRITE_PROJECT_ID);
+
+const tablesDB = new Appwrite.TablesDB(client);
+const storage = new Appwrite.Storage(client);
+const account = new Appwrite.Account(client);
+
+
+/* ==========================================
+   VARIABLES
+========================================== */
+
+let paysDisponibles = [];
+let villesDisponibles = [];
+
+// Utilisateur connecté et personnes qu'il a bloquées
+let utilisateurConnecte = null;
+let blocagesEmis = [];
+
+// AJOUT : libellés du type de relation recherché
+const RELATIONS = {
+  mariage: "💍 Mariage",
+  amoureuse: "🌹 Relation sans précipitation",
+  "relation sans précipitation": "🌹 Relation sans précipitation",
+  projet: "💕 Projet de vie à deux",
+  "projet de vie à deux": "💕 Projet de vie à deux"
+};
+
+// AJOUT : cartes grises affichées pendant le chargement
+const SQUELETTE = `
+  <div class="skeleton"><div class="sk-head"><div class="sk-circle"></div><div class="sk-lines"><div class="sk-line w60"></div><div class="sk-line w40"></div></div></div><div class="sk-photo"></div></div>
+  <div class="skeleton"><div class="sk-head"><div class="sk-circle"></div><div class="sk-lines"><div class="sk-line w60"></div><div class="sk-line w40"></div></div></div><div class="sk-photo"></div></div>`;
+
+
+/* ==========================================
+   PROTECTION DU TEXTE AFFICHÉ
+   Empêche qu'un texte saisi dans un profil
+   soit interprété comme du code HTML.
+========================================== */
+
+function echapperHTML(valeur) {
+
+  return String(
+    valeur === null || valeur === undefined
+      ? ""
+      : valeur
+  )
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+
+}
+
+
+/* ==========================================
+   OBTENIR L'URL D'UNE PHOTO
+   MODIFIÉ : renvoie vide s'il n'y a pas de photo
+   (la carte affiche alors un cœur)
+========================================== */
+
+function urlPhoto(photoId) {
+
+  if (!photoId) {
+    return "";
+  }
+
+  return storage.getFileView({
+    bucketId: APPWRITE_BUCKET_PHOTOS,
+    fileId: photoId
+  });
+
+}
+
+
+/* ==========================================
+   CHARGER LES PAYS
+========================================== */
+
+async function chargerPays() {
+
+  const select = document.getElementById("countrySelect");
+
+  if (!select) return;
+
+  try {
+
+    const reponse = await tablesDB.listRows({
+      databaseId: APPWRITE_DATABASE_ID,
+      tableId: TABLE_PAYS,
+      queries: [
+        Appwrite.Query.limit(50)
+      ]
+    });
+
+    paysDisponibles = reponse.rows;
+
+    let optionsHTML = `<option value="">Tous les pays</option>`;
+
+    paysDisponibles.forEach(function (unPays) {
+      optionsHTML += `<option value="${unPays.$id}">${unPays.nom}</option>`;
+    });
+
+    select.innerHTML = optionsHTML;
+
+  } catch (erreur) {
+
+    console.error("Erreur chargement pays :", erreur);
+
+  }
+
+}
+
+
+/* ==========================================
+   CHARGER TOUTES LES VILLES (POUR RECHERCHE ET AFFICHAGE)
+========================================== */
+
+async function chargerToutesLesVilles() {
+
+  try {
+
+    const reponse = await tablesDB.listRows({
+      databaseId: APPWRITE_DATABASE_ID,
+      tableId: TABLE_VILLES,
+      queries: [
+        Appwrite.Query.limit(200)
+      ]
+    });
+
+    villesDisponibles = reponse.rows;
+
+  } catch (erreur) {
+
+    console.error("Erreur chargement villes :", erreur);
+
+  }
+
+}
+
+
+/* ==========================================
+   CHARGER LES VILLES D'UN PAYS (DANS LE SELECT)
+========================================== */
+
+function chargerVilles(paysId) {
+
+  const citySelect = document.getElementById("citySelect");
+
+  if (!citySelect) return;
+
+  citySelect.innerHTML = `<option value="">Toutes les villes</option>`;
+
+  citySelect.disabled = !paysId;
+
+  if (!paysId) {
+    return;
+  }
+
+  const villesDuPays = villesDisponibles.filter(function (uneVille) {
+    return uneVille.paysId === paysId;
+  });
+
+  villesDuPays.forEach(function (uneVille) {
+    citySelect.innerHTML += `<option value="${uneVille.$id}">${uneVille.nom}</option>`;
+  });
+
+}
+  /* ==========================================
+   NOMS PAYS / VILLE (POUR AFFICHAGE)
+========================================== */
+
+function nomPays(paysId) {
+
+  const trouve = paysDisponibles.find(function (p) { return p.$id === paysId; });
+
+  return trouve ? trouve.nom : "";
+
+}
+
+function nomVille(villeId) {
+
+  const trouve = villesDisponibles.find(function (v) { return v.$id === villeId; });
+
+  return trouve ? trouve.nom : "";
+
+}
+
+
+/* ==========================================
+   SOLDE DE POINTS (affiché comme sur l'accueil)
+========================================== */
+
+// MODIFIÉ : "💎 3 points" / "💎 1 point"
+function afficherSolde(nombre) {
+
+  const badge = document.getElementById("pointsBalance");
+
+  if (!badge) return;
+
+  const n = Number(nombre) || 0;
+
+  badge.textContent = "💎 " + n + (n === 1 ? " point" : " points");
+
+}
+
+async function chargerSoldePoints() {
+
+  try {
+
+    const reponse = await tablesDB.listRows({
+      databaseId: APPWRITE_DATABASE_ID,
+      tableId: TABLE_POINTS,
+      queries: [
+        Appwrite.Query.equal("userId", utilisateurConnecte.$id),
+        Appwrite.Query.limit(1)
+      ]
+    });
+
+    afficherSolde(reponse.total > 0 ? (reponse.rows[0].solde || 0) : 0);
+
+  } catch (erreur) {
+
+    console.error("Erreur chargement solde :", erreur);
+
+    afficherSolde(0);
+
+  }
+
+}
+
+
+/* ==========================================
+   PERSONNES BLOQUÉES PAR L'UTILISATEUR
+========================================== */
+
+async function chargerBlocagesEmis() {
+
+  try {
+
+    const reponse = await tablesDB.listRows({
+      databaseId: APPWRITE_DATABASE_ID,
+      tableId: TABLE_BLOCAGES,
+      queries: [
+        Appwrite.Query.equal("bloqueurId", utilisateurConnecte.$id),
+        Appwrite.Query.limit(100)
+      ]
+    });
+
+    blocagesEmis = reponse.rows.map(function (b) { return b.bloqueId; });
+
+  } catch (erreur) {
+
+    blocagesEmis = [];
+
+  }
+
+}
+
+
+/* ==========================================
+   UTILISATEUR CONNECTÉ
+   Si personne n'est connecté : pas de filtrage
+   et le solde affiché est 0.
+========================================== */
+
+async function chargerUtilisateur() {
+
+  try {
+
+    utilisateurConnecte = await account.get();
+
+    await chargerSoldePoints();
+    await chargerBlocagesEmis();
+
+  } catch (erreur) {
+
+    utilisateurConnecte = null;
+    blocagesEmis = [];
+
+    afficherSolde(0);
+
+  }
+
+}
+
+
+/* ==========================================
+   RECHERCHE
+========================================== */
+
+function rechercherProfils() {
+
+  const paysId = document.getElementById("countrySelect").value;
+  const villeId = document.getElementById("citySelect").value;
+
+  chargerProfils(paysId, villeId);
+
+}
+
+
+/* ==========================================
+   AJOUT : APPARITION EN DOUCEUR DES CARTES
+   Chaque carte apparaît quand on fait défiler la page.
+========================================== */
+
+function animerCartes() {
+
+  const cartes = document.querySelectorAll("#profilesSection .profile-card");
+
+  if (!("IntersectionObserver" in window)) {
+    cartes.forEach(function (c) { c.classList.add("visible"); });
+    return;
+  }
+
+  const observateur = new IntersectionObserver(function (entrees) {
+    entrees.forEach(function (entree) {
+      if (entree.isIntersecting) {
+        entree.target.classList.add("visible");
+        observateur.unobserve(entree.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  cartes.forEach(function (c) { observateur.observe(c); });
+
+}
+
+
+/* ==========================================
+   CHARGER LES PROFILS
+========================================== */
+
+async function chargerProfils(
+  paysId = "",
+  villeId = ""
+) {
+
+  // AJOUT : cartes grises animées pendant le chargement
+  const section = document.getElementById("profilesSection");
+
+  if (section) {
+    section.innerHTML = SQUELETTE;
+  }
+
+  const requetes = [
+    Appwrite.Query.equal("statut", "approuve"),
+    Appwrite.Query.limit(20)
+  ];
+
+  if (paysId) {
+    requetes.push(Appwrite.Query.equal("paysId", paysId));
+  }
+
+  if (villeId) {
+    requetes.push(Appwrite.Query.equal("villeId", villeId));
+  }
+
+  try {
+
+    const reponse = await tablesDB.listRows({
+      databaseId: APPWRITE_DATABASE_ID,
+      tableId: TABLE_PROFILS,
+      queries: requetes
+    });
+
+    // On retire son propre profil et les profils bloqués
+    const profilsVisibles = reponse.rows.filter(function (profil) {
+
+      if (
+        utilisateurConnecte &&
+        profil.userId === utilisateurConnecte.$id
+      ) {
+        return false;
+      }
+
+      if (blocagesEmis.includes(profil.userId)) {
+        return false;
+      }
+
+      return true;
+
+    });
+
+    const profilsAvecNoms = profilsVisibles.map(function (profil) {
+
+      return Object.assign({}, profil, {
+        paysNom: nomPays(profil.paysId),
+        villeNom: nomVille(profil.villeId)
+      });
+
+    });
+
+    afficherProfils(profilsAvecNoms);
+
+  } catch (erreur) {
+
+    console.error("Erreur chargement profils :", erreur);
+
+    afficherProfils([]);
+
+  }
+
+}
+
+
+/* ==========================================
+   AFFICHER LES PROFILS
+   MODIFIÉ : une carte par profil, façon fil d'actualité
+========================================== */
+
+function afficherProfils(liste) {
+
+  const section = document.getElementById("profilesSection");
+
+  if (!section) return;
+
+  if (!liste || liste.length === 0) {
+
+    section.innerHTML = `
+
+      <div class="empty">
+
+        <div class="empty-icon">💚</div>
 
         <h3>Les profils arrivent bientôt</h3>
 
-        <p>
-          Les profils approuvés apparaîtront ici.
-        </p>
+        <p>Les profils approuvés apparaîtront ici.</p>
 
       </div>
 
-    </section>
+    `;
 
-  </main>
+    return;
+  }
 
-  <nav class="bottom-nav">
+  section.innerHTML = liste.map(function (profil, i) {
 
-    <a href="index.html">
-      <span>🏠</span>
-      Accueil
-    </a>
+    const url = urlPhoto(profil.photoPrincipale);
 
-    <a
-      href="explorer.html"
-      class="active"
-    >
-      <span>🔎</span>
-      Explorer
-    </a>
+    const lieu = [profil.villeNom, profil.paysNom].filter(Boolean).join(", ") || "Afrique";
 
-    <a href="messagerie.html">
-      <span>💬</span>
-      Messagerie
-    </a>
+    // MODIFIÉ : à la place de « Recherche : … » (champ qui n'existe pas), on affiche le type de relation
+    const relation = RELATIONS[profil.typeRelation] || "";
 
-    <a href="profil.html">
-      <span>👤</span>
-      Profil
-    </a>
+    const avatar = url
+      ? `<img class="avatar" src="${echapperHTML(url)}" alt="" onerror="this.outerHTML='<div class=avatar>❤️</div>'">`
+      : `<div class="avatar">❤️</div>`;
 
-  </nav>
-  <!-- SDK APPWRITE (CDN) -->
-  <script src="https://cdn.jsdelivr.net/npm/appwrite@20.0.0"></script>
+    const photo = url
+      ? `<img class="profile-photo" loading="lazy" src="${echapperHTML(url)}" alt="Photo de ${echapperHTML(profil.nom || 'profil')}" onload="this.classList.add('loaded')" onerror="this.outerHTML='<div class=photo-empty>❤️</div>'">`
+      : `<div class="photo-empty">❤️</div>`;
 
-  <script>
+    return `
 
-    /*
-    ==========================================
-    CONFIGURATION APPWRITE
-    ==========================================
-    */
+      <article class="profile-card" style="animation-delay:${Math.min(i, 3) * 0.08}s">
 
-    const APPWRITE_ENDPOINT =
-      "https://fra.cloud.appwrite.io/v1";
+        <div class="post-head">
 
-    const APPWRITE_PROJECT_ID =
-      "6aac203e00209ccb3014";
+          ${avatar}
 
-    const APPWRITE_DATABASE_ID =
-      "6aac2a200000e6be5877";
+          <div class="who">
 
-    const APPWRITE_BUCKET_PHOTOS =
-      "6aad2a754e0e095d6a9a";
+            <h3 class="profile-name">
+              ${echapperHTML(profil.nom || "Profil")}${profil.age ? " · " + echapperHTML(profil.age) + " ans" : ""}
+            </h3>
 
-    const TABLE_PAYS = "pays";
-    const TABLE_VILLES = "villes";
-    const TABLE_PROFILS = "6aac2b35002a0debbb85";
-
-    // AJOUT : tables nécessaires au solde de points et au filtrage des blocages
-    const TABLE_POINTS = "points";
-    const TABLE_BLOCAGES = "blocages";
-
-    const PHOTO_PLACEHOLDER =
-      "https://via.placeholder.com/600x500/E0F7EE/087557?text=Afrilova";
-
-    const client = new Appwrite.Client();
-
-    client
-      .setEndpoint(APPWRITE_ENDPOINT)
-      .setProject(APPWRITE_PROJECT_ID);
-
-    const tablesDB = new Appwrite.TablesDB(client);
-    const storage = new Appwrite.Storage(client);
-
-    // AJOUT : pour connaître l'utilisateur connecté
-    const account = new Appwrite.Account(client);
-
-
-    /*
-    ==========================================
-    VARIABLES
-    ==========================================
-    */
-
-    let paysDisponibles = [];
-    let villesDisponibles = [];
-
-    // AJOUT : utilisateur connecté et personnes qu'il a bloquées
-    let utilisateurConnecte = null;
-    let blocagesEmis = [];
-
-
-    /*
-    ==========================================
-    AJOUT : PROTECTION DU TEXTE AFFICHÉ
-    Empêche qu'un texte saisi dans un profil
-    soit interprété comme du code HTML.
-    ==========================================
-    */
-
-    function echapperHTML(valeur) {
-
-      return String(
-        valeur === null || valeur === undefined
-          ? ""
-          : valeur
-      )
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#39;");
-
-    }
-
-
-    /*
-    ==========================================
-    OBTENIR L'URL D'UNE PHOTO
-    ==========================================
-    */
-
-    function urlPhoto(photoId) {
-
-      if (!photoId) {
-        return PHOTO_PLACEHOLDER;
-      }
-
-      return storage.getFileView({
-        bucketId: APPWRITE_BUCKET_PHOTOS,
-        fileId: photoId
-      });
-
-    }
-
-
-    /*
-    ==========================================
-    CHARGER LES PAYS
-    ==========================================
-    */
-
-    async function chargerPays() {
-
-      const select =
-        document.getElementById("countrySelect");
-
-      if (!select) return;
-
-      try {
-
-        const reponse = await tablesDB.listRows({
-          databaseId: APPWRITE_DATABASE_ID,
-          tableId: TABLE_PAYS,
-          queries: [
-            Appwrite.Query.limit(50)
-          ]
-        });
-
-        paysDisponibles = reponse.rows;
-
-        let optionsHTML =
-          `<option value="">Tous les pays</option>`;
-
-        paysDisponibles.forEach(function (unPays) {
-
-          optionsHTML +=
-            `<option value="${unPays.$id}">${unPays.nom}</option>`;
-
-        });
-
-        select.innerHTML = optionsHTML;
-
-      } catch (erreur) {
-
-        console.error(
-          "Erreur chargement pays :",
-          erreur
-        );
-
-      }
-
-    }
-
-
-    /*
-    ==========================================
-    CHARGER TOUTES LES VILLES (POUR RECHERCHE ET AFFICHAGE)
-    ==========================================
-    */
-
-    async function chargerToutesLesVilles() {
-
-      try {
-
-        const reponse = await tablesDB.listRows({
-          databaseId: APPWRITE_DATABASE_ID,
-          tableId: TABLE_VILLES,
-          queries: [
-            Appwrite.Query.limit(200)
-          ]
-        });
-
-        villesDisponibles = reponse.rows;
-
-      } catch (erreur) {
-
-        console.error(
-          "Erreur chargement villes :",
-          erreur
-        );
-
-      }
-
-    }
-
-
-    /*
-    ==========================================
-    CHARGER LES VILLES D'UN PAYS (DANS LE SELECT)
-    ==========================================
-    */
-
-    function chargerVilles(paysId) {
-
-      const citySelect =
-        document.getElementById("citySelect");
-
-      if (!citySelect) return;
-
-      citySelect.innerHTML =
-        `<option value="">Toutes les villes</option>`;
-
-      citySelect.disabled = !paysId;
-
-      if (!paysId) {
-        return;
-      }
-
-      const villesDuPays = villesDisponibles.filter(
-        function (uneVille) {
-          return uneVille.paysId === paysId;
-        }
-      );
-
-      villesDuPays.forEach(function (uneVille) {
-
-        citySelect.innerHTML +=
-          `<option value="${uneVille.$id}">${uneVille.nom}</option>`;
-
-      });
-
-    }
-
-
-    /*
-    ==========================================
-    NOMS PAYS / VILLE (POUR AFFICHAGE)
-    ==========================================
-    */
-
-    function nomPays(paysId) {
-
-      const trouve = paysDisponibles.find(
-        function (p) { return p.$id === paysId; }
-      );
-
-      return trouve ? trouve.nom : "";
-
-    }
-
-    function nomVille(villeId) {
-
-      const trouve = villesDisponibles.find(
-        function (v) { return v.$id === villeId; }
-      );
-
-      return trouve ? trouve.nom : "";
-
-    }
-
-
-    /*
-    ==========================================
-    AJOUT : SOLDE DE POINTS RÉEL
-    ==========================================
-    */
-
-    async function chargerSoldePoints() {
-
-      const badge =
-        document.getElementById("pointsBalance");
-
-      if (!badge) return;
-
-      try {
-
-        const reponse = await tablesDB.listRows({
-          databaseId: APPWRITE_DATABASE_ID,
-          tableId: TABLE_POINTS,
-          queries: [
-            Appwrite.Query.equal(
-              "userId",
-              utilisateurConnecte.$id
-            ),
-            Appwrite.Query.limit(1)
-          ]
-        });
-
-        badge.textContent =
-          reponse.total > 0
-            ? (reponse.rows[0].solde || 0)
-            : 0;
-
-      } catch (erreur) {
-
-        console.error(
-          "Erreur chargement solde :",
-          erreur
-        );
-
-        badge.textContent = 0;
-
-      }
-
-    }
-
-
-    /*
-    ==========================================
-    AJOUT : PERSONNES BLOQUÉES PAR L'UTILISATEUR
-    ==========================================
-    */
-
-    async function chargerBlocagesEmis() {
-
-      try {
-
-        const reponse = await tablesDB.listRows({
-          databaseId: APPWRITE_DATABASE_ID,
-          tableId: TABLE_BLOCAGES,
-          queries: [
-            Appwrite.Query.equal(
-              "bloqueurId",
-              utilisateurConnecte.$id
-            ),
-            Appwrite.Query.limit(100)
-          ]
-        });
-
-        blocagesEmis =
-          reponse.rows.map(
-            function (b) { return b.bloqueId; }
-          );
-
-      } catch (erreur) {
-
-        blocagesEmis = [];
-
-      }
-
-    }
-
-
-    /*
-    ==========================================
-    AJOUT : UTILISATEUR CONNECTÉ
-    Si personne n'est connecté : pas de filtrage
-    et le solde affiché est 0.
-    ==========================================
-    */
-
-    async function chargerUtilisateur() {
-
-      try {
-
-        utilisateurConnecte = await account.get();
-
-        await chargerSoldePoints();
-        await chargerBlocagesEmis();
-
-      } catch (erreur) {
-
-        utilisateurConnecte = null;
-        blocagesEmis = [];
-
-        const badge =
-          document.getElementById("pointsBalance");
-
-        if (badge) {
-          badge.textContent = 0;
-        }
-
-      }
-
-    }
-
-
-    /*
-    ==========================================
-    RECHERCHE
-    ==========================================
-    */
-
-    function rechercherProfils() {
-
-      const paysId =
-        document.getElementById("countrySelect").value;
-
-      const villeId =
-        document.getElementById("citySelect").value;
-
-      chargerProfils(
-        paysId,
-        villeId
-      );
-
-    }
-
-
-    /*
-    ==========================================
-    CHARGER LES PROFILS
-    ==========================================
-    */
-
-    async function chargerProfils(
-      paysId = "",
-      villeId = ""
-    ) {
-
-      const requetes = [
-        Appwrite.Query.equal("statut", "approuve"),
-        Appwrite.Query.limit(20)
-      ];
-
-      if (paysId) {
-        requetes.push(Appwrite.Query.equal("paysId", paysId));
-      }
-
-      if (villeId) {
-        requetes.push(Appwrite.Query.equal("villeId", villeId));
-      }
-
-      try {
-
-        const reponse = await tablesDB.listRows({
-          databaseId: APPWRITE_DATABASE_ID,
-          tableId: TABLE_PROFILS,
-          queries: requetes
-        });
-
-        // MODIFIÉ : on retire son propre profil et les profils bloqués
-        const profilsVisibles = reponse.rows.filter(
-          function (profil) {
-
-            if (
-              utilisateurConnecte &&
-              profil.userId === utilisateurConnecte.$id
-            ) {
-              return false;
-            }
-
-            if (blocagesEmis.includes(profil.userId)) {
-              return false;
-            }
-
-            return true;
-
-          }
-        );
-
-        const profilsAvecNoms = profilsVisibles.map(
-          function (profil) {
-
-            return Object.assign({}, profil, {
-              paysNom: nomPays(profil.paysId),
-              villeNom: nomVille(profil.villeId)
-            });
-
-          }
-        );
-
-        afficherProfils(profilsAvecNoms);
-
-      } catch (erreur) {
-
-        console.error(
-          "Erreur chargement profils :",
-          erreur
-        );
-
-        afficherProfils([]);
-
-      }
-
-    }
-
-
-    /*
-    ==========================================
-    AFFICHER LES PROFILS
-    ==========================================
-    */
-
-    function afficherProfils(liste) {
-
-      const section =
-        document.getElementById("profilesSection");
-
-      if (!section) return;
-
-      if (!liste || liste.length === 0) {
-
-        section.innerHTML = `
-
-          <div class="empty">
-
-            <div class="empty-icon">
-              💚
-            </div>
-
-            <h3>Les profils arrivent bientôt</h3>
-
-            <p>
-              Les profils approuvés apparaîtront ici.
-            </p>
+            <div class="profile-location">📍 ${echapperHTML(lieu)}</div>
 
           </div>
 
-        `;
+        </div>
 
-        return;
-      }
+        ${relation ? `<div class="chip">${echapperHTML(relation)}</div>` : ""}
 
+        <p class="profile-description">
+          ${echapperHTML(profil.description || "À la recherche d'une belle rencontre.")}
+        </p>
 
-      // MODIFIÉ : tous les textes de profil passent par echapperHTML()
-      section.innerHTML =
-        liste.map((profil) => `
+        <div class="photo-wrap">${photo}</div>
 
-          <article class="profile-card">
+        <div class="post-actions">
+          <a class="profile-button" href="voir-profil.html?id=${encodeURIComponent(profil.$id || "")}">
+            Voir le profil ❤️
+          </a>
+        </div>
 
-            <img
-              class="profile-photo"
-              src="${urlPhoto(profil.photoPrincipale)}"
-              alt="Photo de ${echapperHTML(profil.nom || 'profil')}"
-            >
+      </article>
 
-            <div class="profile-content">
+    `;
 
-              <h3 class="profile-name">
-                ${echapperHTML(profil.nom || "Profil")}
-                ${profil.age ? ` · ${echapperHTML(profil.age)} ans` : ""}
-              </h3>
+  }).join("");
 
-              <div class="profile-location">
-                📍 ${echapperHTML(profil.villeNom || "")}
-                ${profil.villeNom && profil.paysNom ? ", " : ""}
-                ${echapperHTML(profil.paysNom || "")}
-              </div>
+  animerCartes();
 
-              <p class="profile-description">
-                ${echapperHTML(profil.description || "")}
-              </p>
-
-              ${
-                profil.recherche
-                ? `
-                  <div class="research-box">
-                    ❤️ Recherche : ${echapperHTML(profil.recherche)}
-                  </div>
-                `
-                : ""
-              }
-
-              <a
-                class="profile-button"
-                href="voir-profil.html?id=${encodeURIComponent(profil.$id || "")}"
-              >
-                Voir le profil
-              </a>
-
-            </div>
-
-          </article>
-
-        `).join("");
-
-    }
+}
 
 
-    /*
-    ==========================================
-    INITIALISATION
-    ==========================================
-    */
+/* ==========================================
+   INITIALISATION
+========================================== */
 
-    document.addEventListener(
-      "DOMContentLoaded",
-      async function() {
+document.addEventListener(
+  "DOMContentLoaded",
+  async function () {
 
-        await chargerPays();
-        await chargerToutesLesVilles();
+    await chargerPays();
+    await chargerToutesLesVilles();
 
-        // AJOUT : solde réel et blocages, avant l'affichage des profils
-        await chargerUtilisateur();
+    // Solde réel et blocages, avant l'affichage des profils
+    await chargerUtilisateur();
 
-        await chargerProfils();
+    await chargerProfils();
 
-        console.log(
-          "Explorer Afrilova initialisé."
-        );
+    console.log("Explorer Afrilova initialisé.");
 
-      }
-    );
+  }
+);
 
-  </script>
+</script>
 
 </body>
 </html>
