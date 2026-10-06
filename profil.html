@@ -3,407 +3,319 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
+<!-- AJOUT : barre de statut d'Android de la couleur du site + logo dans l'onglet -->
+<meta name="theme-color" content="#159b72">
+<link rel="icon" href="logo.png">
 <title>Mon profil - Afrilova</title>
 
 <style>
+/* ===== Base (style commun avec l'accueil) ===== */
 *{box-sizing:border-box;margin:0;padding:0}
+:root{--v:#159b72;--v2:#20b486;--m:#55d3a8;--p:#e8f8f2;--f:#f7fcfa;--t:#17352b;--g:#687b74;--b:#dcefe8}
+html{scroll-behavior:smooth}
 body{
- font-family:Arial,sans-serif;background:#F3FBF7;
- color:#17352C;padding-bottom:85px
+ font-family:Arial,sans-serif;background:var(--f);color:var(--t);
+ padding-bottom:calc(88px + env(safe-area-inset-bottom));
+ -webkit-tap-highlight-color:transparent
 }
-button,input,textarea,select{font-family:inherit}
-button{cursor:pointer}
+/* Confort Android : pas de flash gris, réaction immédiate au toucher */
+button,input,textarea,select,a{font-family:inherit;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+button{cursor:pointer;transition:transform .15s ease,opacity .15s ease,background .2s ease}
+button:active{transform:scale(.97)}
 
+@keyframes in{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes sheet{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:none}}
+@keyframes fondu{from{opacity:0}to{opacity:1}}
+@keyframes pop{0%{transform:scale(.88);opacity:.5}60%{transform:scale(1.08)}100%{transform:none;opacity:1}}
+
+/* ===== En-tête ===== */
 header{
- background:linear-gradient(135deg,#0B8F6A,#3DBB91);
- color:white;padding:18px 16px;
- display:flex;align-items:center;justify-content:space-between;
- box-shadow:0 3px 10px rgba(0,0,0,.08)
+ background:linear-gradient(135deg,var(--v2),var(--m));color:#fff;
+ padding:18px 15px 22px;border-radius:0 0 27px 27px;
+ box-shadow:0 7px 22px #159b7225;
+ display:flex;align-items:center;justify-content:space-between
 }
-.logo{font-size:20px;font-weight:bold}
-.header-points{
- background:rgba(255,255,255,.18);
- padding:8px 12px;border-radius:20px;
- font-size:13px;font-weight:bold
-}
-
-.container{
- width:100%;max-width:700px;margin:auto;
- padding:20px 14px 30px
-}
-h1{color:#087557;font-size:25px;margin-bottom:7px}
-.intro{
- color:#668078;font-size:14px;line-height:1.5;margin-bottom:18px
+.brand{display:flex;align-items:center;gap:10px}
+.logo-img{width:42px;height:42px;border-radius:12px;object-fit:cover;background:#fff;display:block}
+.logo{font-size:24px;font-weight:800}
+.solde{
+ background:#ffffff30;border:1px solid #ffffff45;padding:7px 12px;
+ border-radius:20px;font-size:13px;font-weight:bold;white-space:nowrap
 }
 
-.profile-card,.section-card{
- background:white;border-radius:18px;padding:18px;
- margin-bottom:16px;
- box-shadow:0 3px 12px rgba(0,0,0,.05)
+/* ===== Contenu ===== */
+.container{width:100%;max-width:700px;margin:auto;padding:20px 14px 30px}
+h1{color:#087557;font-size:25px;margin-bottom:7px;animation:in .5s ease both}
+.intro{color:var(--g);font-size:14px;line-height:1.5;margin-bottom:18px}
+
+.profile-card,.section-card,.auth-card{
+ background:#fff;border:1px solid var(--b);border-radius:19px;padding:18px;
+ margin-bottom:16px;box-shadow:0 8px 25px #159b7215;animation:in .55s ease both
 }
 .profile-card{padding:20px}
+.auth-card{padding:22px}
+/* Apparition échelonnée des blocs du profil */
+#profilConnecte>section:nth-of-type(2){animation-delay:.08s}
+#profilConnecte>section:nth-of-type(3){animation-delay:.16s}
+#profilConnecte>section:nth-of-type(4){animation-delay:.24s}
+#profilConnecte>section:nth-of-type(5){animation-delay:.32s}
+
+/* ===== Profil ===== */
 .profile-top{text-align:center}
 .profile-photo{
- width:115px;height:115px;border-radius:50%;
- object-fit:cover;background:#E0F7EE;
- border:4px solid #E0F7EE;margin-bottom:12px
+ width:124px;height:124px;border-radius:50%;object-fit:cover;background:var(--p);
+ border:4px solid #fff;box-shadow:0 0 0 3px var(--m),0 8px 20px #159b7230;margin-bottom:14px
 }
-.profile-name{font-size:21px;color:#17352C;margin-bottom:5px}
-.profile-location{color:#668078;font-size:14px}
-
+.profile-name{font-size:21px;color:var(--t);margin-bottom:5px}
+.profile-location{color:var(--g);font-size:14px}
 .profile-description{
- margin-top:15px;background:#F3FBF7;
+ margin-top:15px;background:var(--f);border:1px solid var(--b);
  border-radius:12px;padding:13px;text-align:left
 }
-.profile-description strong{
- display:block;color:#087557;font-size:13px;margin-bottom:6px
+.profile-description strong{display:block;color:var(--v);font-size:13px;margin-bottom:6px}
+.profile-description p{color:#55736a;font-size:14px;line-height:1.5}
+.profile-info-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:15px}
+.info-box{background:var(--p);border-radius:12px;padding:11px}
+.info-box span{display:block;color:var(--g);font-size:11px;margin-bottom:4px}
+.info-box strong{color:var(--v);font-size:13px}
+.edit-button,.logout-button{
+ width:100%;min-height:48px;border:0;padding:12px;border-radius:12px;
+ font-weight:bold;font-size:14px;margin-top:12px
 }
-.profile-description p{
- color:#55736A;font-size:14px;line-height:1.5
-}
+.edit-button{background:var(--p);color:#087557}
+.logout-button{background:#FDEDED;color:#C0392B}
 
-.profile-info-grid{
- display:grid;grid-template-columns:1fr 1fr;
- gap:9px;margin-top:15px
-}
-.info-box{
- background:#F3FBF7;border-radius:11px;padding:11px
-}
-.info-box span{
- display:block;color:#668078;font-size:11px;margin-bottom:4px
-}
-.info-box strong{color:#087557;font-size:13px}
-
-.edit-button{
- width:100%;border:none;background:#E0F7EE;
- color:#087557;padding:12px;border-radius:11px;
- font-weight:bold;margin-top:15px
-}
-.logout-button{
- width:100%;border:none;background:#FDEDED;
- color:#C0392B;padding:12px;border-radius:11px;
- font-weight:bold;margin-top:10px
-}
-
+/* ===== Points ===== */
 .points-card{
- background:linear-gradient(135deg,#0B8F6A,#3DBB91);
- color:white;border-radius:18px;padding:20px;
- margin-bottom:16px;
- box-shadow:0 4px 12px rgba(11,143,106,.18)
+ background:linear-gradient(135deg,var(--v2),var(--m));color:#fff;border-radius:19px;
+ padding:20px;margin-bottom:16px;box-shadow:0 8px 25px #159b7230;animation:in .55s ease both
 }
-.points-title{font-size:14px;opacity:.9;margin-bottom:7px}
-.points-number{font-size:32px;font-weight:bold;margin-bottom:5px}
-.points-description{font-size:12px;opacity:.9;line-height:1.4}
+.points-title{font-size:14px;opacity:.95;margin-bottom:7px}
+.points-number{font-size:32px;font-weight:bold;margin-bottom:5px;display:inline-block}
+.points-number.pop{animation:pop .6s ease}
+.points-description{font-size:12px;opacity:.95;line-height:1.4}
 
-.section-card h2{
- color:#087557;font-size:18px;margin-bottom:6px
-}
-.section-description{
- color:#668078;font-size:13px;
- line-height:1.5;margin-bottom:15px
-}
+.section-card h2{color:#087557;font-size:18px;margin-bottom:6px}
+.section-description{color:var(--g);font-size:13px;line-height:1.5;margin-bottom:15px}
 
 .packs{display:flex;flex-direction:column;gap:10px}
 .pack{
- width:100%;border:1px solid #dcefe7;
- background:#F9FEFC;border-radius:13px;padding:14px;
- display:flex;align-items:center;justify-content:space-between;
- text-align:left
+ width:100%;min-height:60px;border:1px solid var(--b);background:#f9fefc;border-radius:14px;
+ padding:14px;display:flex;align-items:center;justify-content:space-between;text-align:left;
+ transition:transform .15s,background .2s,box-shadow .2s
 }
-.pack:hover{background:#E0F7EE}
-.pack-info strong{
- display:block;color:#17352C;font-size:15px;margin-bottom:4px
-}
-.pack-info small{color:#668078;font-size:11px}
+.pack:hover{background:var(--p);box-shadow:0 6px 16px #159b7218}
+.pack-info strong{display:block;color:var(--t);font-size:15px;margin-bottom:4px}
+.pack-info small{color:var(--g);font-size:11px}
 .pack-price{
- background:#0B8F6A;color:white;padding:9px 11px;
- border-radius:9px;font-size:12px;font-weight:bold;
- white-space:nowrap
+ background:var(--v);color:#fff;padding:9px 11px;border-radius:10px;
+ font-size:12px;font-weight:bold;white-space:nowrap
 }
-
-.divider-text{
- display:flex;align-items:center;gap:10px;
- color:#95a8a1;font-size:12px;margin:16px 0
-}
-.divider-text::before,.divider-text::after{
- content:"";flex:1;height:1px;background:#dcefe7
-}
-
-.custom-amount-box{
- border:1px solid #dcefe7;background:#F9FEFC;
- border-radius:13px;padding:14px
-}
-.custom-amount-row{
- display:flex;align-items:center;gap:10px;margin-top:10px
-}
+.divider-text{display:flex;align-items:center;gap:10px;color:#95a8a1;font-size:12px;margin:16px 0}
+.divider-text::before,.divider-text::after{content:"";flex:1;height:1px;background:var(--b)}
+.custom-amount-box{border:1px solid var(--b);background:#f9fefc;border-radius:14px;padding:14px}
+.custom-amount-row{display:flex;align-items:center;gap:10px;margin-top:10px}
 .custom-amount-row input{
- flex:1;border:1px solid #cce5dc;border-radius:10px;
- padding:11px;font-size:14px;color:#17352C;outline:none
+ flex:1;min-height:46px;border:1px solid var(--b);border-radius:12px;
+ padding:10px 12px;font-size:16px;color:var(--t);outline:none
 }
-.custom-amount-row input:focus{border-color:#0B8F6A}
-.custom-amount-price{
- color:#087557;font-weight:bold;font-size:14px;
- min-width:95px;text-align:right
-}
+.custom-amount-row input:focus{border-color:var(--v);box-shadow:0 0 0 3px #159b7220}
+.custom-amount-price{color:#087557;font-weight:bold;font-size:14px;min-width:95px;text-align:right}
 .custom-amount-button{
- width:100%;border:none;background:#0B8F6A;color:white;
- padding:11px;border-radius:10px;font-weight:bold;
- margin-top:10px;font-size:13px
+ width:100%;min-height:48px;border:0;background:var(--v);color:#fff;
+ padding:11px;border-radius:12px;font-weight:bold;margin-top:10px;font-size:14px
 }
 
 .usage-list{display:flex;flex-direction:column;gap:10px}
 .usage-item{
- display:flex;align-items:center;gap:10px;
- background:#F3FBF7;border-radius:11px;padding:11px
+ display:flex;align-items:center;gap:10px;background:var(--f);
+ border:1px solid var(--b);border-radius:12px;padding:11px
 }
 .usage-icon{
- width:36px;height:36px;border-radius:10px;
- background:#E0F7EE;display:flex;
- align-items:center;justify-content:center;
- font-size:18px;flex-shrink:0
+ width:38px;height:38px;border-radius:12px;background:var(--p);display:flex;
+ align-items:center;justify-content:center;font-size:18px;flex-shrink:0
 }
-.usage-text strong{
- display:block;color:#17352C;font-size:13px;margin-bottom:3px
-}
-.usage-text small{color:#668078;font-size:11px}
-
+.usage-text strong{display:block;color:var(--t);font-size:13px;margin-bottom:3px}
+.usage-text small{color:var(--g);font-size:11px}
 .security-note{
- background:#FFF6E0;color:#8A6100;border-radius:11px;
- padding:12px;font-size:12px;line-height:1.5;margin-top:10px
+ background:#FFF6E0;color:#8A6100;border-radius:12px;padding:12px;
+ font-size:12px;line-height:1.5;margin-top:10px
 }
 
+/* ===== Fenêtres : elles montent depuis le bas (confortable à une main) ===== */
 .modal{
- display:none;position:fixed;inset:0;
- background:rgba(0,0,0,.45);z-index:100;
- align-items:center;justify-content:center;padding:15px
+ display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:100;
+ align-items:flex-end;justify-content:center;padding:0;animation:fondu .2s ease
 }
 .modal.show{display:flex}
 .modal-content{
- width:100%;max-width:520px;max-height:90vh;
- overflow-y:auto;background:white;border-radius:18px;
- padding:20px;position:relative
+ width:100%;max-width:520px;max-height:92vh;overflow-y:auto;background:#fff;
+ border-radius:22px 22px 0 0;padding:22px 20px calc(20px + env(safe-area-inset-bottom));
+ position:relative;animation:sheet .3s ease
+}
+.modal-content::before{
+ content:"";display:block;width:42px;height:4px;border-radius:4px;
+ background:var(--b);margin:-8px auto 14px
 }
 .close-button{
- position:absolute;right:12px;top:10px;
- width:32px;height:32px;border:none;border-radius:50%;
- background:#E0F7EE;color:#087557;font-size:21px
+ position:absolute;right:12px;top:12px;width:38px;height:38px;border:0;
+ border-radius:50%;background:var(--p);color:#087557;font-size:22px
 }
-.modal-content h2{
- color:#087557;font-size:19px;margin-bottom:15px;padding-right:35px
+.modal-content h2{color:#087557;font-size:19px;margin-bottom:15px;padding-right:42px}
+@media(min-width:700px){
+ .modal{align-items:center;padding:15px}
+ .modal-content{border-radius:22px}
+ .modal-content::before{display:none}
 }
 
+/* ===== Formulaires ===== */
 .form-group{margin-bottom:13px}
-.form-group label{
- display:block;color:#17352C;font-size:12px;
- font-weight:bold;margin-bottom:6px
-}
-.form-group input,
-.form-group textarea,
-.form-group select{
- width:100%;border:1px solid #cce5dc;
- border-radius:10px;padding:11px;outline:none;
- font-size:13px;background:white;color:#17352C
+.form-group label{display:block;color:var(--t);font-size:12px;font-weight:bold;margin-bottom:6px}
+.form-group input,.form-group textarea,.form-group select{
+ width:100%;min-height:46px;border:1px solid var(--b);border-radius:12px;
+ padding:10px 12px;outline:none;font-size:16px;background:#fff;color:var(--t);
+ transition:border-color .2s,box-shadow .2s
 }
 .form-group textarea{min-height:100px;resize:vertical}
-.form-group input:focus,
-.form-group textarea:focus,
-.form-group select:focus{border-color:#0B8F6A}
-
+.form-group input:focus,.form-group textarea:focus,.form-group select:focus{
+ border-color:var(--v);box-shadow:0 0 0 3px #159b7220
+}
 .photo-preview{
- width:100px;height:100px;border-radius:50%;
- object-fit:cover;background:#E0F7EE;
- margin-bottom:10px;display:block
+ width:100px;height:100px;border-radius:50%;object-fit:cover;background:var(--p);
+ margin-bottom:10px;display:block;border:3px solid var(--p)
 }
-
-.checkbox-row{
- display:flex;align-items:flex-start;gap:8px;
- font-size:12px;color:#55736A;margin-top:8px
-}
+.checkbox-row{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:#55736a;margin-top:8px}
 .checkbox-row input{width:auto;margin-top:3px}
 
-/* AJOUT : boutons Politique de confidentialité et Conditions d'utilisation */
+/* Boutons Politique de confidentialité et Conditions d'utilisation */
 .legal-link{
  font-size:12px;margin-top:10px;text-align:center;
  display:flex;flex-wrap:wrap;gap:8px;justify-content:center
 }
 .legal-link a{
- color:#087557;background:#E0F7EE;font-weight:bold;
- text-decoration:none;padding:7px 11px;border-radius:20px
+ color:#087557;background:var(--p);font-weight:bold;text-decoration:none;
+ padding:9px 12px;border-radius:20px
 }
 
 .save-button,.continue-payment{
- width:100%;border:none;background:#0B8F6A;
- color:white;padding:12px;border-radius:10px;
- font-weight:bold;margin-top:5px
+ width:100%;min-height:48px;border:0;background:var(--v);color:#fff;
+ padding:12px;border-radius:12px;font-weight:bold;font-size:15px;margin-top:5px
 }
 .save-button:disabled{opacity:.6}
-
-.choice-note{
- background:#F3FBF7;border-radius:10px;
- padding:10px;font-size:11px;color:#668078;
- margin-top:5px
-}
-
-.payment-info{
- background:#F3FBF7;border-radius:11px;
- padding:12px;margin-bottom:15px
-}
-.payment-info p{
- color:#55736A;font-size:12px;line-height:1.5
-}
-.payment-methods{
- display:flex;flex-direction:column;gap:9px
-}
-.payment-method{
- border:1px solid #dcefe7;background:white;
- border-radius:11px;padding:12px;
- display:flex;align-items:center;gap:10px
-}
-.payment-method input{accent-color:#0B8F6A}
-.payment-method label{
- flex:1;color:#17352C;font-size:13px;font-weight:bold
-}
-.payment-method small{
- display:block;color:#668078;font-size:10px;
- font-weight:normal;margin-top:3px
-}
 .continue-payment{margin-top:15px}
+.choice-note{background:var(--f);border-radius:10px;padding:10px;font-size:11px;color:var(--g);margin-top:5px}
 
-.auth-card{
- background:white;border-radius:18px;padding:22px;
- box-shadow:0 3px 12px rgba(0,0,0,.05)
+.payment-info{background:var(--f);border-radius:12px;padding:12px;margin-bottom:15px}
+.payment-info p{color:#55736a;font-size:12px;line-height:1.5}
+.payment-methods{display:flex;flex-direction:column;gap:9px}
+.payment-method{
+ border:1px solid var(--b);background:#fff;border-radius:12px;padding:12px;
+ display:flex;align-items:center;gap:10px;min-height:52px
 }
-.auth-tabs{
- display:flex;background:#F3FBF7;border-radius:11px;
- padding:4px;margin-bottom:18px
-}
+.payment-method input{accent-color:var(--v)}
+.payment-method label{flex:1;color:var(--t);font-size:13px;font-weight:bold}
+.payment-method small{display:block;color:var(--g);font-size:10px;font-weight:normal;margin-top:3px}
+
+/* ===== Connexion / inscription ===== */
+.auth-tabs{display:flex;background:var(--p);border-radius:13px;padding:4px;margin-bottom:18px}
 .auth-tab{
- flex:1;border:none;background:transparent;
- padding:10px;border-radius:9px;font-weight:bold;
- color:#668078;font-size:13px
+ flex:1;min-height:44px;border:0;background:transparent;padding:10px;
+ border-radius:10px;font-weight:bold;color:var(--g);font-size:14px
 }
-.auth-tab.active{background:#0B8F6A;color:white}
+.auth-tab.active{background:var(--v);color:#fff;box-shadow:0 4px 12px #159b7230}
 .auth-form{display:none}
-.auth-form.active{display:block}
+.auth-form.active{display:block;animation:in .35s ease both}
 .auth-error{
- background:#FDEDED;color:#C0392B;border-radius:10px;
- padding:10px 12px;font-size:12px;margin-bottom:12px;
- display:none
+ background:#FDEDED;color:#C0392B;border-radius:10px;padding:10px 12px;
+ font-size:12px;margin-bottom:12px;display:none
 }
 .auth-error.show{display:block}
 .auth-success{
- background:#E6F7EF;color:#0B8F6A;border-radius:10px;
- padding:10px 12px;font-size:12px;margin-bottom:12px;
- display:none
+ background:#E6F7EF;color:var(--v);border-radius:10px;padding:10px 12px;
+ font-size:12px;margin-bottom:12px;display:none
 }
 .auth-success.show{display:block}
 .link-button{
- background:none;border:none;color:#0B8F6A;
- font-size:12px;font-weight:bold;margin-top:10px;
- text-decoration:underline;padding:0
+ background:none;border:0;color:var(--v);font-size:13px;font-weight:bold;
+ margin-top:12px;text-decoration:underline;padding:8px 0;min-height:44px
 }
 
 .verify-banner{
- background:#FFF6E0;color:#8A6100;border-radius:14px;
- padding:14px;margin-bottom:16px;font-size:13px;line-height:1.5
+ background:#FFF6E0;color:#8A6100;border-radius:14px;padding:14px;
+ margin-bottom:16px;font-size:13px;line-height:1.5
 }
 .verify-banner button{
- margin-top:8px;border:none;background:#8A6100;
- color:white;padding:8px 12px;border-radius:8px;
- font-size:12px;font-weight:bold
+ margin-top:8px;border:0;background:#8A6100;color:#fff;padding:10px 12px;
+ border-radius:8px;font-size:12px;font-weight:bold;min-height:40px
 }
 
-.pending-badge{
- display:inline-block;background:#FFF6E0;color:#8A6100;
- padding:6px 11px;border-radius:20px;font-size:12px;
- font-weight:bold;margin-top:10px
+.pending-badge,.approved-badge,.refused-badge{
+ display:inline-block;padding:6px 11px;border-radius:20px;
+ font-size:12px;font-weight:bold;margin-top:10px
 }
-.approved-badge{
- display:inline-block;background:#E6F7EF;color:#0B8F6A;
- padding:6px 11px;border-radius:20px;font-size:12px;
- font-weight:bold;margin-top:10px
-}
-.refused-badge{
- display:inline-block;background:#FDEDED;color:#C0392B;
- padding:6px 11px;border-radius:20px;font-size:12px;
- font-weight:bold;margin-top:10px
-}
+.pending-badge{background:#FFF6E0;color:#8A6100}
+.approved-badge{background:#E6F7EF;color:var(--v)}
+.refused-badge{background:#FDEDED;color:#C0392B}
 
-/* AJOUT : masque du visage */
+/* ===== Masque du visage ===== */
 .mask-button{
- width:100%;border:none;background:#E0F7EE;color:#087557;
- padding:11px;border-radius:10px;font-weight:bold;
- margin-top:8px;font-size:13px
+ width:100%;min-height:46px;border:0;background:var(--p);color:#087557;
+ padding:11px;border-radius:12px;font-weight:bold;margin-top:8px;font-size:14px
 }
 .mask-status{
- display:none;background:#E6F7EF;color:#0B8F6A;
- border-radius:10px;padding:10px 12px;
- font-size:12px;line-height:1.5;margin-top:8px
+ display:none;background:#E6F7EF;color:var(--v);border-radius:10px;
+ padding:10px 12px;font-size:12px;line-height:1.5;margin-top:8px
 }
 .mask-status.show{display:block}
 .mask-status button{
- background:none;border:none;color:#0B8F6A;
- font-weight:bold;text-decoration:underline;
- font-size:12px;padding:0
+ background:none;border:0;color:var(--v);font-weight:bold;
+ text-decoration:underline;font-size:12px;padding:6px 0
 }
-.mask-canvas-wrap{
- background:#F3FBF7;border-radius:12px;
- padding:6px;margin-bottom:12px;text-align:center
-}
-#maskCanvas{
- max-width:100%;max-height:55vh;border-radius:8px;
- touch-action:none;cursor:grab
-}
-.emoji-choices{
- display:flex;gap:10px;justify-content:center;margin-bottom:12px
-}
+.mask-canvas-wrap{background:var(--f);border-radius:12px;padding:6px;margin-bottom:12px;text-align:center}
+#maskCanvas{max-width:100%;max-height:55vh;border-radius:8px;touch-action:none;cursor:grab}
+.emoji-choices{display:flex;gap:10px;justify-content:center;margin-bottom:12px}
 .emoji-choice{
- width:54px;height:54px;border-radius:14px;
- border:2px solid #dcefe7;background:white;
- font-size:28px;line-height:1
+ width:56px;height:56px;border-radius:14px;border:2px solid var(--b);
+ background:#fff;font-size:28px;line-height:1
 }
-.emoji-choice.active{border-color:#0B8F6A;background:#E0F7EE}
-.form-group input[type=range]{padding:0;border:none}
+.emoji-choice.active{border-color:var(--v);background:var(--p)}
+.form-group input[type=range]{padding:0;border:0;min-height:32px}
 .mask-actions{display:flex;gap:8px;margin-top:12px}
-.mask-actions button{
- flex:1;border:none;border-radius:10px;
- padding:12px;font-weight:bold
-}
+.mask-actions button{flex:1;min-height:48px;border:0;border-radius:12px;padding:12px;font-weight:bold}
 .mask-cancel{background:#eee;color:#555}
-.mask-validate{background:#0B8F6A;color:white}
+.mask-validate{background:var(--v);color:#fff}
 .mask-validate:disabled{opacity:.6}
 
+/* ===== Barre du bas (même style que l'accueil) ===== */
 .bottom-nav{
- position:fixed;left:0;right:0;bottom:0;height:68px;
- background:white;border-top:1px solid #dcefe7;
- display:flex;z-index:40;
- box-shadow:0 -2px 10px rgba(0,0,0,.06)
+ position:fixed;bottom:0;left:0;right:0;z-index:40;background:#fffffff5;
+ border-top:1px solid var(--b);display:grid;grid-template-columns:repeat(4,1fr);
+ padding:7px 6px calc(7px + env(safe-area-inset-bottom));box-shadow:0 -7px 22px #159b7210
 }
 .bottom-nav a{
- flex:1;text-decoration:none;color:#668078;
- display:flex;flex-direction:column;
- align-items:center;justify-content:center;
- gap:3px;font-size:11px;font-weight:bold
+ text-decoration:none;text-align:center;color:var(--g);font-size:11px;font-weight:bold;
+ padding:6px 4px;border-radius:12px;min-height:48px;transition:background .2s,color .2s,transform .15s
 }
-.bottom-nav a span{font-size:20px;line-height:1}
-.bottom-nav a.active{color:#0B8F6A}
+.bottom-nav a:active{transform:scale(.95)}
+.bottom-nav a span{display:block;font-size:20px;line-height:1;margin-bottom:3px}
+.bottom-nav a.active,.bottom-nav a:hover{color:var(--v);background:var(--p)}
 
-@media(min-width:700px){
- .bottom-nav{
-  max-width:700px;left:50%;transform:translateX(-50%);
-  border-radius:16px 16px 0 0
- }
+/* Respect des personnes qui ont désactivé les animations */
+@media(prefers-reduced-motion:reduce){
+ *{animation:none!important;transition:none!important}
 }
- </style>
- </head>
+                            </style>
+</head>
 
 <body>
 
 <header>
-<div class="logo">💚 Afrilova</div>
-<div class="header-points">
-⭐ <span id="headerPoints">-</span> points
+<div class="brand">
+<img class="logo-img" src="logo.png" alt="Logo Afrilova" onerror="this.style.display='none'">
+<div class="logo">Afrilova ❤️</div>
 </div>
+<!-- MODIFIÉ : points en 💎 comme sur l'accueil ("1 point" / "2 points" géré par le script) -->
+<div class="solde">💎 <span id="headerPoints">-</span> <span id="headerLabel">point</span></div>
 </header>
 
 <main class="container">
@@ -451,7 +363,7 @@ h1{color:#087557;font-size:25px;margin-bottom:7px}
       Mot de passe oublié ?
       </button>
 
-      <!-- AJOUT : boutons politique de confidentialité et conditions -->
+      <!-- Boutons politique de confidentialité et conditions -->
       <p class="legal-link">
         <a href="politique-confidentialite.html" target="_blank" rel="noopener">🔒 Politique de confidentialité</a>
         <a href="conditions-utilisation.html" target="_blank" rel="noopener">📜 Conditions d'utilisation</a>
@@ -481,7 +393,7 @@ h1{color:#087557;font-size:25px;margin-bottom:7px}
         </label>
       </div>
 
-      <!-- AJOUT : boutons politique de confidentialité et conditions -->
+      <!-- Boutons politique de confidentialité et conditions -->
       <p class="legal-link">
         <a href="politique-confidentialite.html" target="_blank" rel="noopener">🔒 Politique de confidentialité</a>
         <a href="conditions-utilisation.html" target="_blank" rel="noopener">📜 Conditions d'utilisation</a>
@@ -572,7 +484,7 @@ Renvoyer l'email de vérification
 <img
  id="profilePhoto"
  class="profile-photo"
- src="https://via.placeholder.com/200/E0F7EE/087557?text=Afrilova"
+ src="https://via.placeholder.com/200/E8F8F2/159B72?text=Afrilova"
  alt="Photo de profil">
 
 <h2 id="profileName" class="profile-name">
@@ -644,7 +556,8 @@ Cliquez ci-dessous pour commencer.
 </section>
 
 <section class="points-card">
-<div class="points-title">Mon solde</div>
+<!-- MODIFIÉ : 💎 devant "Mon solde" -->
+<div class="points-title">💎 Mon solde</div>
 <div class="points-number" id="mainPoints">0 point</div>
 <div class="points-description">
 Les points permettent d'envoyer des demandes de discussion
@@ -653,7 +566,8 @@ et d'utiliser l'Aide à la discussion.
 </section>
 
 <section class="section-card">
-<h2>⭐ Acheter des points</h2>
+<!-- MODIFIÉ : 💎 à la place de ⭐ -->
+<h2>💎 Acheter des points</h2>
 <p class="section-description">
 Choisissez un pack avantageux, ou achetez exactement le nombre
 de points dont vous avez besoin (1 point = 200 FCFA à l'unité).
@@ -682,7 +596,6 @@ de points dont vous avez besoin (1 point = 200 FCFA à l'unité).
 <strong style="font-size:13px;color:#17352C">Choisir mon propre montant</strong>
 
 <div class="custom-amount-row">
-<!-- MODIFIÉ : ajout de onchange pour corriger la valeur seulement quand la saisie est terminée -->
 <input
   type="number"
   id="customPointsInput"
@@ -738,8 +651,9 @@ en cas de problème.
 
 </div>
 
-     </main>
-     <!-- MODALE MODIFICATION PROFIL -->
+</main>
+
+<!-- MODALE MODIFICATION PROFIL -->
 
 <div class="modal" id="editProfileModal">
 
@@ -752,11 +666,11 @@ en cas de problème.
 
 <div class="form-group">
 <label>Photo principale</label>
-<img id="photoPreview" class="photo-preview" src="https://via.placeholder.com/200/E0F7EE/087557?text=Photo">
+<img id="photoPreview" class="photo-preview" src="https://via.placeholder.com/200/E8F8F2/159B72?text=Photo">
 <input type="file" id="editPhoto" accept="image/jpeg,image/png,image/webp" onchange="gererPhotoSelectionnee(event)">
 <div class="choice-note">JPG, PNG ou WEBP — compression automatique appliquée si nécessaire.</div>
 
-<!-- AJOUT : masque du visage (le bouton apparaît après le choix d'une photo) -->
+<!-- Masque du visage (le bouton apparaît après le choix d'une photo) -->
 <button type="button" class="mask-button" id="btnMasquer" style="display:none" onclick="ouvrirEditeurMasque()">
 🎭 Masquer mon visage
 </button>
@@ -837,7 +751,8 @@ Votre profil sera examiné avant d'être visible publiquement
 </form>
 </div>
 </div>
- <!-- AJOUT : MODALE MASQUER MON VISAGE (placée après la modale profil pour s'afficher par-dessus) -->
+
+<!-- MODALE MASQUER MON VISAGE (placée après la modale profil pour s'afficher par-dessus) -->
 
 <div class="modal" id="maskModal">
 <div class="modal-content">
@@ -909,13 +824,14 @@ Continuer vers le paiement
 
 
 <!-- NAVIGATION -->
- <nav class="bottom-nav">
+
+<nav class="bottom-nav">
 <a href="index.html"><span>🏠</span>Accueil</a>
 <a href="explorer.html"><span>🔎</span>Explorer</a>
 <a href="messagerie.html"><span>💬</span>Messagerie</a>
 <a href="profil.html" class="active"><span>👤</span>Profil</a>
      </nav>
-     <!-- SDK APPWRITE (CDN) -->
+<!-- SDK APPWRITE (CDN) -->
 <script src="https://cdn.jsdelivr.net/npm/appwrite@20.0.0"></script>
 
 <script>
@@ -951,7 +867,7 @@ let photoFichierSelectionne = null;
 let nombrePointsSelectionne = 0;
 let prixSelectionne = 0;
 
-// AJOUT : état du masque de visage
+// État du masque de visage
 let masqueActif = false;
 let photoMasqueeFichier = null;
 let photoOriginaleFichier = null;
@@ -969,7 +885,7 @@ const LABELS_TYPE_RELATION = {
 };
 
 
-/* ========================================== AJOUT : PERMISSIONS DES FICHIERS ========================================== */
+/* ========================================== PERMISSIONS DES FICHIERS ========================================== */
 
 function permLirePublic() {
   return 'read("any")';
@@ -1278,7 +1194,7 @@ async function gererPhotoSelectionnee(event) {
     photoFichierSelectionne = fichierFinal;
     document.getElementById("photoPreview").src = URL.createObjectURL(fichierFinal);
 
-    // AJOUT : nouvelle photo = on repart sans masque, et le bouton "Masquer mon visage" apparaît
+    // Nouvelle photo = on repart sans masque, et le bouton "Masquer mon visage" apparaît
     reinitialiserMasque();
     document.getElementById("btnMasquer").style.display = "block";
 
@@ -1365,12 +1281,12 @@ function compresserImage(fichier, tailleMaxOctets, largeurMax) {
 }
 
 function urlPhoto(photoId) {
-  if (!photoId) return "https://via.placeholder.com/200/E0F7EE/087557?text=Afrilova";
+  if (!photoId) return "https://via.placeholder.com/200/E8F8F2/159B72?text=Afrilova";
   return storage.getFileView({ bucketId: APPWRITE_BUCKET_PHOTOS, fileId: photoId });
 }
 
 
-/* ========================================== AJOUT : MASQUE DU VISAGE ========================================== */
+/* ========================================== MASQUE DU VISAGE ========================================== */
 
 // Exporte un canvas en JPEG de 500 Ko maximum (cela supprime aussi les données EXIF / GPS)
 function canvasVersFichier(canvas, tailleMaxOctets) {
@@ -1616,6 +1532,8 @@ function ouvrirModificationProfil() {
 
   document.getElementById("editProfileModal").classList.add("show");
 }
+
+
 /* ========================================== ENREGISTRER LE PROFIL ========================================== */
 async function enregistrerProfil(event) {
   event.preventDefault();
@@ -1648,7 +1566,7 @@ async function enregistrerProfil(event) {
     let photoId = profilActuel ? profilActuel.photoPrincipale : null;
     let photoOriginaleId = null;
 
-    // AJOUT : le masque est utilisé seulement si les deux fichiers sont prêts
+    // Le masque est utilisé seulement si les deux fichiers sont prêts
     const masqueUtilise = !!(
       photoFichierSelectionne &&
       masqueActif &&
@@ -1661,12 +1579,11 @@ async function enregistrerProfil(event) {
     if (photoFichierSelectionne) {
 
       if (masqueUtilise) {
-       // MODIFIÉ : deux fichiers : l'original PRIVÉ d'abord, puis la photo masquée PUBLIQUE
+       // Deux fichiers : l'original PRIVÉ d'abord, puis la photo masquée PUBLIQUE
         let fichierOriginalUploade = null;
 
         try {
-
-          fichierOriginalUploade = await storage.createFile({
+fichierOriginalUploade = await storage.createFile({
             bucketId: APPWRITE_BUCKET_PHOTOS,
             fileId: Appwrite.ID.unique(),
             file: photoOriginaleFichier,
@@ -1692,7 +1609,8 @@ async function enregistrerProfil(event) {
           photoOriginaleId = fichierOriginalUploade.$id;
 
         } catch (erreurUpload) {
-         // Si la photo masquée n'a pas pu être envoyée, on supprime l'original déjà envoyé
+
+          // Si la photo masquée n'a pas pu être envoyée, on supprime l'original déjà envoyé
           if (fichierOriginalUploade) {
             try {
               await storage.deleteFile({
@@ -1707,7 +1625,7 @@ async function enregistrerProfil(event) {
 
       } else {
 
-        // MODIFIÉ : photo sans masque, avec sa propre lecture publique
+        // Photo sans masque, avec sa propre lecture publique
         const fichierUploade = await storage.createFile({
           bucketId: APPWRITE_BUCKET_PHOTOS,
           fileId: Appwrite.ID.unique(),
@@ -1732,8 +1650,7 @@ async function enregistrerProfil(event) {
       typeRelation,
       photoPrincipale: photoId
     };
-
-    // AJOUT : la colonne photoOriginaleId n'est envoyée que si nécessaire
+   // La colonne photoOriginaleId n'est envoyée que si nécessaire
     if (masqueUtilise) {
       donnees.photoOriginaleId = photoOriginaleId;
     } else if (photoFichierSelectionne && profilActuel && profilActuel.photoOriginaleId) {
@@ -1777,7 +1694,7 @@ async function enregistrerProfil(event) {
 
     photoFichierSelectionne = null;
 
-    // AJOUT : on remet le masque à zéro après l'enregistrement
+    // On remet le masque à zéro après l'enregistrement
     reinitialiserMasque();
     document.getElementById("btnMasquer").style.display = "none";
 
@@ -1869,13 +1786,24 @@ async function chargerSoldePoints(userId) {
   }
 }
 
+// MODIFIÉ : "💎 1 point" / "💎 2 points" comme sur l'accueil, avec une petite animation
 function afficherSolde(points) {
-  document.getElementById("headerPoints").textContent = points;
-  document.getElementById("mainPoints").textContent = points + (points > 1 ? " points" : " point");
-}
 
+  const n = Number(points) || 0;
 
-/* ========================================== ÉTAT DE CONNEXION ========================================== */
+  document.getElementById("headerPoints").textContent = n;
+  document.getElementById("headerLabel").textContent = n > 1 ? "points" : "point";
+
+  const principal = document.getElementById("mainPoints");
+  principal.textContent = n + (n > 1 ? " points" : " point");
+
+  // Animation quand le solde s'affiche
+  principal.classList.remove("pop");
+  void principal.offsetWidth;
+  principal.classList.add("pop");
+
+ }
+ /* ========================================== ÉTAT DE CONNEXION ========================================== */
 
 async function chargerEtatConnexion() {
   try {
@@ -1897,8 +1825,10 @@ async function chargerEtatConnexion() {
     document.getElementById("profilConnecte").style.display = "none";
     document.getElementById("headerPoints").textContent = "-";
   }
- }
- /* ========================================== ACHAT DE POINTS (packs + montant personnalisé) ========================================== */
+}
+
+
+/* ========================================== ACHAT DE POINTS (packs + montant personnalisé) ========================================== */
 
 function mettreAJourPrixPersonnalise() {
 
@@ -1908,7 +1838,7 @@ function mettreAJourPrixPersonnalise() {
   if (!nombre || nombre < 1) nombre = 1;
   if (nombre > 500) nombre = 500;
 
-  // MODIFIÉ : le champ n'est plus réécrit pendant la saisie,
+  // Le champ n'est plus réécrit pendant la saisie,
   // sinon on ne peut pas effacer le "1" pour taper 2, 3, 4...
   const prix = nombre * PRIX_PAR_POINT;
 
@@ -1917,7 +1847,7 @@ function mettreAJourPrixPersonnalise() {
 
 }
 
-// AJOUT : corrige la valeur du champ quand la saisie est terminée
+// Corrige la valeur du champ quand la saisie est terminée
 function corrigerChampPersonnalise() {
 
   const input = document.getElementById("customPointsInput");
@@ -1933,7 +1863,7 @@ function corrigerChampPersonnalise() {
 
 function ouvrirPaiementPersonnalise() {
 
-  corrigerChampPersonnalise(); // AJOUT : valeur toujours entre 1 et 500
+  corrigerChampPersonnalise(); // valeur toujours entre 1 et 500
 
   const nombre = parseInt(document.getElementById("customPointsInput").value, 10) || 1;
   const prix = nombre * PRIX_PAR_POINT;
@@ -1941,8 +1871,7 @@ function ouvrirPaiementPersonnalise() {
   ouvrirPaiement(nombre, prix);
 
 }
-
-function ouvrirPaiement(nombrePoints, prix) {
+ function ouvrirPaiement(nombrePoints, prix) {
   nombrePointsSelectionne = nombrePoints;
   prixSelectionne = prix;
 
@@ -1964,10 +1893,8 @@ function formaterPrix(prix) {
   }
 
   alert("Le paiement réel sera connecté avec PayDunya à une prochaine étape. Aucun point n'a été crédité.");
-}
-
-
-/* ========================================== MODALES ========================================== */
+ }
+ /* ========================================== MODALES ========================================== */
 
 function fermerModal(id) {
   const modal = document.getElementById(id);
@@ -1984,7 +1911,7 @@ document.addEventListener("click", function (event) {
 /* ========================================== INITIALISATION ========================================== */
 
 document.addEventListener("DOMContentLoaded", async function () {
-  initialiserEditeurMasque(); // AJOUT : active le déplacement de l'emoji au doigt
+  initialiserEditeurMasque(); // active le déplacement de l'emoji au doigt
   await chargerPays();
   await chargerToutesLesVilles();
   await verifierRetourEmail();
