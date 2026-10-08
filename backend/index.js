@@ -5,11 +5,12 @@
 
 import { Client, Databases, ID, Query } from "node-appwrite";
 
-/* ---------- Connexion Appwrite (clé API côté serveur) ---------- */
+/* ---------- Connexion Appwrite ---------- */
+// Adresse et projet fournis automatiquement par Appwrite à la fonction.
+// La clé API est ajoutée plus bas, à chaque exécution (voir le point d'entrée).
 const client = new Client()
-  .setEndpoint(process.env.APPWRITE_ENDPOINT)
-  .setProject(process.env.APPWRITE_PROJECT_ID)
-  .setKey(process.env.APPWRITE_API_KEY);
+  .setEndpoint(process.env.APPWRITE_FUNCTION_API_ENDPOINT)
+  .setProject(process.env.APPWRITE_FUNCTION_PROJECT_ID);
 
 const databases = new Databases(client);
 
@@ -295,7 +296,7 @@ async function envoyerDemande(userId, data) {
     await addPoints(userId, COUT_DEMANDE);
     throw error;
   }
-}
+         }
 // Refuse une demande (le point est rendu à l'expéditeur)
 async function refuserDemande(userId, data) {
   const demandeId = data.demandeId;
@@ -607,6 +608,16 @@ Ne présente jamais la compatibilité comme une certitude.
 
 export default async ({ req, res, log, error }) => {
   try {
+    // Clé dynamique fournie par Appwrite pour cette exécution
+    // (elle n'expire pas et suit les droits de la fonction)
+    const cleDynamique = req.headers?.["x-appwrite-key"];
+
+    if (!cleDynamique) {
+      throw new Error("Clé de la fonction absente.");
+    }
+
+    client.setKey(cleDynamique);
+
     const userId = getUserId(req);
 
     const donnees =
