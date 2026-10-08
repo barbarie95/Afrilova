@@ -3,7 +3,7 @@
    Fichier : backend/index.js
    ===================================================== */
 
-import { Client, Databases, ID, Query } from "node-appwrite";
+import { Client, Databases, Users, Teams, ID, Query } from "node-appwrite";
 
 /* ---------- Connexion Appwrite ---------- */
 // Adresse et projet fournis automatiquement par Appwrite à la fonction.
@@ -13,6 +13,8 @@ const client = new Client()
   .setProject(process.env.APPWRITE_FUNCTION_PROJECT_ID);
 
 const databases = new Databases(client);
+const users = new Users(client);
+const teams = new Teams(client);
 
 /* ---------- Identifiants des tables ---------- */
 const DATABASE_ID =
@@ -23,6 +25,11 @@ const TABLE_POINTS = "points";
 const TABLE_DEMANDES = "demandes";
 const TABLE_CONVERSATIONS = "conversations";
 const TABLE_MESSAGES = "messages";
+const TABLE_SIGNALEMENTS = "signalements";
+const TABLE_BLOCAGES = "blocages";
+
+// Équipe Appwrite des administrateurs
+const ADMIN_TEAM_ID = "6aacffe749b1978e61bf";
 
 /* ---------- Configuration Gemini (IA) ---------- */
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
@@ -296,7 +303,7 @@ async function envoyerDemande(userId, data) {
     await addPoints(userId, COUT_DEMANDE);
     throw error;
   }
-         }
+     }
 // Refuse une demande (le point est rendu à l'expéditeur)
 async function refuserDemande(userId, data) {
   const demandeId = data.demandeId;
@@ -603,6 +610,161 @@ Ne présente jamais la compatibilité comme une certitude.
 }
 
 /* =====================================================
+   ESPACE ADMINISTRATEUR (lecture seule)
+   ===================================================== */
+
+// Vérifie que l'utilisateur est membre confirmé de l'équipe "Administrateurs"
+// Renvoie "super" (rôle owner) ou "associe" (autres membres)
+async function verifierAdmin(userId) {
+  const adhesions = await teams.listMemberships(
+    ADMIN_TEAM_ID,
+    [
+      Query.equal("userId", userId),
+      Query.limit(1),
+    ]
+  );
+
+  const adhesion = adhesions.memberships?.[0];
+
+  if (!adhesion || !adhesion.confirm) {
+    throw new Error("Accès réservé aux administrateurs.");
+  }
+
+  return adhesion.roles.includes("owner") ? "super" : "associe";
+}
+
+// Renvoie le total d'une requête, ou null si elle échoue
+// (une statistique indisponible ne bloque pas les autres)
+async function totalOuNull(requete) {
+  try {
+    const resultat = await requete;
+    return resultat.total;
+  } catch (e) {
+    return null;
+  }
+}
+
+// Compte les documents d'une table (on ne lit qu'un document, seul le total compte)
+function compterDocs(table, requetes = []) {
+  return databases.listDocuments(
+    DATABASE_ID,
+    table,
+    [...requetes, Query.limit(1)]
+  );
+}
+
+// Compte les utilisateurs Appwrite
+function compterUsers(requetes = []) {
+  return users.list([...requetes, Query.limit(1)]);
+}
+
+// Statistiques du tableau de bord (réservé aux administrateurs)
+async function adminStats(userId) {
+  const role = await verifierAdmin(userId);
+
+  const JOUR = 24 * 60 * 60 * 1000;
+  const maintenant = Date.now();
+
+  // Date d'il y a "nb" jours, au format ISO
+  const depuis = (nb) =>
+    new Date(maintenant - nb * JOUR).toISOString();
+
+  // Début de la journée en cours
+  const debutJour = new Date();
+  debutJour.setUTCHours(0, 0, 0, 0);
+  const aujourdhui = debutJour.toISOString();
+
+  // Toutes les requêtes partent en même temps pour aller vite
+  const taches = {
+    utilisateursTotal: totalOuNull(compterUsers()),
+    utilisateursActifs24h: totalOuNull(
+      compterUsers([Query.greaterThan("accessedAt", depuis(1))])
+    ),
+    nouveauxAujourdhui: totalOuNull(
+      compterUsers([Query.greaterThan("registration", aujourdhui)])
+    ),
+    nouveaux7j: totalOuNull(
+      compterUsers([Query.greaterThan("registration", depuis(7))])
+    ),
+    nouveaux7jPrecedents: totalOuNull(
+      compterUsers([
+        Query.greaterThan("registration", depuis(14)),
+        Query.lessThanEqual("registration", depuis(7)),
+      ])
+    ),
+    nouveaux30j: totalOuNull(
+      compterUsers([Query.greaterThan("registration", depuis(30))])
+    ),
+
+    profilsTotal: totalOuNull(compterDocs(TABLE_PROFILS)),
+    profilsEnAttente: totalOuNull(
+      compterDocs(TABLE_PROFILS, [Query.equal("statut", "en_attente")])
+    ),
+    profilsApprouves: totalOuNull(
+      compterDocs(TABLE_PROFILS, [Query.equal("statut", "approuve")])
+    ),
+    profilsRefuses: totalOuNull(
+      compterDocs(TABLE_PROFILS, [Query.equal("statut", "refuse")])
+    ),
+
+    demandesTotal: totalOuNull(compterDocs(TABLE_DEMANDES)),
+    demandes7j: totalOuNull(
+      compterDocs(TABLE_DEMANDES, [
+        Query.greaterThan("$createdAt", depuis(7)),
+      ])
+    ),
+    demandes7jPrecedents: totalOuNull(
+      compterDocs(TABLE_DEMANDES, [
+        Query.greaterThan("$createdAt", depuis(14)),
+        Query.lessThanEqual("$createdAt", depuis(7)),
+      ])
+    ),
+
+    conversationsTotal: totalOuNull(compterDocs(TABLE_CONVERSATIONS)),
+    conversations7j: totalOuNull(
+      compterDocs(TABLE_CONVERSATIONS, [
+        Query.greaterThan("$createdAt", depuis(7)),
+      ])
+    ),
+    conversations7jPrecedentes: totalOuNull(
+      compterDocs(TABLE_CONVERSATIONS, [
+        Query.greaterThan("$createdAt", depuis(14)),
+        Query.lessThanEqual("$createdAt", depuis(7)),
+      ])
+    ),
+
+    messagesTotal: totalOuNull(compterDocs(TABLE_MESSAGES)),
+    messages7j: totalOuNull(
+      compterDocs(TABLE_MESSAGES, [
+        Query.greaterThan("$createdAt", depuis(7)),
+      ])
+    ),
+    messages7jPrecedents: totalOuNull(
+      compterDocs(TABLE_MESSAGES, [
+        Query.greaterThan("$createdAt", depuis(14)),
+        Query.lessThanEqual("$createdAt", depuis(7)),
+      ])
+    ),
+
+    signalementsEnAttente: totalOuNull(
+      compterDocs(TABLE_SIGNALEMENTS, [Query.equal("statut", "en_attente")])
+    ),
+    blocagesTotal: totalOuNull(compterDocs(TABLE_BLOCAGES)),
+  };
+
+  // On attend toutes les réponses puis on reconstruit l'objet
+  const cles = Object.keys(taches);
+  const valeurs = await Promise.all(Object.values(taches));
+
+  const stats = {};
+  cles.forEach((cle, i) => {
+    stats[cle] = valeurs[i];
+  });
+
+  return { role, stats };
+}
+
+/* =====================================================
    POINT D'ENTRÉE DE LA FONCTION
    ===================================================== */
 
@@ -732,6 +894,14 @@ export default async ({ req, res, log, error }) => {
           userId,
           donnees
         );
+        break;
+
+      case "adminStats":
+        if (!userId) {
+          throw new Error("Utilisateur non connecté.");
+        }
+
+        resultat = await adminStats(userId);
         break;
 
       default:
