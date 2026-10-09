@@ -220,6 +220,78 @@ async function appelerFonction(donnees){
   return resultat;
 }
 
+/* =====================================================
+   BLOCAGE APRÈS DE MAUVAIS ESSAIS (dans le navigateur)
+   - 2 mauvais mots de passe  -> blocage de 3 heures
+   - 2 nouveaux échecs ensuite -> blocage de 24 heures
+   - un mot de passe correct remet tout à zéro
+   ===================================================== */
+const CLE_VERROU="afrilova_admin_verrou";
+const ESSAIS_MAX=2;
+const BLOCAGE_1=3*60*60*1000;    // 3 heures
+const BLOCAGE_2=24*60*60*1000;   // 24 heures
+
+// Copie en mémoire : le blocage tient même si le stockage est effacé pendant que la page est ouverte
+let verrouMemoire={echecs:0,niveau:0,jusqua:0};
+let minuteurVerrou=null;
+
+function lireVerrou(){
+  try{
+    const v=JSON.parse(localStorage.getItem(CLE_VERROU)||"null");
+    if(v) return v;
+  }catch(e){}
+  return verrouMemoire;
+}
+
+function ecrireVerrou(v){
+  verrouMemoire=v;
+  try{ localStorage.setItem(CLE_VERROU,JSON.stringify(v)); }catch(e){}
+}
+
+// Compte un échec ; au 2e échec de suite, déclenche le blocage
+function enregistrerEchec(){
+  const v=lireVerrou();
+  v.echecs=(v.echecs||0)+1;
+  if(v.echecs>=ESSAIS_MAX){
+    v.niveau=(v.niveau||0)+1;
+    v.jusqua=Date.now()+(v.niveau===1?BLOCAGE_1:BLOCAGE_2);
+    v.echecs=0;
+  }
+  ecrireVerrou(v);
+}
+
+function dureeTexte(ms){
+  const min=Math.ceil(ms/60000);
+  const h=Math.floor(min/60), m=min%60;
+  return h>0?(h+" h"+(m?" "+m+" min":"")):(m+" min");
+}
+
+// Applique l'état du blocage sur le formulaire. Renvoie true si bloqué.
+function appliquerVerrou(){
+  const v=lireVerrou();
+  const reste=(v.jusqua||0)-Date.now();
+  clearInterval(minuteurVerrou);
+
+  if(reste>0){
+    $("goBtn").disabled=true;
+    $("email").disabled=true;
+    $("mdp").disabled=true;
+    $("err").dataset.verrou="1";
+    $("err").textContent="Trop d'essais. Connexion bloquée, réessaie dans "+dureeTexte(reste)+".";
+    minuteurVerrou=setInterval(appliquerVerrou,30000);
+    return true;
+  }
+
+  $("goBtn").disabled=false;
+  $("email").disabled=false;
+  $("mdp").disabled=false;
+  if($("err").dataset.verrou){
+    $("err").textContent="";
+    delete $("err").dataset.verrou;
+  }
+  return false;
+}
+
 /* ===== Menu ===== */
 // [identifiant, icône, titre, réservé au super administrateur]
 const MENU=[
@@ -264,6 +336,7 @@ function montrerLogin(msg){
   $("app").style.display="none";
   $("loginView").style.display="flex";
   $("err").textContent=msg||"";
+  appliquerVerrou();
 }
 function afficherApp(){
   $("loginView").style.display="none";
@@ -272,6 +345,10 @@ function afficherApp(){
 
 async function connecter(ev){
   ev.preventDefault();
+
+  // Formulaire bloqué : on n'envoie rien à Appwrite
+  if(appliquerVerrou()) return;
+
   $("err").textContent="";
   $("goBtn").disabled=true;
   try{
@@ -281,11 +358,18 @@ async function connecter(ev){
       email:$("email").value.trim(),
       password:$("mdp").value
     });
+
+    // Mot de passe correct : les essais et les blocages repartent à zéro
+    ecrireVerrou({echecs:0,niveau:0,jusqua:0});
+
     await ouvrirAdmin();
   }catch(e){
-    $("err").textContent="Email ou mot de passe incorrect.";
+    enregistrerEchec();
+    const restants=ESSAIS_MAX-(lireVerrou().echecs||0);
+    $("err").textContent="Email ou mot de passe incorrect. Essais restants avant blocage : "+restants+".";
   }finally{
-    $("goBtn").disabled=false;
+    // Si le blocage vient de se déclencher, ceci remplace le message et verrouille le formulaire
+    appliquerVerrou();
   }
 }
 
