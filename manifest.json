@@ -1,0 +1,13 @@
+{
+"name": "Afrilova",
+"short_name": "Afrilova",
+"description": "Rencontres sérieuses en Afrique",
+"lang": "fr",
+"start_url": "./index.html",
+"scope": "./",
+"display": "standalone",
+"orientation": "portrait",
+"background_color": "#FFFFFF",
+"theme_color": "#198754",
+"categories": ["social", "lifestyle"]
+}
