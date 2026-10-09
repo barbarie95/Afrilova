@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<!-- Page d'administration : ne doit pas apparaître dans Google -->
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#060c0a">
+<title>Afrilova Admin</title>
+<style>
+/* ===== Thème sombre technologique, vert néon ===== */
+:root{--bg:#060c0a;--panel:#0d1713;--line:#16372b;--neon:#39ff88;--neon2:#12c46a;--txt:#d9f5e6;--mut:#7fa592;--danger:#ff5d6c}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,sans-serif;background:var(--bg);color:var(--txt);min-height:100vh}
+button,input{font:inherit}
+button{cursor:pointer;border:0}
+
+/* ===== Connexion ===== */
+.login{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:18px}
+.lbox{width:100%;max-width:380px;background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:26px;box-shadow:0 0 40px #39ff8814}
+.brand{font-weight:800;letter-spacing:2px;color:var(--neon);text-shadow:0 0 14px #39ff8866}
+.lbox h1{font-size:20px;margin:6px 0 18px}
+label{display:block;font-size:12px;color:var(--mut);margin:12px 0 5px}
+input{width:100%;padding:12px;border-radius:12px;border:1px solid var(--line);background:#08110d;color:var(--txt);outline:none}
+input:focus{border-color:var(--neon)}
+.go{width:100%;margin-top:18px;padding:13px;border-radius:12px;background:var(--neon);color:#042014;font-weight:800}
+.go:disabled{opacity:.6}
+.err{color:var(--danger);font-size:13px;margin-top:12px;min-height:16px}
+
+/* ===== Menu à gauche (tiroir sur téléphone, fixe sur ordinateur) ===== */
+#app{display:none}
+aside{position:fixed;top:0;bottom:0;left:0;width:250px;background:#08110d;border-right:1px solid var(--line);padding:18px 12px;overflow-y:auto;z-index:30;transform:translateX(-100%);transition:transform .25s}
+body.open aside{transform:none}
+.ov{display:none;position:fixed;inset:0;background:#000a;z-index:20}
+body.open .ov{display:block}
+aside .brand{padding:6px 10px 14px;font-size:15px}
+.mi{display:flex;gap:10px;width:100%;padding:11px 12px;margin-bottom:4px;border-radius:12px;background:transparent;color:var(--txt);text-align:left;font-size:14px}
+.mi:hover{background:#12261d}
+.mi.on{background:#12261d;color:var(--neon);box-shadow:inset 3px 0 var(--neon)}
+.mi.out{color:var(--danger);margin-top:10px}
+
+/* ===== Barre du haut ===== */
+.top{position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:10px;padding:12px 14px;background:#060c0acc;backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.top b{flex:1;font-size:14px}
+.ib{width:40px;height:40px;border-radius:12px;background:var(--panel);color:var(--neon);border:1px solid var(--line);font-size:18px}
+.badge{font-size:11px;padding:5px 10px;border-radius:20px;border:1px solid var(--neon);color:var(--neon)}
+main{padding:16px 14px 40px;max-width:1100px;margin:auto}
+h1.h{font-size:20px;margin:6px 0 14px}
+.sec{display:none}
+.sec.on{display:block}
+
+/* ===== Cartes, panneaux, barres ===== */
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.row2{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px;margin-top:12px}
+.card,.panel{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px;animation:up .5s ease both}
+.n{font-size:28px;font-weight:800;color:var(--neon);text-shadow:0 0 14px #39ff8855;margin-top:6px}
+.l{font-size:12px;color:var(--mut);margin-top:4px}
+.panel h2{font-size:14px;margin-bottom:14px}
+.line{display:flex;justify-content:space-between;gap:8px;font-size:13px}
+.bar{height:9px;background:#10231a;border-radius:9px;overflow:hidden;margin-top:6px}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--neon2),var(--neon));border-radius:9px;box-shadow:0 0 10px var(--neon);transition:width 1.2s ease}
+.up{color:var(--neon)}
+.dn{color:var(--danger)}
+.soon{border-style:dashed;color:var(--mut)}
+.soon p{font-size:13px;margin-top:8px}
+@keyframes up{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media(min-width:900px){
+  aside{transform:none}
+  .ov{display:none!important}
+  .ib.m{display:none}
+  #app{padding-left:250px}
+}
+</style>
+</head>
+<body>
+
+<!-- CONNEXION -->
+<div id="loginView" class="login" style="display:none">
+  <form class="lbox" onsubmit="connecter(event)">
+    <div class="brand">AFRILOVA ADMIN</div>
+    <h1>Connexion</h1>
+    <label for="email">Email</label>
+    <input id="email" type="email" autocomplete="username" required>
+    <label for="mdp">Mot de passe</label>
+    <input id="mdp" type="password" autocomplete="current-password" required>
+    <button id="goBtn" class="go" type="submit">Se connecter</button>
+    <div id="err" class="err" role="alert"></div>
+  </form>
+</div>
+
+<!-- ESPACE ADMIN -->
+<div id="app">
+  <div class="ov" onclick="menu(false)"></div>
+  <aside aria-label="Menu">
+    <div class="brand">AFRILOVA ADMIN</div>
+    <nav id="nav"></nav>
+  </aside>
+
+  <div class="top">
+    <button class="ib m" onclick="menu(true)" aria-label="Ouvrir le menu">☰</button>
+    <b id="titre">Tableau de bord</b>
+    <span id="role" class="badge"></span>
+    <button class="ib" onclick="actualiser()" aria-label="Actualiser">↻</button>
+  </div>
+
+  <main>
+    <!-- TABLEAU DE BORD -->
+    <section id="s-dashboard" class="sec on">
+      <h1 class="h">Tableau de bord</h1>
+      <div id="cards" class="grid"></div>
+
+      <div class="row2">
+        <div class="panel">
+          <h2>📊 Évolution : 7 derniers jours vs 7 jours d'avant</h2>
+          <div id="evo"></div>
+        </div>
+        <div class="panel">
+          <h2>💕 Taux d'activité</h2>
+          <div id="taux"></div>
+        </div>
+      </div>
+
+      <div class="row2">
+        <div class="panel soon"><h2>📈 Inscriptions par mois</h2><p>Données bientôt disponibles.</p></div>
+        <div class="panel soon"><h2>🌍 Répartition par pays</h2><p>Données bientôt disponibles.</p></div>
+        <div class="panel soon"><h2>💰 Points achetés par jour</h2><p>Données bientôt disponibles.</p></div>
+      </div>
+    </section>
+
+    <!-- AUTRES RUBRIQUES (activées aux étapes suivantes) -->
+    <section id="s-autre" class="sec">
+      <h1 class="h" id="autreT"></h1>
+      <div class="panel soon"><p>Cette rubrique sera activée à l'étape suivante.</p></div>
+    </section>
+  </main>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/appwrite@20.0.0"></script>
+<script>
+/* ===== Connexion à Appwrite (mêmes réglages que messagerie.html) ===== */
+const APPWRITE_ENDPOINT="https://fra.cloud.appwrite.io/v1";
+const APPWRITE_PROJECT_ID="6aac203e00209ccb3014";
+const FUNCTION_ID="6aaf8d3fdb99e41f0aaf";
+
+const client=new Appwrite.Client();
+client.setEndpoint(APPWRITE_ENDPOINT).setProject(APPWRITE_PROJECT_ID);
+const account=new Appwrite.Account(client);
+const functions=new Appwrite.Functions(client);
+
+const $=id=>document.getElementById(id);
+const reduit=matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+/* Appelle afrilova-backend (même méthode que messagerie.html) */
+async function appelerFonction(donnees){
+  const execution=await functions.createExecution({
+    functionId:FUNCTION_ID,
+    body:JSON.stringify(donnees),
+    method:"POST"
+  });
+  let resultat;
+  try{ resultat=JSON.parse(execution.responseBody||"{}"); }
+  catch(e){ throw new Error("Réponse invalide du serveur."); }
+  if(!resultat.ok){ throw new Error(resultat.message||"Une erreur est survenue."); }
+  return resultat;
+}
+
+/* ===== Menu ===== */
+const MENU=[
+  ["dashboard","🏠","Tableau de bord"],
+  ["profils","👤","Profils"],
+  ["demandes","📨","Demandes de discussion"],
+  ["conversations","💬","Conversations"],
+  ["signalements","🚨","Signalements"],
+  ["blocages","🚫","Blocages"],
+  ["points","💰","Points & transactions"],
+  ["pays","🌍","Pays & villes"],
+  ["parametres","⚙️","Paramètres"]
+];
+
+function construireMenu(){
+  $("nav").innerHTML=MENU.map(m=>
+    '<button class="mi'+(m[0]==="dashboard"?' on':'')+'" data-sec="'+m[0]+'" onclick="aller(\''+m[0]+'\')">'+
+    '<span>'+m[1]+'</span><span>'+m[2]+'</span></button>'
+  ).join("")+
+  '<button class="mi out" onclick="deconnecter()"><span>🔐</span><span>Déconnexion</span></button>';
+}
+
+function menu(ouvert){ document.body.classList.toggle("open",ouvert); }
+
+function aller(sec){
+  document.querySelectorAll(".mi[data-sec]").forEach(b=>b.classList.toggle("on",b.dataset.sec===sec));
+  const dash=sec==="dashboard";
+  $("s-dashboard").classList.toggle("on",dash);
+  $("s-autre").classList.toggle("on",!dash);
+  const m=MENU.find(x=>x[0]===sec);
+  $("titre").textContent=m[2];
+  $("autreT").textContent=m[1]+" "+m[2];
+  menu(false);
+}
+
+/* ===== Connexion / déconnexion ===== */
+function montrerLogin(msg){
+  $("app").style.display="none";
+  $("loginView").style.display="flex";
+  $("err").textContent=msg||"";
+}
+function afficherApp(){
+  $("loginView").style.display="none";
+  $("app").style.display="block";
+}
+
+async function connecter(ev){
+  ev.preventDefault();
+  $("err").textContent="";
+  $("goBtn").disabled=true;
+  try{
+    // Une session déjà ouverte empêche d'en créer une autre : on la ferme d'abord
+    try{ await account.deleteSession({sessionId:"current"}); }catch(_){}
+    await account.createEmailPasswordSession({
+      email:$("email").value.trim(),
+      password:$("mdp").value
+    });
+    await ouvrirAdmin();
+  }catch(e){
+    $("err").textContent="Email ou mot de passe incorrect.";
+  }finally{
+    $("goBtn").disabled=false;
+  }
+}
+
+async function deconnecter(){
+  try{ await account.deleteSession({sessionId:"current"}); }catch(_){}
+  location.reload();
+}
+
+/* ===== Chargement du tableau de bord =====
+   Le serveur vérifie lui-même que la personne est administrateur. */
+async function ouvrirAdmin(){
+  try{
+    const r=await appelerFonction({action:"adminStats"});
+    $("role").textContent=r.role==="super"?"Super administrateur":"Administrateur associé";
+    afficherApp();
+    dessiner(r.stats||{});
+  }catch(e){
+    montrerLogin(e.message||"Accès refusé.");
+  }
+}
+async function actualiser(){ await ouvrirAdmin(); }
+
+/* ===== Animations ===== */
+
+// Compteur qui monte de 0 jusqu'à la valeur (null = donnée indisponible)
+function compter(el,cible){
+  if(cible==null){ el.textContent="—"; return; }
+  if(reduit){ el.textContent=cible.toLocaleString("fr-FR"); return; }
+  const t0=performance.now(), duree=1200;
+  (function pas(t){
+    const p=Math.min((t-t0)/duree,1);
+    el.textContent=Math.round(cible*(1-Math.pow(1-p,3))).toLocaleString("fr-FR");
+    if(p<1) requestAnimationFrame(pas);
+  })(t0);
+}
+
+// Pourcentage sûr (null si une donnée manque ou si on divise par 0)
+function pct(a,b){
+  if(a==null||b==null||b<=0) return null;
+  return Math.min(100,Math.round(a/b*100));
+}
+
+/* ===== Dessin du tableau de bord ===== */
+function dessiner(s){
+  // 1) Cartes animées
+  const cartes=[
+    ["👥","Utilisateurs",s.utilisateursTotal,""],
+    ["❤️","Profils approuvés",s.profilsApprouves,""],
+    ["⏳","Profils en attente",s.profilsEnAttente,""],
+    ["🚨","Signalements en attente",s.signalementsEnAttente,""],
+    ["🟢","Actifs (24 h)",s.utilisateursActifs24h,""],
+    ["💰","Revenus",null,"bientôt disponible"]
+  ];
+  const g=$("cards");
+  g.innerHTML="";
+  cartes.forEach(([ico,lib,val,note])=>{
+    const d=document.createElement("div");
+    d.className="card";
+    d.innerHTML='<div>'+ico+'</div><div class="n">0</div><div class="l">'+lib+(note?' · '+note:'')+'</div>';
+    g.appendChild(d);
+    compter(d.querySelector(".n"),val);
+  });
+
+  // 2) Évolution sur 7 jours avec variation en %
+  const evo=[
+    ["Nouveaux utilisateurs",s.nouveaux7j,s.nouveaux7jPrecedents],
+    ["Demandes de discussion",s.demandes7j,s.demandes7jPrecedents],
+    ["Conversations",s.conversations7j,s.conversations7jPrecedentes],
+    ["Messages",s.messages7j,s.messages7jPrecedents]
+  ];
+  $("evo").innerHTML=evo.map(([l,c,p])=>{
+    const max=Math.max(c||0,p||0,1);
+    let v="—",cl="";
+    if(c!=null&&p!=null){
+      if(p>0){
+        const x=Math.round((c-p)/p*100);
+        v=(x>=0?"▲ +":"▼ ")+x+" %";
+        cl=x>=0?"up":"dn";
+      }else if(c>0){ v="nouveau"; cl="up"; }
+    }
+    return '<div style="margin-bottom:14px"><div class="line"><span>'+l+'</span>'+
+      '<span><b>'+(c==null?"—":c)+'</b> <span class="'+cl+'">'+v+'</span></span></div>'+
+      '<div class="bar"><i data-w="'+Math.round((c||0)/max*100)+'"></i></div></div>';
+  }).join("");
+
+  // 3) Taux d'activité
+  const taux=[
+    ["Profils approuvés",pct(s.profilsApprouves,s.profilsTotal)],
+    ["Utilisateurs actifs (24 h)",pct(s.utilisateursActifs24h,s.utilisateursTotal)],
+    ["Demandes devenues conversations",pct(s.conversationsTotal,s.demandesTotal)]
+  ];
+  $("taux").innerHTML=taux.map(([l,v])=>
+    '<div style="margin-bottom:14px"><div class="line"><span>'+l+'</span><b>'+(v==null?"—":v+" %")+'</b></div>'+
+    '<div class="bar"><i data-w="'+(v||0)+'"></i></div></div>'
+  ).join("");
+
+  // Les barres se remplissent progressivement
+  setTimeout(()=>{
+    document.querySelectorAll("[data-w]").forEach(i=>{ i.style.width=i.dataset.w+"%"; });
+  },80);
+}
+
+/* ===== Démarrage ===== */
+(async function demarrer(){
+  construireMenu();
+  try{
+    await account.get();     // une session existe déjà ?
+  }catch(e){
+    montrerLogin();
+    return;
+  }
+  await ouvrirAdmin();
+})();
+</script>
+</body>
+</html>
