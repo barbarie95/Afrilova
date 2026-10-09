@@ -5,64 +5,81 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <!-- Page d'administration : ne doit pas apparaître dans Google -->
 <meta name="robots" content="noindex,nofollow">
-<meta name="theme-color" content="#060c0a">
+<meta name="theme-color" content="#CFE5FB">
 <title>Afrilova Admin</title>
 <style>
-/* ===== Thème sombre technologique, vert néon ===== */
-:root{--bg:#060c0a;--panel:#0d1713;--line:#16372b;--neon:#39ff88;--neon2:#12c46a;--txt:#d9f5e6;--mut:#7fa592;--danger:#ff5d6c}
+/* ===== Couleurs : bleu clair, or, gris très clair, blanc ===== */
+:root{--side:#CFE5FB;--ink:#17406B;--gold:#D6B15E;--gold2:#B8923A;--bg:#F3F5F9;--card:#fff;--line:#E3E8F0;--mut:#6B7C93;--danger:#D64545}
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:Arial,sans-serif;background:var(--bg);color:var(--txt);min-height:100vh}
+body{font-family:Arial,sans-serif;background:var(--bg);color:#1d2b3a;min-height:100vh}
 button,input{font:inherit}
 button{cursor:pointer;border:0}
+.muted{color:var(--mut);font-size:13px}
 
 /* ===== Connexion ===== */
-.login{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:18px}
-.lbox{width:100%;max-width:380px;background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:26px;box-shadow:0 0 40px #39ff8814}
-.brand{font-weight:800;letter-spacing:2px;color:var(--neon);text-shadow:0 0 14px #39ff8866}
-.lbox h1{font-size:20px;margin:6px 0 18px}
+.login{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:18px;background:linear-gradient(160deg,var(--side),#fff)}
+.lbox{width:100%;max-width:380px;background:#fff;border:1px solid var(--line);border-radius:20px;padding:26px;box-shadow:0 12px 40px #17406b1a}
+.brand{font-weight:800;letter-spacing:2px;color:var(--ink)}
+.brand b{color:var(--gold2)}
+.lbox h1{font-size:20px;margin:6px 0 16px;color:var(--ink)}
 label{display:block;font-size:12px;color:var(--mut);margin:12px 0 5px}
-input{width:100%;padding:12px;border-radius:12px;border:1px solid var(--line);background:#08110d;color:var(--txt);outline:none}
-input:focus{border-color:var(--neon)}
-.go{width:100%;margin-top:18px;padding:13px;border-radius:12px;background:var(--neon);color:#042014;font-weight:800}
+input{width:100%;padding:12px;border-radius:12px;border:1px solid var(--line);background:#fff;color:#1d2b3a;outline:none}
+input:focus{border-color:var(--gold)}
+.go{width:100%;margin-top:18px;padding:13px;border-radius:12px;background:var(--gold);color:var(--ink);font-weight:800}
 .go:disabled{opacity:.6}
-.err{color:var(--danger);font-size:13px;margin-top:12px;min-height:16px}
+.err{color:var(--danger);font-size:13px;margin-top:12px}
 
 /* ===== Menu à gauche (tiroir sur téléphone, fixe sur ordinateur) ===== */
 #app{display:none}
-aside{position:fixed;top:0;bottom:0;left:0;width:250px;background:#08110d;border-right:1px solid var(--line);padding:18px 12px;overflow-y:auto;z-index:30;transform:translateX(-100%);transition:transform .25s}
+aside{position:fixed;top:0;bottom:0;left:0;width:250px;background:var(--side);padding:18px 12px;overflow-y:auto;z-index:30;transform:translateX(-100%);transition:transform .25s}
 body.open aside{transform:none}
-.ov{display:none;position:fixed;inset:0;background:#000a;z-index:20}
+.ov{display:none;position:fixed;inset:0;background:#0007;z-index:20}
 body.open .ov{display:block}
-aside .brand{padding:6px 10px 14px;font-size:15px}
-.mi{display:flex;gap:10px;width:100%;padding:11px 12px;margin-bottom:4px;border-radius:12px;background:transparent;color:var(--txt);text-align:left;font-size:14px}
-.mi:hover{background:#12261d}
-.mi.on{background:#12261d;color:var(--neon);box-shadow:inset 3px 0 var(--neon)}
+aside .brand{padding:6px 10px 16px;font-size:15px}
+.mi{display:flex;gap:10px;width:100%;padding:11px 12px;margin-bottom:4px;border-radius:12px;background:transparent;color:var(--ink);text-align:left;font-size:14px}
+.mi:hover{background:#ffffff80}
+.mi.on{background:#fff;font-weight:700;box-shadow:inset 3px 0 var(--gold)}
 .mi.out{color:var(--danger);margin-top:10px}
 
 /* ===== Barre du haut ===== */
-.top{position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:10px;padding:12px 14px;background:#060c0acc;backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
-.top b{flex:1;font-size:14px}
-.ib{width:40px;height:40px;border-radius:12px;background:var(--panel);color:var(--neon);border:1px solid var(--line);font-size:18px}
-.badge{font-size:11px;padding:5px 10px;border-radius:20px;border:1px solid var(--neon);color:var(--neon)}
+.top{position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:10px;padding:12px 14px;background:#fff;border-bottom:1px solid var(--line)}
+.top b{flex:1;font-size:15px;color:var(--ink)}
+.ib{width:40px;height:40px;border-radius:12px;background:var(--bg);color:var(--ink);border:1px solid var(--line);font-size:18px}
+.badge{font-size:11px;padding:5px 10px;border-radius:20px;background:var(--gold);color:var(--ink);font-weight:700}
 main{padding:16px 14px 40px;max-width:1100px;margin:auto}
-h1.h{font-size:20px;margin:6px 0 14px}
+h1.h{font-size:20px;margin:6px 0 14px;color:var(--ink)}
 .sec{display:none}
 .sec.on{display:block}
 
-/* ===== Cartes, panneaux, barres ===== */
+/* ===== Cartes et panneaux ===== */
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
-.row2{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px;margin-top:12px}
-.card,.panel{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px;animation:up .5s ease both}
-.n{font-size:28px;font-weight:800;color:var(--neon);text-shadow:0 0 14px #39ff8855;margin-top:6px}
+.row2{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:12px;margin-top:12px}
+.card,.panel{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;box-shadow:0 4px 16px #17406b0d;animation:up .5s ease both}
+.n{font-size:28px;font-weight:800;color:var(--gold2);margin-top:6px}
 .l{font-size:12px;color:var(--mut);margin-top:4px}
-.panel h2{font-size:14px;margin-bottom:14px}
-.line{display:flex;justify-content:space-between;gap:8px;font-size:13px}
-.bar{height:9px;background:#10231a;border-radius:9px;overflow:hidden;margin-top:6px}
-.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--neon2),var(--neon));border-radius:9px;box-shadow:0 0 10px var(--neon);transition:width 1.2s ease}
-.up{color:var(--neon)}
-.dn{color:var(--danger)}
-.soon{border-style:dashed;color:var(--mut)}
-.soon p{font-size:13px;margin-top:8px}
+.panel h2{font-size:14px;margin-bottom:14px;color:var(--ink)}
+.line{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:13px;margin-bottom:6px}
+.bar{height:10px;background:#E8EEF6;border-radius:10px;overflow:hidden;margin-top:6px}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold2));border-radius:10px;transition:width 1.2s ease}
+.up{color:#2E9E6B;font-weight:700}
+.dn{color:var(--danger);font-weight:700}
+.soon{border-style:dashed}
+.donut{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.donut svg{width:150px;height:150px;flex:none}
+.donut>div{flex:1;min-width:130px}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:7px}
+svg{max-width:100%}
+
+/* ===== Tableaux et boutons ===== */
+.tw{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:left;color:var(--mut);font-weight:600;padding:8px;border-bottom:1px solid var(--line)}
+td{padding:10px 8px;border-bottom:1px solid var(--line)}
+.btn{padding:9px 14px;border-radius:10px;background:var(--gold);color:var(--ink);font-weight:700}
+.btn.sm{padding:6px 10px;font-size:12px}
+.btn.alt{background:var(--side)}
+.bar-actions{display:flex;gap:10px;margin-bottom:12px}
+#toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:12px 18px;border-radius:12px;font-size:13px;z-index:99;display:none;max-width:90%}
 @keyframes up{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 @media(min-width:900px){
@@ -78,7 +95,7 @@ h1.h{font-size:20px;margin:6px 0 14px}
 <!-- CONNEXION -->
 <div id="loginView" class="login" style="display:none">
   <form class="lbox" onsubmit="connecter(event)">
-    <div class="brand">AFRILOVA ADMIN</div>
+    <div class="brand">AFRILOVA <b>ADMIN</b></div>
     <h1>Connexion</h1>
     <label for="email">Email</label>
     <input id="email" type="email" autocomplete="username" required>
@@ -93,7 +110,7 @@ h1.h{font-size:20px;margin:6px 0 14px}
 <div id="app">
   <div class="ov" onclick="menu(false)"></div>
   <aside aria-label="Menu">
-    <div class="brand">AFRILOVA ADMIN</div>
+    <div class="brand">AFRILOVA <b>ADMIN</b></div>
     <nav id="nav"></nav>
   </aside>
 
@@ -109,46 +126,85 @@ h1.h{font-size:20px;margin:6px 0 14px}
     <section id="s-dashboard" class="sec on">
       <h1 class="h">Tableau de bord</h1>
       <div id="cards" class="grid"></div>
-
       <div class="row2">
-        <div class="panel">
-          <h2>📊 Évolution : 7 derniers jours vs 7 jours d'avant</h2>
-          <div id="evo"></div>
-        </div>
-        <div class="panel">
-          <h2>💕 Taux d'activité</h2>
-          <div id="taux"></div>
-        </div>
+        <div class="panel"><h2>📈 Inscriptions par mois</h2><div id="courbe"></div></div>
+        <div class="panel"><h2>🌍 Répartition par pays</h2><div id="pays"></div></div>
       </div>
-
       <div class="row2">
-        <div class="panel soon"><h2>📈 Inscriptions par mois</h2><p>Données bientôt disponibles.</p></div>
-        <div class="panel soon"><h2>🌍 Répartition par pays</h2><p>Données bientôt disponibles.</p></div>
-        <div class="panel soon"><h2>💰 Points achetés par jour</h2><p>Données bientôt disponibles.</p></div>
+        <div class="panel"><h2>📊 7 derniers jours vs 7 jours d'avant</h2><div id="evo"></div></div>
+        <div class="panel"><h2>💕 Taux d'activité</h2><div id="taux"></div></div>
+      </div>
+      <div class="row2">
+        <div class="panel soon"><h2>💰 Points achetés par jour</h2><p class="muted">Bientôt disponible.</p></div>
       </div>
     </section>
 
-    <!-- AUTRES RUBRIQUES (activées aux étapes suivantes) -->
+    <!-- PROFILS -->
+    <section id="s-profils" class="sec">
+      <h1 class="h">Profils</h1>
+      <div class="panel">
+        <input id="rechercheProfil" type="search" placeholder="Rechercher un nom…" oninput="afficherProfils()" style="margin-bottom:12px">
+        <div id="profilsZone" class="tw"></div>
+      </div>
+    </section>
+
+    <!-- JOURNAL (super administrateur) -->
+    <section id="s-journal" class="sec">
+      <h1 class="h">Journal admin</h1>
+      <div class="panel">
+        <div class="tw">
+          <table>
+            <thead><tr><th>Date</th><th>Administrateur</th><th>Action</th><th>Détails</th></tr></thead>
+            <tbody id="journalLignes"></tbody>
+          </table>
+        </div>
+        <p id="journalVide" class="muted" style="display:none;padding:10px 0">Aucune action enregistrée pour le moment.</p>
+        <button id="journalPlus" class="btn alt" style="display:none;margin-top:12px" onclick="chargerJournal(false)">Charger plus</button>
+      </div>
+    </section>
+
+    <!-- AUTRES RUBRIQUES -->
     <section id="s-autre" class="sec">
       <h1 class="h" id="autreT"></h1>
-      <div class="panel soon"><p>Cette rubrique sera activée à l'étape suivante.</p></div>
+      <div class="panel soon"><p class="muted">Cette rubrique sera activée à l'étape suivante.</p></div>
     </section>
   </main>
 </div>
+
+<div id="toast" role="status"></div>
 <script src="https://cdn.jsdelivr.net/npm/appwrite@20.0.0"></script>
 <script>
 /* ===== Connexion à Appwrite (mêmes réglages que messagerie.html) ===== */
 const APPWRITE_ENDPOINT="https://fra.cloud.appwrite.io/v1";
 const APPWRITE_PROJECT_ID="6aac203e00209ccb3014";
 const FUNCTION_ID="6aaf8d3fdb99e41f0aaf";
+const DATABASE_ID="6aac2a200000e6be5877";
+const TABLE_PROFILS="6aac2b35002a0debbb85";
 
 const client=new Appwrite.Client();
 client.setEndpoint(APPWRITE_ENDPOINT).setProject(APPWRITE_PROJECT_ID);
 const account=new Appwrite.Account(client);
 const functions=new Appwrite.Functions(client);
+const tablesDB=new Appwrite.TablesDB(client);
 
 const $=id=>document.getElementById(id);
 const reduit=matchMedia("(prefers-reduced-motion: reduce)").matches;
+let ROLE=null;
+let profilsListe=[], profilsCharges=false, journalCharge=0;
+
+/* Protège l'affichage des textes venant de la base */
+function esc(t){
+  return String(t==null?"":t).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+
+/* Petit message en bas de l'écran */
+function toast(msg){
+  const t=$("toast");
+  t.textContent=msg;
+  t.style.display="block";
+  clearTimeout(toast.h);
+  toast.h=setTimeout(()=>{t.style.display="none";},4000);
+}
 
 /* Appelle afrilova-backend (même méthode que messagerie.html) */
 async function appelerFonction(donnees){
@@ -165,6 +221,7 @@ async function appelerFonction(donnees){
 }
 
 /* ===== Menu ===== */
+// [identifiant, icône, titre, réservé au super administrateur]
 const MENU=[
   ["dashboard","🏠","Tableau de bord"],
   ["profils","👤","Profils"],
@@ -173,28 +230,32 @@ const MENU=[
   ["signalements","🚨","Signalements"],
   ["blocages","🚫","Blocages"],
   ["points","💰","Points & transactions"],
+  ["journal","📒","Journal admin",true],
   ["pays","🌍","Pays & villes"],
   ["parametres","⚙️","Paramètres"]
 ];
 
 function construireMenu(){
-  $("nav").innerHTML=MENU.map(m=>
-    '<button class="mi'+(m[0]==="dashboard"?' on':'')+'" data-sec="'+m[0]+'" onclick="aller(\''+m[0]+'\')">'+
-    '<span>'+m[1]+'</span><span>'+m[2]+'</span></button>'
-  ).join("")+
-  '<button class="mi out" onclick="deconnecter()"><span>🔐</span><span>Déconnexion</span></button>';
+  $("nav").innerHTML=MENU
+    .filter(m=>!m[3]||ROLE==="super")
+    .map(m=>'<button class="mi'+(m[0]==="dashboard"?' on':'')+'" data-sec="'+m[0]+'" onclick="aller(\''+m[0]+'\')">'+
+      '<span>'+m[1]+'</span><span>'+m[2]+'</span></button>')
+    .join("")+
+    '<button class="mi out" onclick="deconnecter()"><span>🔐</span><span>Déconnexion</span></button>';
 }
 
 function menu(ouvert){ document.body.classList.toggle("open",ouvert); }
 
 function aller(sec){
   document.querySelectorAll(".mi[data-sec]").forEach(b=>b.classList.toggle("on",b.dataset.sec===sec));
-  const dash=sec==="dashboard";
-  $("s-dashboard").classList.toggle("on",dash);
-  $("s-autre").classList.toggle("on",!dash);
+  ["dashboard","profils","journal","autre"].forEach(s=>$("s-"+s).classList.remove("on"));
+  const propres=["dashboard","profils","journal"];
   const m=MENU.find(x=>x[0]===sec);
+  $("s-"+(propres.includes(sec)?sec:"autre")).classList.add("on");
   $("titre").textContent=m[2];
   $("autreT").textContent=m[1]+" "+m[2];
+  if(sec==="profils"&&!profilsCharges) chargerProfils();
+  if(sec==="journal") chargerJournal(true);
   menu(false);
 }
 
@@ -233,21 +294,25 @@ async function deconnecter(){
   location.reload();
 }
 
-/* ===== Chargement du tableau de bord =====
-   Le serveur vérifie lui-même que la personne est administrateur. */
+/* ===== Chargement : le serveur vérifie lui-même le droit d'accès ===== */
 async function ouvrirAdmin(){
   try{
-    const r=await appelerFonction({action:"adminStats"});
-    $("role").textContent=r.role==="super"?"Super administrateur":"Administrateur associé";
+    const [r,g]=await Promise.all([
+      appelerFonction({action:"adminStats"}),
+      appelerFonction({action:"adminGraphiques"}).catch(()=>null)
+    ]);
+    ROLE=r.role;
+    $("role").textContent=ROLE==="super"?"Super administrateur":"Administrateur associé";
+    construireMenu();
     afficherApp();
-    dessiner(r.stats||{});
+    dessiner(r.stats||{},g);
   }catch(e){
     montrerLogin(e.message||"Accès refusé.");
   }
 }
-async function actualiser(){ await ouvrirAdmin(); }
+async function actualiser(){ profilsCharges=false; await ouvrirAdmin(); }
 
-/* ===== Animations ===== */
+/* ===== Animations et calculs ===== */
 
 // Compteur qui monte de 0 jusqu'à la valeur (null = donnée indisponible)
 function compter(el,cible){
@@ -267,28 +332,94 @@ function pct(a,b){
   return Math.min(100,Math.round(a/b*100));
 }
 
-/* ===== Dessin du tableau de bord ===== */
-function dessiner(s){
-  // 1) Cartes animées
+/* ===== Diagramme 1 : courbe des inscriptions (se dessine progressivement) ===== */
+const MOIS=["Jan","Fév","Mar","Avr","Mai","Juin","Juil","Août","Sep","Oct","Nov","Déc"];
+
+function dessinerCourbe(mois){
+  const zone=$("courbe");
+  if(!mois||mois.length<2||mois.some(m=>m.total==null)){
+    zone.innerHTML='<p class="muted">Données indisponibles.</p>'; return;
+  }
+  const W=320,H=170,L=28,R=12,T=18,B=28,n=mois.length;
+  const max=Math.max(...mois.map(m=>m.total),1);
+  const X=i=>L+i*((W-L-R)/(n-1));
+  const Y=v=>H-B-(v/max)*(H-B-T);
+  const pts=mois.map((m,i)=>[X(i),Y(m.total)]);
+  const d=pts.map((p,i)=>(i?"L":"M")+p[0].toFixed(1)+" "+p[1].toFixed(1)).join(" ");
+  const aire=d+" L"+X(n-1)+" "+(H-B)+" L"+X(0)+" "+(H-B)+" Z";
+
+  let svg='<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Inscriptions par mois">';
+  [0,.5,1].forEach(f=>{
+    const y=Y(max*f);
+    svg+='<line x1="'+L+'" x2="'+(W-R)+'" y1="'+y+'" y2="'+y+'" stroke="#E3E8F0"/>'+
+         '<text x="'+(L-5)+'" y="'+(y+3)+'" font-size="9" text-anchor="end" fill="#6B7C93">'+Math.round(max*f)+'</text>';
+  });
+  svg+='<path d="'+aire+'" fill="#D6B15E" opacity=".15"/>';
+  svg+='<path id="trait" d="'+d+'" pathLength="1" fill="none" stroke="#B8923A" stroke-width="2.5" '+
+       'stroke-linecap="round" stroke-linejoin="round" style="stroke-dasharray:1;stroke-dashoffset:'+(reduit?0:1)+
+       ';transition:stroke-dashoffset 1.6s ease"/>';
+  pts.forEach((p,i)=>{
+    svg+='<circle cx="'+p[0]+'" cy="'+p[1]+'" r="3.5" fill="#fff" stroke="#B8923A" stroke-width="2"/>'+
+         '<text x="'+p[0]+'" y="'+(p[1]-8)+'" font-size="9" text-anchor="middle" fill="#17406B">'+mois[i].total+'</text>'+
+         '<text x="'+p[0]+'" y="'+(H-10)+'" font-size="9" text-anchor="middle" fill="#6B7C93">'+MOIS[Number(mois[i].mois.slice(5,7))-1]+'</text>';
+  });
+  zone.innerHTML=svg+'</svg>';
+  if(!reduit) setTimeout(()=>{ $("trait").style.strokeDashoffset=0; },80);
+}
+
+/* ===== Diagramme 2 : répartition par pays (camembert animé) ===== */
+const COULEURS=["#D6B15E","#4A90D9","#8CC1F2","#17406B","#E8D49A","#A9C7E8","#B8923A"];
+
+function dessinerPays(pays){
+  const zone=$("pays");
+  const liste=(pays||[]).filter(p=>p.total>0);
+  const total=liste.reduce((a,p)=>a+p.total,0);
+  if(!total){ zone.innerHTML='<p class="muted">Aucun profil par pays pour le moment.</p>'; return; }
+
+  let cumul=0, arcs="", leg="";
+  liste.forEach((p,i)=>{
+    const part=p.total/total*100;
+    const c=COULEURS[i%COULEURS.length];
+    const dash=part.toFixed(2)+" "+(100-part).toFixed(2);
+    arcs+='<circle r="15.9155" cx="21" cy="21" fill="none" stroke="'+c+'" stroke-width="7" data-d="'+dash+'" '+
+          'stroke-dashoffset="'+(25-cumul).toFixed(2)+'" style="stroke-dasharray:'+(reduit?dash:"0 100")+
+          ';transition:stroke-dasharray 1.2s ease"/>';
+    cumul+=part;
+    leg+='<div class="line"><span><i class="dot" style="background:'+c+'"></i>'+esc(p.nom)+'</span><b>'+Math.round(part)+' %</b></div>';
+  });
+  zone.innerHTML='<div class="donut"><svg viewBox="0 0 42 42" role="img" aria-label="Répartition par pays">'+arcs+
+    '<text x="21" y="23" text-anchor="middle" font-size="6" font-weight="700" fill="#17406B">'+total+'</text></svg>'+
+    '<div>'+leg+'</div></div>';
+  if(!reduit) setTimeout(()=>zone.querySelectorAll("circle").forEach(c=>{ c.style.strokeDasharray=c.dataset.d; }),80);
+}
+
+/* ===== Tableau de bord complet ===== */
+function dessiner(s,g){
+  // Cartes animées
   const cartes=[
     ["👥","Utilisateurs",s.utilisateursTotal,""],
-    ["❤️","Profils approuvés",s.profilsApprouves,""],
+    ["✅","Profils approuvés",s.profilsApprouves,""],
     ["⏳","Profils en attente",s.profilsEnAttente,""],
     ["🚨","Signalements en attente",s.signalementsEnAttente,""],
     ["🟢","Actifs (24 h)",s.utilisateursActifs24h,""],
-    ["💰","Revenus",null,"bientôt disponible"]
+    ["💰","Revenus",null," · bientôt"]
   ];
-  const g=$("cards");
-  g.innerHTML="";
+  const grille=$("cards");
+  grille.innerHTML="";
   cartes.forEach(([ico,lib,val,note])=>{
     const d=document.createElement("div");
     d.className="card";
-    d.innerHTML='<div>'+ico+'</div><div class="n">0</div><div class="l">'+lib+(note?' · '+note:'')+'</div>';
-    g.appendChild(d);
+    d.innerHTML='<div>'+ico+'</div><div class="n">0</div><div class="l">'+lib+note+'</div>';
+    grille.appendChild(d);
     compter(d.querySelector(".n"),val);
   });
 
-  // 2) Évolution sur 7 jours avec variation en %
+  // Diagrammes courbe et camembert
+  dessinerCourbe(g&&g.inscriptionsParMois);
+  if(g) dessinerPays(g.profilsParPays);
+  else $("pays").innerHTML='<p class="muted">Données indisponibles.</p>';
+
+  // Barres : 7 derniers jours comparés aux 7 jours d'avant
   const evo=[
     ["Nouveaux utilisateurs",s.nouveaux7j,s.nouveaux7jPrecedents],
     ["Demandes de discussion",s.demandes7j,s.demandes7jPrecedents],
@@ -299,37 +430,96 @@ function dessiner(s){
     const max=Math.max(c||0,p||0,1);
     let v="—",cl="";
     if(c!=null&&p!=null){
-      if(p>0){
-        const x=Math.round((c-p)/p*100);
-        v=(x>=0?"▲ +":"▼ ")+x+" %";
-        cl=x>=0?"up":"dn";
-      }else if(c>0){ v="nouveau"; cl="up"; }
+      if(p>0){ const x=Math.round((c-p)/p*100); v=(x>=0?"▲ +":"▼ ")+x+" %"; cl=x>=0?"up":"dn"; }
+      else if(c>0){ v="nouveau"; cl="up"; }
     }
-    return '<div style="margin-bottom:14px"><div class="line"><span>'+l+'</span>'+
-      '<span><b>'+(c==null?"—":c)+'</b> <span class="'+cl+'">'+v+'</span></span></div>'+
-      '<div class="bar"><i data-w="'+Math.round((c||0)/max*100)+'"></i></div></div>';
+    return '<div style="margin-bottom:14px"><div class="line"><span>'+l+'</span><span><b>'+(c==null?"—":c)+
+      '</b> <span class="'+cl+'">'+v+'</span></span></div><div class="bar"><i data-w="'+Math.round((c||0)/max*100)+'"></i></div></div>';
   }).join("");
 
-  // 3) Taux d'activité
+  // Taux d'activité
   const taux=[
     ["Profils approuvés",pct(s.profilsApprouves,s.profilsTotal)],
     ["Utilisateurs actifs (24 h)",pct(s.utilisateursActifs24h,s.utilisateursTotal)],
     ["Demandes devenues conversations",pct(s.conversationsTotal,s.demandesTotal)]
   ];
   $("taux").innerHTML=taux.map(([l,v])=>
-    '<div style="margin-bottom:14px"><div class="line"><span>'+l+'</span><b>'+(v==null?"—":v+" %")+'</b></div>'+
-    '<div class="bar"><i data-w="'+(v||0)+'"></i></div></div>'
+    '<div style="margin-bottom:14px"><div class="line"><span>'+l+'</span><b>'+(v==null?"—":v+" %")+
+    '</b></div><div class="bar"><i data-w="'+(v||0)+'"></i></div></div>'
   ).join("");
 
-  // Les barres se remplissent progressivement
-  setTimeout(()=>{
-    document.querySelectorAll("[data-w]").forEach(i=>{ i.style.width=i.dataset.w+"%"; });
-  },80);
+  setTimeout(()=>document.querySelectorAll("[data-w]").forEach(i=>{ i.style.width=i.dataset.w+"%"; }),80);
+}
+
+/* ===== Profils (lecture) + ajout de points (super administrateur seulement) ===== */
+async function chargerProfils(){
+  $("profilsZone").innerHTML='<p class="muted">Chargement…</p>';
+  try{
+    const r=await tablesDB.listRows({
+      databaseId:DATABASE_ID,
+      tableId:TABLE_PROFILS,
+      queries:[Appwrite.Query.orderDesc("$createdAt"),Appwrite.Query.limit(100)]
+    });
+    profilsListe=r.rows||[];
+    profilsCharges=true;
+    afficherProfils();
+  }catch(e){
+    $("profilsZone").innerHTML='<p class="err">Impossible de lire les profils : '+esc(e.message)+'</p>';
+  }
+}
+
+function afficherProfils(){
+  const q=$("rechercheProfil").value.trim().toLowerCase();
+  const liste=profilsListe.filter(p=>!q||String(p.nom||"").toLowerCase().includes(q));
+  if(!liste.length){
+    $("profilsZone").innerHTML='<p class="muted">Aucun profil trouvé.</p>';
+    return;
+  }
+  const super_=ROLE==="super";
+  $("profilsZone").innerHTML='<table><thead><tr><th>Nom</th><th>Statut</th>'+(super_?'<th></th>':'')+'</tr></thead><tbody>'+
+    liste.map(p=>'<tr><td>'+esc(p.nom||"—")+(p.age?', '+esc(p.age):'')+'</td><td>'+esc(p.statut||"—")+'</td>'+
+      (super_?'<td><button class="btn sm" onclick="ajouterPoints('+profilsListe.indexOf(p)+')">+ Points</button></td>':'')+
+      '</tr>').join("")+'</tbody></table>';
+}
+
+async function ajouterPoints(index){
+  const p=profilsListe[index];
+  if(!p||!p.userId){ toast("Profil introuvable."); return; }
+  const v=prompt("Combien de points ajouter à "+(p.nom||"ce profil")+" ? (1 à 1000)");
+  if(v===null) return;
+  const n=Number(v);
+  if(!Number.isInteger(n)||n<1||n>1000){ toast("Nombre invalide (1 à 1000)."); return; }
+  if(!confirm("Ajouter "+n+" point(s) à "+(p.nom||"ce profil")+" ?")) return;
+  try{
+    await appelerFonction({action:"adminAjouterPoints",cibleId:p.userId,montant:n});
+    toast("✅ "+n+" point(s) ajouté(s).");
+  }catch(e){
+    toast("❌ "+e.message);
+  }
+}
+
+/* ===== Journal admin (super administrateur seulement) ===== */
+const ETIQUETTES={points_ajoutes:"Points ajoutés"};
+
+async function chargerJournal(reset){
+  if(ROLE!=="super") return;
+  if(reset){ journalCharge=0; $("journalLignes").innerHTML=""; }
+  try{
+    const r=await appelerFonction({action:"adminJournal",limite:50,decalage:journalCharge});
+    $("journalLignes").insertAdjacentHTML("beforeend",(r.journal||[]).map(j=>
+      '<tr><td>'+esc(new Date(j.date).toLocaleString("fr-FR"))+'</td><td>'+esc(j.adminEmail)+
+      '</td><td>'+esc(ETIQUETTES[j.action]||j.action)+'</td><td>'+esc(j.details||"")+'</td></tr>'
+    ).join(""));
+    journalCharge+=(r.journal||[]).length;
+    $("journalVide").style.display=journalCharge===0?"block":"none";
+    $("journalPlus").style.display=journalCharge<r.total?"inline-block":"none";
+  }catch(e){
+    toast("❌ "+e.message);
+  }
 }
 
 /* ===== Démarrage ===== */
 (async function demarrer(){
-  construireMenu();
   try{
     await account.get();     // une session existe déjà ?
   }catch(e){
