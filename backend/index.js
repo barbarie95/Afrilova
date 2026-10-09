@@ -27,6 +27,8 @@ const TABLE_CONVERSATIONS = "conversations";
 const TABLE_MESSAGES = "messages";
 const TABLE_SIGNALEMENTS = "signalements";
 const TABLE_BLOCAGES = "blocages";
+const TABLE_JOURNAL = "journal_admin";
+const TABLE_PAYS = "pays";
 
 // Équipe Appwrite des administrateurs
 const ADMIN_TEAM_ID = "6aacffe749b1978e61bf";
@@ -303,7 +305,8 @@ async function envoyerDemande(userId, data) {
     await addPoints(userId, COUT_DEMANDE);
     throw error;
   }
-     }
+}
+
 // Refuse une demande (le point est rendu à l'expéditeur)
 async function refuserDemande(userId, data) {
   const demandeId = data.demandeId;
@@ -763,6 +766,160 @@ async function adminStats(userId) {
 
   return { role, stats };
 }
+/* =====================================================
+   ESPACE ADMINISTRATEUR : POUVOIRS DU SUPER ADMIN,
+   JOURNAL ET DIAGRAMMES
+   ===================================================== */
+
+// Réservé au super administrateur (rôle owner)
+async function verifierSuper(userId) {
+  const role = await verifierAdmin(userId);
+
+  if (role !== "super") {
+    throw new Error("Action réservée au super administrateur.");
+  }
+
+  return role;
+}
+
+// Enregistre une action dans le journal (adresse email de l'admin incluse)
+async function ecrireJournal(userId, action, cibleId, details) {
+  const admin = await users.get(userId);
+
+  return databases.createDocument(
+    DATABASE_ID,
+    TABLE_JOURNAL,
+    ID.unique(),
+    {
+      adminId: userId,
+      adminEmail: admin.email,
+      action: cleanText(action, 50),
+      cibleId: cibleId || null,
+      details: cleanText(details, 500),
+      date: new Date().toISOString(),
+    }
+  );
+}
+
+// Ajoute des points à n'importe quel utilisateur (super admin seulement)
+// "cibleId" = identifiant de l'utilisateur (userId du profil)
+async function adminAjouterPoints(userId, data) {
+  await verifierSuper(userId);
+
+  const cibleId = cleanText(data.cibleId, 36);
+  const montant = Number(data.montant);
+
+  if (!cibleId) {
+    throw new Error("Profil manquant.");
+  }
+
+  // Limite de sécurité : entier entre 1 et 1000 par opération
+  if (!Number.isInteger(montant) || montant < 1 || montant > 1000) {
+    throw new Error("Le nombre de points doit être entre 1 et 1000.");
+  }
+
+  // Vérifie que l'utilisateur existe
+  await users.get(cibleId);
+
+  const points = await addPoints(cibleId, montant);
+
+  // Pas de trace = pas d'ajout : si le journal échoue, on annule
+  try {
+    await ecrireJournal(
+      userId,
+      "points_ajoutes",
+      cibleId,
+      "+" + montant + " point(s)"
+    );
+  } catch (e) {
+    await removePoints(cibleId, montant);
+    throw new Error("Journal indisponible : ajout annulé.");
+  }
+
+  return { points };
+}
+
+// Lit le journal (super admin seulement, du plus récent au plus ancien)
+async function adminJournal(userId, data) {
+  await verifierSuper(userId);
+
+  const limite = Math.min(Number(data.limite) || 50, 100);
+  const decalage = Math.max(Number(data.decalage) || 0, 0);
+
+  const resultat = await databases.listDocuments(
+    DATABASE_ID,
+    TABLE_JOURNAL,
+    [
+      Query.orderDesc("$createdAt"),
+      Query.limit(limite),
+      Query.offset(decalage),
+    ]
+  );
+
+  return {
+    total: resultat.total,
+    journal: resultat.documents.map((d) => ({
+      id: d.$id,
+      adminEmail: d.adminEmail,
+      action: d.action,
+      cibleId: d.cibleId,
+      details: d.details,
+      date: d.date,
+    })),
+  };
+}
+
+// Données des diagrammes : inscriptions des 6 derniers mois + pays
+async function adminGraphiques(userId) {
+  await verifierAdmin(userId);
+
+  // Inscriptions : 6 mois, du plus ancien au mois en cours
+  const mois = [];
+  const maintenant = new Date();
+
+  for (let i = 5; i >= 0; i--) {
+    const debut = new Date(
+      Date.UTC(maintenant.getUTCFullYear(), maintenant.getUTCMonth() - i, 1)
+    );
+    const fin = new Date(
+      Date.UTC(maintenant.getUTCFullYear(), maintenant.getUTCMonth() - i + 1, 1)
+    );
+
+    mois.push({
+      mois: debut.toISOString().slice(0, 7),
+      total: await totalOuNull(
+        compterUsers([
+          Query.greaterThanEqual("registration", debut.toISOString()),
+          Query.lessThan("registration", fin.toISOString()),
+        ])
+      ),
+    });
+  }
+
+  // Répartition des profils par pays
+  let pays = [];
+
+  try {
+    const liste = await databases.listDocuments(
+      DATABASE_ID,
+      TABLE_PAYS,
+      [Query.limit(50)]
+    );
+
+    pays = await Promise.all(
+      liste.documents.map(async (p) => ({
+        nom: p.nom,
+        total: await totalOuNull(
+          compterDocs(TABLE_PROFILS, [Query.equal("paysId", p.$id)])
+        ),
+      }))
+    );
+  } catch (e) {
+    pays = [];
+  }
+
+  return { inscriptionsParMois: mois, profilsParPays: pays };
+}
 
 /* =====================================================
    POINT D'ENTRÉE DE LA FONCTION
@@ -902,6 +1059,36 @@ export default async ({ req, res, log, error }) => {
         }
 
         resultat = await adminStats(userId);
+        break;
+
+      case "adminAjouterPoints":
+        if (!userId) {
+          throw new Error("Utilisateur non connecté.");
+        }
+
+        resultat = await adminAjouterPoints(
+          userId,
+          donnees
+        );
+        break;
+
+      case "adminJournal":
+        if (!userId) {
+          throw new Error("Utilisateur non connecté.");
+        }
+
+        resultat = await adminJournal(
+          userId,
+          donnees
+        );
+        break;
+
+      case "adminGraphiques":
+        if (!userId) {
+          throw new Error("Utilisateur non connecté.");
+        }
+
+        resultat = await adminGraphiques(userId);
         break;
 
       default:
