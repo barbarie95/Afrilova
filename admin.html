@@ -70,15 +70,18 @@ h1.h{font-size:20px;margin:6px 0 14px;color:var(--ink)}
 .dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:7px}
 svg{max-width:100%}
 
-/* ===== Tableaux et boutons ===== */
+/* ===== Tableaux, boutons, étiquettes ===== */
 .tw{overflow-x:auto}
 table{width:100%;border-collapse:collapse;font-size:13px}
-th{text-align:left;color:var(--mut);font-weight:600;padding:8px;border-bottom:1px solid var(--line)}
-td{padding:10px 8px;border-bottom:1px solid var(--line)}
+th{text-align:left;color:var(--mut);font-weight:600;padding:8px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:10px 8px;border-bottom:1px solid var(--line);vertical-align:top}
 .btn{padding:9px 14px;border-radius:10px;background:var(--gold);color:var(--ink);font-weight:700}
 .btn.sm{padding:6px 10px;font-size:12px}
 .btn.alt{background:var(--side)}
-.bar-actions{display:flex;gap:10px;margin-bottom:12px}
+.btn.dng{background:#FDE8E8;color:var(--danger)}
+.pill{display:inline-block;padding:3px 9px;border-radius:20px;background:var(--bg);font-size:12px}
+.pill.bad{background:#FDE8E8;color:var(--danger)}
+.acts{white-space:nowrap}
 #toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:12px 18px;border-radius:12px;font-size:13px;z-index:99;display:none;max-width:90%}
 @keyframes up{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
@@ -163,10 +166,34 @@ td{padding:10px 8px;border-bottom:1px solid var(--line)}
       </div>
     </section>
 
-    <!-- AUTRES RUBRIQUES -->
-    <section id="s-autre" class="sec">
-      <h1 class="h" id="autreT"></h1>
-      <div class="panel soon"><p class="muted">Cette rubrique sera activée à l'étape suivante.</p></div>
+    <!-- RUBRIQUES : demandes, conversations, signalements, blocages, points, pays -->
+    <section id="s-vue" class="sec">
+      <h1 class="h" id="vueTitre"></h1>
+      <div id="vueZone"></div>
+    </section>
+
+    <!-- PARAMÈTRES -->
+    <section id="s-parametres" class="sec">
+      <h1 class="h">Paramètres</h1>
+      <div class="row2" style="margin-top:0">
+        <div class="panel">
+          <h2>🔑 Changer mon mot de passe</h2>
+          <label for="mdpAncien">Mot de passe actuel</label>
+          <input id="mdpAncien" type="password" autocomplete="current-password">
+          <label for="mdpNouveau">Nouveau mot de passe (12 caractères minimum)</label>
+          <input id="mdpNouveau" type="password" autocomplete="new-password">
+          <button class="btn" style="margin-top:14px" onclick="changerMdp()">Changer</button>
+        </div>
+        <div class="panel">
+          <h2>📱 Mes appareils</h2>
+          <p class="muted" style="margin-bottom:14px">Déconnecte ton compte de tous les appareils, celui-ci compris.</p>
+          <button class="btn dng" onclick="toutDeconnecter()">Déconnecter tous mes appareils</button>
+        </div>
+      </div>
+      <div id="connexionsPanel" class="panel" style="margin-top:12px;display:none">
+        <h2>🛡️ Connexions actives des administrateurs</h2>
+        <div id="connexionsZone" class="tw"></div>
+      </div>
     </section>
   </main>
 </div>
@@ -189,12 +216,17 @@ const tablesDB=new Appwrite.TablesDB(client);
 
 const $=id=>document.getElementById(id);
 const reduit=matchMedia("(prefers-reduced-motion: reduce)").matches;
-let ROLE=null;
-let profilsListe=[], profilsCharges=false, journalCharge=0;
+let ROLE=null, SECTION="dashboard";
+let profilsListe=[], journalCharge=0, moderation=null;
 
 /* Protège l'affichage des textes venant de la base */
 function esc(t){
   return String(t==null?"":t).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+function fdate(d){
+  if(!d) return "—";
+  const x=new Date(d);
+  return isNaN(x)?"—":x.toLocaleString("fr-FR");
 }
 
 /* Petit message en bas de l'écran */
@@ -203,7 +235,7 @@ function toast(msg){
   t.textContent=msg;
   t.style.display="block";
   clearTimeout(toast.h);
-  toast.h=setTimeout(()=>{t.style.display="none";},4000);
+  toast.h=setTimeout(()=>{t.style.display="none";},4500);
 }
 
 /* Appelle afrilova-backend (même méthode que messagerie.html) */
@@ -242,12 +274,10 @@ function lireVerrou(){
   }catch(e){}
   return verrouMemoire;
 }
-
 function ecrireVerrou(v){
   verrouMemoire=v;
   try{ localStorage.setItem(CLE_VERROU,JSON.stringify(v)); }catch(e){}
 }
-
 // Compte un échec ; au 2e échec de suite, déclenche le blocage
 function enregistrerEchec(){
   const v=lireVerrou();
@@ -259,19 +289,16 @@ function enregistrerEchec(){
   }
   ecrireVerrou(v);
 }
-
 function dureeTexte(ms){
   const min=Math.ceil(ms/60000);
   const h=Math.floor(min/60), m=min%60;
   return h>0?(h+" h"+(m?" "+m+" min":"")):(m+" min");
 }
-
 // Applique l'état du blocage sur le formulaire. Renvoie true si bloqué.
 function appliquerVerrou(){
   const v=lireVerrou();
   const reste=(v.jusqua||0)-Date.now();
   clearInterval(minuteurVerrou);
-
   if(reste>0){
     $("goBtn").disabled=true;
     $("email").disabled=true;
@@ -281,7 +308,6 @@ function appliquerVerrou(){
     minuteurVerrou=setInterval(appliquerVerrou,30000);
     return true;
   }
-
   $("goBtn").disabled=false;
   $("email").disabled=false;
   $("mdp").disabled=false;
@@ -310,7 +336,7 @@ const MENU=[
 function construireMenu(){
   $("nav").innerHTML=MENU
     .filter(m=>!m[3]||ROLE==="super")
-    .map(m=>'<button class="mi'+(m[0]==="dashboard"?' on':'')+'" data-sec="'+m[0]+'" onclick="aller(\''+m[0]+'\')">'+
+    .map(m=>'<button class="mi'+(m[0]===SECTION?' on':'')+'" data-sec="'+m[0]+'" onclick="aller(\''+m[0]+'\')">'+
       '<span>'+m[1]+'</span><span>'+m[2]+'</span></button>')
     .join("")+
     '<button class="mi out" onclick="deconnecter()"><span>🔐</span><span>Déconnexion</span></button>';
@@ -319,15 +345,16 @@ function construireMenu(){
 function menu(ouvert){ document.body.classList.toggle("open",ouvert); }
 
 function aller(sec){
+  SECTION=sec;
   document.querySelectorAll(".mi[data-sec]").forEach(b=>b.classList.toggle("on",b.dataset.sec===sec));
-  ["dashboard","profils","journal","autre"].forEach(s=>$("s-"+s).classList.remove("on"));
-  const propres=["dashboard","profils","journal"];
-  const m=MENU.find(x=>x[0]===sec);
-  $("s-"+(propres.includes(sec)?sec:"autre")).classList.add("on");
-  $("titre").textContent=m[2];
-  $("autreT").textContent=m[1]+" "+m[2];
-  if(sec==="profils"&&!profilsCharges) chargerProfils();
-  if(sec==="journal") chargerJournal(true);
+  document.querySelectorAll(".sec").forEach(s=>s.classList.remove("on"));
+  const propres=["dashboard","profils","journal","parametres"];
+  $("s-"+(propres.includes(sec)?sec:"vue")).classList.add("on");
+  $("titre").textContent=MENU.find(x=>x[0]===sec)[2];
+  if(sec==="profils") chargerProfils();
+  else if(sec==="journal") chargerJournal(true);
+  else if(sec==="parametres") chargerConnexions();
+  else if(sec!=="dashboard") chargerVue(sec);
   menu(false);
 }
 
@@ -345,10 +372,8 @@ function afficherApp(){
 
 async function connecter(ev){
   ev.preventDefault();
-
   // Formulaire bloqué : on n'envoie rien à Appwrite
   if(appliquerVerrou()) return;
-
   $("err").textContent="";
   $("goBtn").disabled=true;
   try{
@@ -358,10 +383,8 @@ async function connecter(ev){
       email:$("email").value.trim(),
       password:$("mdp").value
     });
-
     // Mot de passe correct : les essais et les blocages repartent à zéro
     ecrireVerrou({echecs:0,niveau:0,jusqua:0});
-
     await ouvrirAdmin();
   }catch(e){
     enregistrerEchec();
@@ -394,7 +417,11 @@ async function ouvrirAdmin(){
     montrerLogin(e.message||"Accès refusé.");
   }
 }
-async function actualiser(){ profilsCharges=false; await ouvrirAdmin(); }
+async function actualiser(){
+  moderation=null;
+  await ouvrirAdmin();
+  if(SECTION!=="dashboard") aller(SECTION);
+}
 
 /* ===== Animations et calculs ===== */
 
@@ -486,7 +513,7 @@ function dessiner(s,g){
     ["⏳","Profils en attente",s.profilsEnAttente,""],
     ["🚨","Signalements en attente",s.signalementsEnAttente,""],
     ["🟢","Actifs (24 h)",s.utilisateursActifs24h,""],
-    ["💰","Revenus",null," · bientôt"]
+    ["💰","Revenus",null," · voir Points"]
   ];
   const grille=$("cards");
   grille.innerHTML="";
@@ -535,7 +562,96 @@ function dessiner(s,g){
   setTimeout(()=>document.querySelectorAll("[data-w]").forEach(i=>{ i.style.width=i.dataset.w+"%"; }),80);
 }
 
-/* ===== Profils (lecture) + ajout de points (super administrateur seulement) ===== */
+/* =====================================================
+   OUTILS D'AFFICHAGE DES RUBRIQUES
+   ===================================================== */
+
+// Tableau : "entetes" = titres, "lignes" = liste de lignes (chaque cellule est du HTML déjà protégé)
+function tableau(entetes,lignes){
+  return '<div class="panel tw"><table><thead><tr>'+entetes.map(h=>'<th>'+h+'</th>').join("")+'</tr></thead><tbody>'+
+    (lignes.length
+      ? lignes.map(r=>'<tr>'+r.map(c=>'<td>'+c+'</td>').join("")+'</tr>').join("")
+      : '<tr><td colspan="'+entetes.length+'" class="muted">Rien à afficher pour le moment.</td></tr>')+
+    '</tbody></table></div>';
+}
+
+// Cartes de chiffres : liste de [valeur, libellé]
+function cartesChiffres(liste){
+  return '<div class="grid" style="margin-bottom:14px">'+liste.map(([v,l])=>
+    '<div class="card"><div class="n">'+(v==null?"—":esc(v))+'</div><div class="l">'+esc(l)+'</div></div>').join("")+'</div>';
+}
+
+function chiffresParStatut(total,par){
+  return cartesChiffres([[total,"Total"]].concat(Object.entries(par||{}).map(([k,v])=>[v,k.replace(/_/g," ")])));
+}
+
+function pill(statut,mauvais){
+  return '<span class="pill'+(mauvais?' bad':'')+'">'+esc(String(statut||"—").replace(/_/g," "))+'</span>';
+}
+
+function fcfa(n){ return Number(n||0).toLocaleString("fr-FR")+" FCFA"; }
+
+/* ===== Actions sur un compte : points, suspension, réactivation, suppression ===== */
+const CIBLES=[];
+function reg(userId,nom,statut){ CIBLES.push({userId,nom,statut}); return CIBLES.length-1; }
+
+function boutons(userId,nom,statut){
+  if(!userId) return "";
+  const i=reg(userId,nom,statut);
+  let h="";
+  if(statut==="suspendu"){
+    h+='<button class="btn sm alt" onclick="act(\'reac\','+i+')">Réactiver</button> '+
+       '<button class="btn sm dng" onclick="act(\'supp\','+i+')">Supprimer</button>';
+  }else{
+    h+='<button class="btn sm dng" onclick="act(\'susp\','+i+')">Suspendre</button>';
+  }
+  if(ROLE==="super") h+=' <button class="btn sm" onclick="act(\'pts\','+i+')">+ Points</button>';
+  return '<span class="acts">'+h+'</span>';
+}
+
+async function act(type,i){
+  const c=CIBLES[i];
+  if(!c) return;
+  const nom=c.nom||"ce compte";
+  try{
+    if(type==="pts"){
+      const v=prompt("Combien de points ajouter à "+nom+" ? (1 à 1000)");
+      if(v===null) return;
+      const n=Number(v);
+      if(!Number.isInteger(n)||n<1||n>1000){ toast("Nombre invalide (1 à 1000)."); return; }
+      if(!confirm("Ajouter "+n+" point(s) à "+nom+" ?")) return;
+      await appelerFonction({action:"adminAjouterPoints",cibleId:c.userId,montant:n});
+      toast("✅ "+n+" point(s) ajouté(s).");
+    }
+    if(type==="susp"){
+      const m=prompt("Motif de la suspension de "+nom+" ?");
+      if(!m||m.trim().length<3){ toast("Un motif est obligatoire (3 caractères minimum)."); return; }
+      if(!confirm("Suspendre "+nom+" ? La personne ne pourra plus se connecter.")) return;
+      await appelerFonction({action:"adminSuspendre",cibleId:c.userId,motif:m.trim()});
+      toast("✅ Compte suspendu.");
+    }
+    if(type==="reac"){
+      if(!confirm("Réactiver "+nom+" ?")) return;
+      await appelerFonction({action:"adminReactiver",cibleId:c.userId});
+      toast("✅ Compte réactivé.");
+    }
+    if(type==="supp"){
+      const m=prompt("Motif de la SUPPRESSION DÉFINITIVE de "+nom+" ?");
+      if(!m||m.trim().length<3){ toast("Un motif est obligatoire (3 caractères minimum)."); return; }
+      const mot=c.nom||"SUPPRIMER";
+      const t=prompt("Action IRRÉVERSIBLE. Tape exactement « "+mot+" » pour confirmer :");
+      if(t!==mot){ toast("Texte différent : suppression annulée."); return; }
+      await appelerFonction({action:"adminSupprimer",cibleId:c.userId,motif:m.trim()});
+      toast("✅ Compte supprimé.");
+    }
+    moderation=null;
+    aller(SECTION);
+  }catch(e){
+    toast("❌ "+e.message);
+  }
+}
+
+/* ===== Profils ===== */
 async function chargerProfils(){
   $("profilsZone").innerHTML='<p class="muted">Chargement…</p>';
   try{
@@ -545,7 +661,6 @@ async function chargerProfils(){
       queries:[Appwrite.Query.orderDesc("$createdAt"),Appwrite.Query.limit(100)]
     });
     profilsListe=r.rows||[];
-    profilsCharges=true;
     afficherProfils();
   }catch(e){
     $("profilsZone").innerHTML='<p class="err">Impossible de lire les profils : '+esc(e.message)+'</p>';
@@ -555,35 +670,113 @@ async function chargerProfils(){
 function afficherProfils(){
   const q=$("rechercheProfil").value.trim().toLowerCase();
   const liste=profilsListe.filter(p=>!q||String(p.nom||"").toLowerCase().includes(q));
-  if(!liste.length){
-    $("profilsZone").innerHTML='<p class="muted">Aucun profil trouvé.</p>';
-    return;
-  }
-  const super_=ROLE==="super";
-  $("profilsZone").innerHTML='<table><thead><tr><th>Nom</th><th>Statut</th>'+(super_?'<th></th>':'')+'</tr></thead><tbody>'+
-    liste.map(p=>'<tr><td>'+esc(p.nom||"—")+(p.age?', '+esc(p.age):'')+'</td><td>'+esc(p.statut||"—")+'</td>'+
-      (super_?'<td><button class="btn sm" onclick="ajouterPoints('+profilsListe.indexOf(p)+')">+ Points</button></td>':'')+
-      '</tr>').join("")+'</tbody></table>';
+  $("profilsZone").innerHTML=tableau(["Nom","Statut","Actions"],liste.map(p=>[
+    esc(p.nom||"—")+(p.age?', '+esc(p.age):''),
+    pill(p.statut,p.statut==="suspendu"),
+    boutons(p.userId,p.nom,p.statut)
+  ])).replace('class="panel tw"','class="tw"');
 }
 
-async function ajouterPoints(index){
-  const p=profilsListe[index];
-  if(!p||!p.userId){ toast("Profil introuvable."); return; }
-  const v=prompt("Combien de points ajouter à "+(p.nom||"ce profil")+" ? (1 à 1000)");
-  if(v===null) return;
-  const n=Number(v);
-  if(!Number.isInteger(n)||n<1||n>1000){ toast("Nombre invalide (1 à 1000)."); return; }
-  if(!confirm("Ajouter "+n+" point(s) à "+(p.nom||"ce profil")+" ?")) return;
+/* ===== Rubriques lues sur le serveur ===== */
+function rDemandes(r){
+  return chiffresParStatut(r.total,r.parStatut)+
+    tableau(["Date","De","À","Statut","Points"],(r.lignes||[]).map(l=>[
+      fdate(l.date),esc(l.de||"—"),esc(l.a||"—"),pill(l.statut),esc(l.points==null?"":l.points)
+    ]));
+}
+
+function rConversations(r){
+  return chiffresParStatut(r.total,r.parStatut)+
+    '<p class="muted" style="margin-bottom:10px">🔒 Le contenu des messages n\'est jamais affiché.</p>'+
+    tableau(["Date","Participant 1","Participant 2","Statut"],(r.lignes||[]).map(l=>[
+      fdate(l.date),esc(l.participant1||"—"),esc(l.participant2||"—"),pill(l.statut,l.statut==="signalee")
+    ]));
+}
+
+function rPoints(r){
+  const t=r.transactions||{};
+  let h=cartesChiffres([
+    [(r.pointsEnCirculation||0).toLocaleString("fr-FR"),"Points en circulation"],
+    [r.comptes,"Comptes de points"],
+    [t.pointsVendus==null?null:Number(t.pointsVendus).toLocaleString("fr-FR"),"Points vendus"],
+    [fcfa(t.montantConfirme),"Chiffre d'affaires confirmé"],
+    [t.total,"Transactions"]
+  ]);
+  if(r.meilleursSoldes){
+    h+='<div class="row2"><div>'+
+      '<h2 style="font-size:14px;margin:6px 0 10px;color:var(--ink)">🏆 Plus gros soldes</h2>'+
+      tableau(["Profil","Solde"],r.meilleursSoldes.map(s=>[esc(s.nom||"—"),esc(s.solde)]))+
+      '</div></div>'+
+      '<h2 style="font-size:14px;margin:16px 0 10px;color:var(--ink)">🧾 Dernières transactions</h2>'+
+      tableau(["Date","Profil","Montant","Points","Statut","Moyen"],(r.dernieresTransactions||[]).map(x=>[
+        fdate(x.date),esc(x.nom||"—"),esc(fcfa(x.montant)),esc(x.points==null?"":x.points),pill(x.statut,x.statut==="echoue"),esc(x.moyen)
+      ]));
+  }else{
+    h+='<p class="muted">Le détail des transactions est réservé au super administrateur.</p>';
+  }
+  return h;
+}
+
+function rPays(r){
+  const total=(r.pays||[]).reduce((a,p)=>a+(p.profils||0),0);
+  return cartesChiffres([[(r.pays||[]).length,"Pays"],[r.totalVilles,"Villes"],[total,"Profils"]])+
+    tableau(["Pays","Villes","Profils","Part"],(r.pays||[]).map(p=>[
+      esc(p.nom),esc(p.villes),esc(p.profils==null?"—":p.profils),
+      '<div class="bar" style="min-width:90px"><i data-w="'+(pct(p.profils,total)||0)+'"></i></div>'
+    ]));
+}
+
+function motifsTexte(m){
+  return Object.entries(m||{}).map(([k,v])=>esc(k.replace(/_/g," "))+" ×"+v).join(", ")||"—";
+}
+
+function rSignalements(r){
+  const liste=(r.profils||[]).filter(p=>p.signalements>0);
+  return cartesChiffres([[r.totaux.signalements,"Signalements reçus"],[liste.length,"Profils signalés"]])+
+    tableau(["Profil","Signalements","Motifs","Blocages","Statut","Actions"],liste.map(p=>[
+      esc(p.nom||"Profil introuvable")+(p.age?', '+esc(p.age):''),
+      '<b>'+p.signalements+'</b>',motifsTexte(p.motifs),p.blocages,
+      pill(p.statut,p.statut==="suspendu"),boutons(p.userId,p.nom,p.statut)
+    ]));
+}
+
+function rBlocages(r){
+  const liste=(r.profils||[]).filter(p=>p.blocages>0).sort((a,b)=>b.blocages-a.blocages);
+  return cartesChiffres([[r.totaux.blocages,"Blocages entre utilisateurs"],[liste.length,"Profils bloqués"]])+
+    tableau(["Profil","Bloqué par","Signalements","Statut","Actions"],liste.map(p=>[
+      esc(p.nom||"Profil introuvable")+(p.age?', '+esc(p.age):''),
+      '<b>'+p.blocages+'</b> personne(s)',p.signalements,
+      pill(p.statut,p.statut==="suspendu"),boutons(p.userId,p.nom,p.statut)
+    ]));
+}
+
+async function chargerVue(sec){
+  const m=MENU.find(x=>x[0]===sec);
+  $("vueTitre").textContent=m[1]+" "+m[2];
+  $("vueZone").innerHTML='<p class="muted">Chargement…</p>';
   try{
-    await appelerFonction({action:"adminAjouterPoints",cibleId:p.userId,montant:n});
-    toast("✅ "+n+" point(s) ajouté(s).");
+    let html;
+    if(sec==="signalements"||sec==="blocages"){
+      if(!moderation) moderation=await appelerFonction({action:"adminModeration"});
+      html=sec==="signalements"?rSignalements(moderation):rBlocages(moderation);
+    }else{
+      const r=await appelerFonction({action:"adminRubrique",rubrique:sec});
+      html={demandes:rDemandes,conversations:rConversations,points:rPoints,pays:rPays}[sec](r);
+    }
+    $("vueZone").innerHTML=html;
+    setTimeout(()=>document.querySelectorAll("#vueZone [data-w]").forEach(i=>{ i.style.width=i.dataset.w+"%"; }),80);
   }catch(e){
-    toast("❌ "+e.message);
+    $("vueZone").innerHTML='<p class="err">'+esc(e.message)+'</p>';
   }
 }
 
 /* ===== Journal admin (super administrateur seulement) ===== */
-const ETIQUETTES={points_ajoutes:"Points ajoutés"};
+const ETIQUETTES={
+  points_ajoutes:"Points ajoutés",
+  compte_suspendu:"Compte suspendu",
+  compte_reactive:"Compte réactivé",
+  compte_supprime:"Compte supprimé"
+};
 
 async function chargerJournal(reset){
   if(ROLE!=="super") return;
@@ -591,7 +784,7 @@ async function chargerJournal(reset){
   try{
     const r=await appelerFonction({action:"adminJournal",limite:50,decalage:journalCharge});
     $("journalLignes").insertAdjacentHTML("beforeend",(r.journal||[]).map(j=>
-      '<tr><td>'+esc(new Date(j.date).toLocaleString("fr-FR"))+'</td><td>'+esc(j.adminEmail)+
+      '<tr><td>'+esc(fdate(j.date))+'</td><td>'+esc(j.adminEmail)+
       '</td><td>'+esc(ETIQUETTES[j.action]||j.action)+'</td><td>'+esc(j.details||"")+'</td></tr>'
     ).join(""));
     journalCharge+=(r.journal||[]).length;
@@ -599,6 +792,43 @@ async function chargerJournal(reset){
     $("journalPlus").style.display=journalCharge<r.total?"inline-block":"none";
   }catch(e){
     toast("❌ "+e.message);
+  }
+}
+
+/* ===== Paramètres ===== */
+async function changerMdp(){
+  const ancien=$("mdpAncien").value, nouveau=$("mdpNouveau").value;
+  if(!ancien){ toast("Entre ton mot de passe actuel."); return; }
+  if(nouveau.length<12){ toast("Le nouveau mot de passe doit faire au moins 12 caractères."); return; }
+  try{
+    await account.updatePassword({password:nouveau,oldPassword:ancien});
+    $("mdpAncien").value="";
+    $("mdpNouveau").value="";
+    toast("✅ Mot de passe changé. Si tu es déconnecté, reconnecte-toi avec le nouveau.");
+  }catch(e){
+    toast("❌ "+(e.message||"Changement impossible."));
+  }
+}
+
+async function toutDeconnecter(){
+  if(!confirm("Déconnecter ton compte de TOUS les appareils, celui-ci compris ?")) return;
+  try{ await account.deleteSessions(); }catch(_){}
+  location.reload();
+}
+
+// Appareils connectés sur les comptes administrateurs (super administrateur seulement)
+async function chargerConnexions(){
+  if(ROLE!=="super"){ $("connexionsPanel").style.display="none"; return; }
+  $("connexionsPanel").style.display="block";
+  $("connexionsZone").innerHTML='<p class="muted">Chargement…</p>';
+  try{
+    const r=await appelerFonction({action:"adminConnexions"});
+    $("connexionsZone").innerHTML=tableau(["Administrateur","Date","Pays","Appareil","IP"],(r.connexions||[]).map(c=>[
+      esc(c.adminEmail),fdate(c.date),esc(c.pays||"—"),esc(c.appareil||"—"),esc(c.ip||"—")
+    ])).replace('class="panel tw"','class="tw"')+
+    '<p class="muted" style="margin-top:10px">Une connexion que tu ne reconnais pas ? Change le mot de passe du compte concerné.</p>';
+  }catch(e){
+    $("connexionsZone").innerHTML='<p class="err">'+esc(e.message)+'</p>';
   }
 }
 
