@@ -677,7 +677,7 @@ function afficherProfils(){
   ])).replace('class="panel tw"','class="tw"');
 }
 
-/* ===== Rubriques lues sur le serveur ===== */
+  /* ===== Rubriques lues sur le serveur ===== */
 function rDemandes(r){
   return chiffresParStatut(r.total,r.parStatut)+
     tableau(["Date","De","À","Statut","Points"],(r.lignes||[]).map(l=>[
