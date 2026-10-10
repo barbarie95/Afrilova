@@ -1714,4 +1714,5 @@ case "analyserCompatibilite":
       },
       400
     );
-      
+    }
+};    
