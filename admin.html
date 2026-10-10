@@ -172,10 +172,17 @@ td{padding:10px 8px;border-bottom:1px solid var(--line);vertical-align:top}
       <div id="vueZone"></div>
     </section>
 
-    <!-- PARAMÈTRES -->
+    <!-- PARAMÈTRES (réservés au super administrateur) -->
     <section id="s-parametres" class="sec">
       <h1 class="h">Paramètres</h1>
-      <div class="row2" style="margin-top:0">
+
+      <!-- Message pour les administrateurs associés -->
+      <div id="parametresAssocie" class="panel soon" style="display:none">
+        <p class="muted">Aucun réglage n'est disponible pour ton rôle. Pour changer ton mot de passe, demande au super administrateur.</p>
+      </div>
+
+      <!-- Panneaux du super administrateur -->
+      <div id="moiPanels" class="row2" style="margin-top:0">
         <div class="panel">
           <h2>🔑 Changer mon mot de passe</h2>
           <label for="mdpAncien">Mot de passe actuel</label>
@@ -353,7 +360,7 @@ function aller(sec){
   $("titre").textContent=MENU.find(x=>x[0]===sec)[2];
   if(sec==="profils") chargerProfils();
   else if(sec==="journal") chargerJournal(true);
-  else if(sec==="parametres") chargerConnexions();
+  else if(sec==="parametres") chargerParametres();
   else if(sec!=="dashboard") chargerVue(sec);
   menu(false);
 }
@@ -677,7 +684,7 @@ function afficherProfils(){
   ])).replace('class="panel tw"','class="tw"');
 }
 
-  /* ===== Rubriques lues sur le serveur ===== */
+/* ===== Rubriques lues sur le serveur ===== */
 function rDemandes(r){
   return chiffresParStatut(r.total,r.parStatut)+
     tableau(["Date","De","À","Statut","Points"],(r.lignes||[]).map(l=>[
@@ -795,8 +802,16 @@ async function chargerJournal(reset){
   }
 }
 
-/* ===== Paramètres ===== */
+/* ===== Paramètres (réservés au super administrateur) ===== */
+function chargerParametres(){
+  const superAdmin=ROLE==="super";
+  $("moiPanels").style.display=superAdmin?"grid":"none";
+  $("parametresAssocie").style.display=superAdmin?"none":"block";
+  chargerConnexions();
+}
+
 async function changerMdp(){
+  if(ROLE!=="super") return;
   const ancien=$("mdpAncien").value, nouveau=$("mdpNouveau").value;
   if(!ancien){ toast("Entre ton mot de passe actuel."); return; }
   if(nouveau.length<12){ toast("Le nouveau mot de passe doit faire au moins 12 caractères."); return; }
@@ -811,6 +826,7 @@ async function changerMdp(){
 }
 
 async function toutDeconnecter(){
+  if(ROLE!=="super") return;
   if(!confirm("Déconnecter ton compte de TOUS les appareils, celui-ci compris ?")) return;
   try{ await account.deleteSessions(); }catch(_){}
   location.reload();
