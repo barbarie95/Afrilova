@@ -632,19 +632,24 @@ if ("serviceWorker" in navigator) {
     installPrompt = null;
   });
 
-  installBtn.addEventListener("click", async () => {
-    if (installPrompt) {
-      const promptEvent = installPrompt;
-      installPrompt = null;
-      await promptEvent.prompt();
-      box.hidden = true;
-      return;
-    }
+installBtn.addEventListener("click", async () => {
+  if (installPrompt) {
+    const promptEvent = installPrompt;
+    installPrompt = null;
+    await promptEvent.prompt();
+    const result = await promptEvent.userChoice;
 
-    help.hidden = false;
-    help.textContent =
-      "Pour installer Afrilova, ouvre le menu ⋮ de Chrome puis choisis « Installer l’application » si cette option est proposée. Sur iPhone, ouvre le site dans Safari, touche Partager puis « Sur l’écran d’accueil ».";
-  });
+    if (result.outcome === "accepted") {
+      box.hidden = true;
+    }
+    return;
+  }
+
+  help.hidden = false;
+  help.textContent =
+    "L’installation directe n’est pas disponible pour le moment. Ouvre le menu ⋮ de Chrome puis choisis « Installer l’application ».";
+});
+  
 
   laterBtn.addEventListener("click", () => {
     box.hidden = true;
