@@ -3,7 +3,7 @@
    Fichier : backend/index.js
    ===================================================== */
 
-import { Client, Databases, Users, Teams, ID, Query } from "node-appwrite";
+import { Client, Databases, Users, Teams, Storage, ID, Query } from "node-appwrite";
 
 /* ---------- Connexion Appwrite ---------- */
 // Adresse et projet fournis automatiquement par Appwrite à la fonction.
@@ -15,6 +15,7 @@ const client = new Client()
 const databases = new Databases(client);
 const users = new Users(client);
 const teams = new Teams(client);
+const storage = new Storage(client);
 
 /* ---------- Identifiants des tables ---------- */
 const DATABASE_ID =
@@ -32,6 +33,9 @@ const TABLE_PAYS = "pays";
 
 // Équipe Appwrite des administrateurs
 const ADMIN_TEAM_ID = "6aacffe749b1978e61bf";
+
+// Dossier des photos (profils et messagerie)
+const BUCKET_PHOTOS = "6aad2a754e0e095d6a9a";
 
 /* ---------- Configuration Gemini (IA) ---------- */
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
@@ -765,7 +769,7 @@ async function adminStats(userId) {
   });
 
   return { role, stats };
-}
+                            }
 /* =====================================================
    ESPACE ADMINISTRATEUR : POUVOIRS DU SUPER ADMIN,
    JOURNAL ET DIAGRAMMES
@@ -919,6 +923,350 @@ async function adminGraphiques(userId) {
   }
 
   return { inscriptionsParMois: mois, profilsParPays: pays };
+}
+
+/* =====================================================
+   MODÉRATION : SIGNALEMENTS, BLOCAGES, SUSPENSION,
+   SUPPRESSION (tous les administrateurs)
+   ===================================================== */
+
+// Lit le profil d'un utilisateur (ou null s'il n'existe pas)
+async function getProfilParUserId(userId) {
+  const resultat = await databases.listDocuments(
+    DATABASE_ID,
+    TABLE_PROFILS,
+    [
+      Query.equal("userId", userId),
+      Query.limit(1),
+    ]
+  );
+
+  return resultat.documents[0] || null;
+}
+
+// Lit une table par pages de 100 (jusqu'à "max" lignes), du plus récent au plus ancien
+async function listerTout(table, max = 500) {
+  const lignes = [];
+
+  while (lignes.length < max) {
+    const page = await databases.listDocuments(
+      DATABASE_ID,
+      table,
+      [
+        Query.orderDesc("$createdAt"),
+        Query.limit(100),
+        Query.offset(lignes.length),
+      ]
+    );
+
+    lignes.push(...page.documents);
+
+    if (page.documents.length < 100) {
+      break;
+    }
+  }
+
+  return lignes;
+}
+
+// Refuse de viser soi-même ou un membre de l'équipe des administrateurs
+async function verifierCibleModerable(userId, cibleId) {
+  if (!cibleId) {
+    throw new Error("Profil manquant.");
+  }
+
+  if (cibleId === userId) {
+    throw new Error("Impossible de viser son propre compte.");
+  }
+
+  const adhesions = await teams.listMemberships(
+    ADMIN_TEAM_ID,
+    [
+      Query.equal("userId", cibleId),
+      Query.limit(1),
+    ]
+  );
+
+  if (adhesions.memberships?.length) {
+    throw new Error("Impossible de viser un administrateur.");
+  }
+}
+
+// Profils classés par signalements puis par blocages reçus
+async function adminModeration(userId) {
+  await verifierAdmin(userId);
+
+  const [signalements, blocages] = await Promise.all([
+    listerTout(TABLE_SIGNALEMENTS),
+    listerTout(TABLE_BLOCAGES),
+  ]);
+
+  const parProfil = {};
+
+  const entree = (id) => {
+    if (!parProfil[id]) {
+      parProfil[id] = { userId: id, signalements: 0, blocages: 0, motifs: {} };
+    }
+    return parProfil[id];
+  };
+
+  signalements.forEach((s) => {
+    if (!s.signaleId) return;
+    const e = entree(s.signaleId);
+    e.signalements++;
+    e.motifs[s.motif] = (e.motifs[s.motif] || 0) + 1;
+  });
+
+  blocages.forEach((b) => {
+    if (!b.bloqueId) return;
+    entree(b.bloqueId).blocages++;
+  });
+
+  // Les 50 profils les plus signalés (puis les plus bloqués)
+  const classes = Object.values(parProfil)
+    .sort((a, b) => b.signalements - a.signalements || b.blocages - a.blocages)
+    .slice(0, 50);
+
+  let profils = [];
+
+  if (classes.length) {
+    const lecture = await databases.listDocuments(
+      DATABASE_ID,
+      TABLE_PROFILS,
+      [
+        Query.equal("userId", classes.map((c) => c.userId)),
+        Query.limit(100),
+      ]
+    );
+    profils = lecture.documents;
+  }
+
+  return {
+    totaux: {
+      signalements: signalements.length,
+      blocages: blocages.length,
+    },
+    profils: classes.map((c) => {
+      const p = profils.find((x) => x.userId === c.userId);
+      return {
+        ...c,
+        nom: p ? p.nom : null,
+        age: p ? p.age : null,
+        statut: p ? p.statut : null,
+      };
+    }),
+  };
+}
+
+// Suspend un compte : connexion impossible + profil "suspendu" (réversible)
+async function adminSuspendre(userId, data) {
+  await verifierAdmin(userId);
+
+  const cibleId = cleanText(data.cibleId, 36);
+  const motif = cleanText(data.motif, 200);
+
+  await verifierCibleModerable(userId, cibleId);
+
+  if (motif.length < 3) {
+    throw new Error("Un motif est obligatoire.");
+  }
+
+  const profil = await getProfilParUserId(cibleId);
+  const statutAvant = profil ? profil.statut : null;
+
+  await users.updateStatus(cibleId, false);
+
+  if (profil) {
+    try {
+      await databases.updateDocument(
+        DATABASE_ID,
+        TABLE_PROFILS,
+        profil.$id,
+        { statut: "suspendu" }
+      );
+    } catch (e) {
+      await users.updateStatus(cibleId, true);
+      throw e;
+    }
+  }
+
+  // Pas de trace = pas de suspension : si le journal échoue, on annule
+  try {
+    await ecrireJournal(
+      userId,
+      "compte_suspendu",
+      cibleId,
+      "nom: " + (profil ? profil.nom : "?") + " | motif: " + motif
+    );
+  } catch (e) {
+    await users.updateStatus(cibleId, true);
+
+    if (profil) {
+      await databases.updateDocument(
+        DATABASE_ID,
+        TABLE_PROFILS,
+        profil.$id,
+        { statut: statutAvant }
+      );
+    }
+
+    throw new Error("Journal indisponible : suspension annulée.");
+  }
+
+  // Ferme les sessions déjà ouvertes (sans bloquer si ça échoue)
+  try {
+    await users.deleteSessions(cibleId);
+  } catch (e) {}
+
+  return { suspendu: true };
+}
+
+// Réactive un compte suspendu : connexion rétablie, profil remis à "approuve"
+async function adminReactiver(userId, data) {
+  await verifierAdmin(userId);
+
+  const cibleId = cleanText(data.cibleId, 36);
+
+  await verifierCibleModerable(userId, cibleId);
+
+  const profil = await getProfilParUserId(cibleId);
+  const etaitSuspendu = Boolean(profil && profil.statut === "suspendu");
+
+  await users.updateStatus(cibleId, true);
+
+  if (etaitSuspendu) {
+    try {
+      await databases.updateDocument(
+        DATABASE_ID,
+        TABLE_PROFILS,
+        profil.$id,
+        { statut: "approuve" }
+      );
+    } catch (e) {
+      await users.updateStatus(cibleId, false);
+      throw e;
+    }
+  }
+
+  try {
+    await ecrireJournal(
+      userId,
+      "compte_reactive",
+      cibleId,
+      "nom: " + (profil ? profil.nom : "?")
+    );
+  } catch (e) {
+    await users.updateStatus(cibleId, false);
+
+    if (etaitSuspendu) {
+      await databases.updateDocument(
+        DATABASE_ID,
+        TABLE_PROFILS,
+        profil.$id,
+        { statut: "suspendu" }
+      );
+    }
+
+    throw new Error("Journal indisponible : réactivation annulée.");
+  }
+
+  return { reactive: true };
+}
+
+// Supprime définitivement un compte (seulement s'il est déjà suspendu)
+async function adminSupprimer(userId, data) {
+  await verifierAdmin(userId);
+
+  const cibleId = cleanText(data.cibleId, 36);
+  const motif = cleanText(data.motif, 200);
+
+  await verifierCibleModerable(userId, cibleId);
+
+  if (motif.length < 3) {
+    throw new Error("Un motif est obligatoire.");
+  }
+
+  const compte = await users.get(cibleId);
+  const profil = await getProfilParUserId(cibleId);
+
+  // Garde-fou : on ne supprime qu'après une suspension
+  if (compte.status !== false || (profil && profil.statut !== "suspendu")) {
+    throw new Error("Suspends d'abord ce compte avant de le supprimer.");
+  }
+
+  // La trace est écrite AVANT : la suppression est irréversible
+  try {
+    await ecrireJournal(
+      userId,
+      "compte_supprime",
+      cibleId,
+      "nom: " + (profil ? profil.nom : "?") + " | motif: " + motif
+    );
+  } catch (e) {
+    throw new Error("Journal indisponible : suppression annulée.");
+  }
+
+  // Photos du profil (une photo déjà absente ne bloque pas)
+  const photos = [
+    profil ? profil.photoPrincipale : null,
+    profil ? profil.photoOriginaleId : null,
+  ];
+
+  for (const fichierId of photos) {
+    if (!fichierId) continue;
+
+    try {
+      await storage.deleteFile(BUCKET_PHOTOS, fichierId);
+    } catch (e) {}
+  }
+
+  // Points
+  const points = await getPoints(cibleId);
+
+  if (points) {
+    await databases.deleteDocument(DATABASE_ID, TABLE_POINTS, points.$id);
+  }
+
+  // Profil puis compte
+  if (profil) {
+    await databases.deleteDocument(DATABASE_ID, TABLE_PROFILS, profil.$id);
+  }
+
+  await users.delete(cibleId);
+
+  return { supprime: true };
+}
+
+// Appareils actuellement connectés sur les comptes administrateurs (super admin seulement)
+async function adminConnexions(userId) {
+  await verifierSuper(userId);
+
+  const adhesions = await teams.listMemberships(
+    ADMIN_TEAM_ID,
+    [Query.limit(25)]
+  );
+
+  const connexions = [];
+
+  for (const adhesion of adhesions.memberships || []) {
+    try {
+      const resultat = await users.listSessions(adhesion.userId);
+
+      (resultat.sessions || []).forEach((s) => {
+        connexions.push({
+          adminEmail: adhesion.userEmail,
+          date: s.$createdAt,
+          ip: s.ip || "",
+          pays: s.countryName || "",
+          appareil: [s.osName, s.clientName].filter(Boolean).join(" · "),
+        });
+      });
+    } catch (e) {}
+  }
+
+  connexions.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+  return { connexions: connexions.slice(0, 30) };
 }
 
 /* =====================================================
@@ -1089,6 +1437,55 @@ export default async ({ req, res, log, error }) => {
         }
 
         resultat = await adminGraphiques(userId);
+        break;
+
+      case "adminModeration":
+        if (!userId) {
+          throw new Error("Utilisateur non connecté.");
+        }
+
+        resultat = await adminModeration(userId);
+        break;
+
+      case "adminSuspendre":
+        if (!userId) {
+          throw new Error("Utilisateur non connecté.");
+        }
+
+        resultat = await adminSuspendre(
+          userId,
+          donnees
+        );
+        break;
+
+      case "adminReactiver":
+        if (!userId) {
+          throw new Error("Utilisateur non connecté.");
+        }
+
+        resultat = await adminReactiver(
+          userId,
+          donnees
+        );
+        break;
+
+      case "adminSupprimer":
+        if (!userId) {
+          throw new Error("Utilisateur non connecté.");
+        }
+
+        resultat = await adminSupprimer(
+          userId,
+          donnees
+        );
+        break;
+
+      case "adminConnexions":
+        if (!userId) {
+          throw new Error("Utilisateur non connecté.");
+        }
+
+        resultat = await adminConnexions(userId);
         break;
 
       default:
