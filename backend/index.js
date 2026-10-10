@@ -28,6 +28,8 @@ const TABLE_CONVERSATIONS = "conversations";
 const TABLE_MESSAGES = "messages";
 const TABLE_SIGNALEMENTS = "signalements";
 const TABLE_BLOCAGES = "blocages";
+const TABLE_TRANSACTIONS = "transactions";
+const TABLE_VILLES = "villes";
 const TABLE_JOURNAL = "journal_admin";
 const TABLE_PAYS = "pays";
 
@@ -769,7 +771,7 @@ async function adminStats(userId) {
   });
 
   return { role, stats };
-                            }
+  }
 /* =====================================================
    ESPACE ADMINISTRATEUR : POUVOIRS DU SUPER ADMIN,
    JOURNAL ET DIAGRAMMES
@@ -1270,6 +1272,193 @@ async function adminConnexions(userId) {
 }
 
 /* =====================================================
+   RUBRIQUES DE L'ADMINISTRATION (lecture seule)
+   Demandes, conversations (jamais le contenu des messages),
+   points et transactions, pays et villes
+   ===================================================== */
+
+// Noms des profils pour une liste d'identifiants (userId -> nom)
+async function nomsProfils(ids) {
+  const uniques = [...new Set(ids.filter(Boolean))].slice(0, 100);
+
+  if (!uniques.length) {
+    return {};
+  }
+
+  const lecture = await databases.listDocuments(
+    DATABASE_ID,
+    TABLE_PROFILS,
+    [
+      Query.equal("userId", uniques),
+      Query.limit(100),
+    ]
+  );
+
+  const noms = {};
+  lecture.documents.forEach((p) => {
+    noms[p.userId] = p.nom;
+  });
+
+  return noms;
+}
+
+// Compte les lignes par statut
+function compterParStatut(lignes) {
+  const par = {};
+
+  lignes.forEach((l) => {
+    const s = l.statut || "inconnu";
+    par[s] = (par[s] || 0) + 1;
+  });
+
+  return par;
+}
+
+// Somme d'un champ numérique
+function sommeChamp(lignes, champ) {
+  return lignes.reduce((a, l) => a + Number(l[champ] || 0), 0);
+}
+
+async function adminRubrique(userId, data) {
+  const role = await verifierAdmin(userId);
+  const rubrique = cleanText(data.rubrique, 30);
+
+  // ----- Demandes de discussion -----
+  if (rubrique === "demandes") {
+    const [total, lignes] = await Promise.all([
+      totalOuNull(compterDocs(TABLE_DEMANDES)),
+      listerTout(TABLE_DEMANDES, 500),
+    ]);
+
+    const recentes = lignes.slice(0, 50);
+    const noms = await nomsProfils(
+      recentes.flatMap((d) => [d.expediteurId, d.destinataireId])
+    );
+
+    return {
+      role,
+      rubrique,
+      total,
+      parStatut: compterParStatut(lignes),
+      lignes: recentes.map((d) => ({
+        date: d.dateCreation || d.$createdAt,
+        de: noms[d.expediteurId] || null,
+        a: noms[d.destinataireId] || null,
+        statut: d.statut,
+        points: d.pointsDepenses,
+      })),
+    };
+  }
+
+  // ----- Conversations (le contenu des messages n'est jamais lu) -----
+  if (rubrique === "conversations") {
+    const [total, lignes] = await Promise.all([
+      totalOuNull(compterDocs(TABLE_CONVERSATIONS)),
+      listerTout(TABLE_CONVERSATIONS, 500),
+    ]);
+
+    const recentes = lignes.slice(0, 50);
+    const noms = await nomsProfils(
+      recentes.flatMap((c) => [c.utilisateur1Id, c.utilisateur2Id])
+    );
+
+    return {
+      role,
+      rubrique,
+      total,
+      parStatut: compterParStatut(lignes),
+      lignes: recentes.map((c) => ({
+        date: c.dateCreation || c.$createdAt,
+        participant1: noms[c.utilisateur1Id] || null,
+        participant2: noms[c.utilisateur2Id] || null,
+        statut: c.statut,
+      })),
+    };
+  }
+
+  // ----- Points et transactions -----
+  if (rubrique === "points") {
+    const [comptes, transactions] = await Promise.all([
+      listerTout(TABLE_POINTS, 1000),
+      listerTout(TABLE_TRANSACTIONS, 500),
+    ]);
+
+    const confirmees = transactions.filter((t) => t.statut === "confirme");
+
+    const resultat = {
+      role,
+      rubrique,
+      pointsEnCirculation: sommeChamp(comptes, "solde"),
+      comptes: comptes.length,
+      transactions: {
+        total: transactions.length,
+        parStatut: compterParStatut(transactions),
+        montantConfirme: sommeChamp(confirmees, "montant"),
+        pointsVendus: sommeChamp(confirmees, "nombrePoints"),
+      },
+    };
+
+    // Le détail est réservé au super administrateur
+    if (role === "super") {
+      const meilleurs = [...comptes]
+        .sort((a, b) => Number(b.solde || 0) - Number(a.solde || 0))
+        .slice(0, 10);
+
+      const recentes = transactions.slice(0, 50);
+
+      const noms = await nomsProfils([
+        ...meilleurs.map((c) => c.userId),
+        ...recentes.map((t) => t.userId),
+      ]);
+
+      resultat.meilleursSoldes = meilleurs.map((c) => ({
+        nom: noms[c.userId] || null,
+        solde: Number(c.solde || 0),
+      }));
+
+      resultat.dernieresTransactions = recentes.map((t) => ({
+        date: t.dateCreation || t.$createdAt,
+        nom: noms[t.userId] || null,
+        montant: t.montant,
+        points: t.nombrePoints,
+        statut: t.statut,
+        moyen: t.moyenPaiement || "",
+      }));
+    }
+
+    return resultat;
+  }
+
+  // ----- Pays et villes -----
+  if (rubrique === "pays") {
+    const [pays, villes] = await Promise.all([
+      databases.listDocuments(DATABASE_ID, TABLE_PAYS, [Query.limit(50)]),
+      databases.listDocuments(DATABASE_ID, TABLE_VILLES, [Query.limit(500)]),
+    ]);
+
+    const liste = await Promise.all(
+      pays.documents.map(async (p) => ({
+        nom: p.nom,
+        code: p.code || "",
+        villes: villes.documents.filter((v) => v.paysId === p.$id).length,
+        profils: await totalOuNull(
+          compterDocs(TABLE_PROFILS, [Query.equal("paysId", p.$id)])
+        ),
+      }))
+    );
+
+    return {
+      role,
+      rubrique,
+      pays: liste,
+      totalVilles: villes.total,
+    };
+  }
+
+  throw new Error("Rubrique inconnue.");
+}
+
+/* =====================================================
    POINT D'ENTRÉE DE LA FONCTION
    ===================================================== */
 
@@ -1389,8 +1578,8 @@ export default async ({ req, res, log, error }) => {
           donnees
         );
         break;
-
-      case "analyserCompatibilite":
+          
+case "analyserCompatibilite":
         if (!userId) {
           throw new Error("Utilisateur non connecté.");
         }
@@ -1488,6 +1677,17 @@ export default async ({ req, res, log, error }) => {
         resultat = await adminConnexions(userId);
         break;
 
+      case "adminRubrique":
+        if (!userId) {
+          throw new Error("Utilisateur non connecté.");
+        }
+
+        resultat = await adminRubrique(
+          userId,
+          donnees
+        );
+        break;
+
       default:
         return res.json(
           {
@@ -1514,5 +1714,4 @@ export default async ({ req, res, log, error }) => {
       },
       400
     );
-  }
-};
+      
