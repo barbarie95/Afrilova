@@ -546,5 +546,116 @@ if ("serviceWorker" in navigator) {
   });
 }
 </script>
+  <style>
+#afrilova-install-box {
+  position: fixed;
+  z-index: 99999;
+  left: 16px;
+  right: 16px;
+  bottom: 20px;
+  max-width: 440px;
+  margin: auto;
+  padding: 20px;
+  background: #FFFFFF;
+  color: #24352C;
+  border: 1px solid #DCE9DF;
+  border-radius: 18px;
+  box-shadow: 0 8px 35px rgba(0,0,0,.22);
+  font-family: Arial, sans-serif;
+}
+#afrilova-install-box h3 {
+  margin: 0 0 8px;
+  color: #198754;
+  font-size: 20px;
+}
+#afrilova-install-box p {
+  margin: 0 0 16px;
+  line-height: 1.5;
+  font-size: 14px;
+}
+#afrilova-install-box .af-install-btn {
+  display: block;
+  width: 100%;
+  border: 0;
+  border-radius: 10px;
+  padding: 12px;
+  margin-top: 8px;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+}
+#afrilova-install-now {
+  background: #198754;
+  color: white;
+}
+#afrilova-install-later {
+  background: #EEF4EF;
+  color: #24563A;
+}
+#afrilova-install-help {
+  margin-top: 12px;
+  font-size: 13px;
+  line-height: 1.5;
+}
+</style>
+
+<div id="afrilova-install-box" role="dialog" aria-label="Installer Afrilova" hidden>
+  <h3>❤️ Installe Afrilova</h3>
+  <p>Retrouve plus facilement Afrilova depuis l’écran d’accueil de ton téléphone.</p>
+  <button id="afrilova-install-now" class="af-install-btn">Installer Afrilova</button>
+  <div id="afrilova-install-help" hidden></div>
+  <button id="afrilova-install-later" class="af-install-btn">Pas maintenant</button>
+</div>
+
+<script>
+(() => {
+  const box = document.getElementById("afrilova-install-box");
+  const installBtn = document.getElementById("afrilova-install-now");
+  const laterBtn = document.getElementById("afrilova-install-later");
+  const help = document.getElementById("afrilova-install-help");
+  let installPrompt = null;
+
+  function isInstalled() {
+    return window.matchMedia("(display-mode: standalone)").matches ||
+      window.navigator.standalone === true;
+  }
+
+  if (isInstalled()) return;
+
+  window.addEventListener("beforeinstallprompt", (event) => {
+    event.preventDefault();
+    installPrompt = event;
+  });
+
+  window.addEventListener("appinstalled", () => {
+    box.hidden = true;
+    installPrompt = null;
+  });
+
+  installBtn.addEventListener("click", async () => {
+    if (installPrompt) {
+      const promptEvent = installPrompt;
+      installPrompt = null;
+      await promptEvent.prompt();
+      box.hidden = true;
+      return;
+    }
+
+    help.hidden = false;
+    help.textContent =
+      "Pour installer Afrilova, ouvre le menu ⋮ de Chrome puis choisis « Installer l’application » si cette option est proposée. Sur iPhone, ouvre le site dans Safari, touche Partager puis « Sur l’écran d’accueil ».";
+  });
+
+  laterBtn.addEventListener("click", () => {
+    box.hidden = true;
+  });
+
+  window.addEventListener("load", () => {
+    setTimeout(() => {
+      if (!isInstalled()) box.hidden = false;
+    }, 4000);
+  });
+})();
+</script>
 </body>
 </html>
