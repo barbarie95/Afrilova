@@ -203,6 +203,7 @@ h1{color:#087557;font-size:25px;margin-bottom:7px;animation:in .5s ease both}
 }
 .save-button:disabled{opacity:.6}
 .continue-payment{margin-top:15px}
+.continue-payment:disabled{opacity:.6}
 .choice-note{background:var(--f);border-radius:10px;padding:10px;font-size:11px;color:var(--g);margin-top:5px}
 
 .payment-info{background:var(--f);border-radius:12px;padding:12px;margin-bottom:15px}
@@ -304,7 +305,7 @@ h1{color:#087557;font-size:25px;margin-bottom:7px;animation:in .5s ease both}
 @media(prefers-reduced-motion:reduce){
  *{animation:none!important;transition:none!important}
 }
-                            </style>
+</style>
 </head>
 
 <body>
@@ -455,10 +456,8 @@ h1{color:#087557;font-size:25px;margin-bottom:7px;animation:in .5s ease both}
 
   </div>
 
-</section>
-
-
-<!-- ======== PROFIL (utilisateur connecté) ======== -->
+         </section>
+         <!-- ======== PROFIL (utilisateur connecté) ======== -->
 
 <div id="profilConnecte" style="display:none">
 
@@ -804,18 +803,14 @@ sur votre visage. Réglez sa taille avec le curseur.
 </div>
 
 <p class="section-description">
-Choisissez votre moyen de paiement.
-Le solde sera crédité uniquement après confirmation réelle du paiement.
+Le paiement se fait en Mobile Money (Orange Money, Wave, MTN, Moov...)
+sur la page sécurisée de BKApay. Le solde sera crédité uniquement après
+confirmation réelle du paiement.
 </p>
 
-<div class="payment-methods">
-<div class="payment-method">
-<input type="radio" name="paymentMethod" value="paydunya">
-<label>PayDunya<small>Paiement sécurisé</small></label>
-</div>
-</div>
+<div class="auth-error" id="paymentError"></div>
 
-<button type="button" class="continue-payment" onclick="continuerPaiement()">
+<button type="button" class="continue-payment" id="btnPayer" onclick="continuerPaiement()">
 Continuer vers le paiement
 </button>
 
@@ -830,7 +825,8 @@ Continuer vers le paiement
 <a href="explorer.html"><span>🔎</span>Explorer</a>
 <a href="messagerie.html"><span>💬</span>Messagerie</a>
 <a href="profil.html" class="active"><span>👤</span>Profil</a>
-     </nav>
+</nav>
+
 <!-- SDK APPWRITE (CDN) -->
 <script src="https://cdn.jsdelivr.net/npm/appwrite@20.0.0"></script>
 
@@ -849,6 +845,13 @@ const TABLE_VILLES = "villes";
 const TABLE_POINTS = "points";
 
 const PRIX_PAR_POINT = 200;
+
+// Prix des packs : même règle que sur le serveur
+const PACKS = { 7: 1000, 14: 2000, 28: 4000 };
+
+function prixPourPoints(nombre) {
+  return PACKS[nombre] || nombre * PRIX_PAR_POINT;
+}
 
 const client = new Appwrite.Client();
 client.setEndpoint(APPWRITE_ENDPOINT).setProject(APPWRITE_PROJECT_ID);
@@ -1161,9 +1164,7 @@ function nomVille(villeId) {
   const trouve = villesDisponibles.find(v => v.$id === villeId);
   return trouve ? trouve.nom : "";
 }
-
-
-/* ========================================== PHOTO (avec compression automatique) ========================================== */
+ /* ========================================== PHOTO (avec compression automatique) ========================================== */
 
 async function gererPhotoSelectionnee(event) {
   const fichier = event.target.files[0];
@@ -1535,6 +1536,7 @@ function ouvrirModificationProfil() {
 
 
 /* ========================================== ENREGISTRER LE PROFIL ========================================== */
+
 async function enregistrerProfil(event) {
   event.preventDefault();
 
@@ -1579,11 +1581,13 @@ async function enregistrerProfil(event) {
     if (photoFichierSelectionne) {
 
       if (masqueUtilise) {
-       // Deux fichiers : l'original PRIVÉ d'abord, puis la photo masquée PUBLIQUE
+
+        // Deux fichiers : l'original PRIVÉ d'abord, puis la photo masquée PUBLIQUE
         let fichierOriginalUploade = null;
 
         try {
-fichierOriginalUploade = await storage.createFile({
+
+          fichierOriginalUploade = await storage.createFile({
             bucketId: APPWRITE_BUCKET_PHOTOS,
             fileId: Appwrite.ID.unique(),
             file: photoOriginaleFichier,
@@ -1619,7 +1623,8 @@ fichierOriginalUploade = await storage.createFile({
               });
             } catch (e) {}
           }
-         throw erreurUpload;
+
+          throw erreurUpload;
 
         }
 
@@ -1650,7 +1655,8 @@ fichierOriginalUploade = await storage.createFile({
       typeRelation,
       photoPrincipale: photoId
     };
-   // La colonne photoOriginaleId n'est envoyée que si nécessaire
+
+    // La colonne photoOriginaleId n'est envoyée que si nécessaire
     if (masqueUtilise) {
       donnees.photoOriginaleId = photoOriginaleId;
     } else if (photoFichierSelectionne && profilActuel && profilActuel.photoOriginaleId) {
@@ -1702,15 +1708,18 @@ fichierOriginalUploade = await storage.createFile({
     await chargerSoldePoints(utilisateurConnecte.$id);
     fermerModal("editProfileModal");
     alert("Votre profil a été enregistré. Il sera visible après validation.");
-     } catch (erreur) {
+
+  } catch (erreur) {
     console.error("Erreur enregistrement profil :", erreur);
     alert("Une erreur est survenue lors de l'enregistrement : " + erreur.message);
   } finally {
     bouton.disabled = false;
     bouton.textContent = "💾 Enregistrer";
   }
- }
- /* ========================================== CHARGER / AFFICHER LE PROFIL ========================================== */
+}
+
+
+/* ========================================== CHARGER / AFFICHER LE PROFIL ========================================== */
 
 async function chargerProfilUtilisateur() {
   try {
@@ -1766,8 +1775,10 @@ function afficherProfil() {
   } else {
     badge.innerHTML = `<span class="pending-badge">⏳ Profil en attente de validation</span>`;
   }
- }
- /* ========================================== POINTS ========================================== */
+}
+
+
+/* ========================================== POINTS ========================================== */
 
 async function chargerSoldePoints(userId) {
   try {
@@ -1802,8 +1813,10 @@ function afficherSolde(points) {
   void principal.offsetWidth;
   principal.classList.add("pop");
 
- }
- /* ========================================== ÉTAT DE CONNEXION ========================================== */
+}
+
+
+/* ========================================== ÉTAT DE CONNEXION ========================================== */
 
 async function chargerEtatConnexion() {
   try {
@@ -1840,7 +1853,7 @@ function mettreAJourPrixPersonnalise() {
 
   // Le champ n'est plus réécrit pendant la saisie,
   // sinon on ne peut pas effacer le "1" pour taper 2, 3, 4...
-  const prix = nombre * PRIX_PAR_POINT;
+  const prix = prixPourPoints(nombre);
 
   document.getElementById("customPointsPrice").textContent =
     formaterPrix(prix) + " FCFA";
@@ -1866,35 +1879,123 @@ function ouvrirPaiementPersonnalise() {
   corrigerChampPersonnalise(); // valeur toujours entre 1 et 500
 
   const nombre = parseInt(document.getElementById("customPointsInput").value, 10) || 1;
-  const prix = nombre * PRIX_PAR_POINT;
+  const prix = prixPourPoints(nombre);
 
   ouvrirPaiement(nombre, prix);
 
 }
- function ouvrirPaiement(nombrePoints, prix) {
+
+function ouvrirPaiement(nombrePoints, prix) {
   nombrePointsSelectionne = nombrePoints;
   prixSelectionne = prix;
 
   document.getElementById("selectedPoints").textContent = nombrePoints + " points";
   document.getElementById("selectedPrice").textContent = formaterPrix(prix) + " FCFA";
 
+  // Remise à zéro du bouton et du message d'erreur (si on rouvre la fenêtre)
+  const bouton = document.getElementById("btnPayer");
+  bouton.disabled = false;
+  bouton.textContent = "Continuer vers le paiement";
+  document.getElementById("paymentError").classList.remove("show");
+
   document.getElementById("paymentModal").classList.add("show");
 }
 
 function formaterPrix(prix) {
   return Number(prix).toLocaleString("fr-FR");
- }
- function continuerPaiement() {
-  const methode = document.querySelector('input[name="paymentMethod"]:checked');
+}
 
-  if (!methode) {
-    alert("Veuillez sélectionner un moyen de paiement.");
+async function continuerPaiement() {
+  const bouton = document.getElementById("btnPayer");
+  const erreur = document.getElementById("paymentError");
+
+  erreur.classList.remove("show");
+  bouton.disabled = true;
+  bouton.textContent = "Préparation du paiement...";
+
+  try {
+    // Le serveur calcule le prix et crée la commande : la page n'envoie que le nombre de points
+    const execution = await functions.createExecution({
+      functionId: FUNCTION_ID,
+      body: JSON.stringify({
+        action: "creerCommandePoints",
+        points: nombrePointsSelectionne
+      }),
+      method: "POST"
+    });
+
+    let resultat;
+
+    try {
+      resultat = JSON.parse(execution.responseBody || "{}");
+    } catch (e) {
+      throw new Error("Réponse invalide du serveur.");
+    }
+
+    if (!resultat.ok || !resultat.paymentUrl) {
+      throw new Error(resultat.message || "Impossible de démarrer le paiement.");
+    }
+
+    // Redirection vers la page de paiement sécurisée BKApay
+    window.location.href = resultat.paymentUrl;
+
+  } catch (e) {
+    erreur.textContent = e.message || "Impossible de démarrer le paiement.";
+    erreur.classList.add("show");
+    bouton.disabled = false;
+    bouton.textContent = "Continuer vers le paiement";
+  }
+}
+
+// Au retour de BKApay : on attend la confirmation du serveur avant d'annoncer les points
+async function verifierRetourPaiement() {
+  const parametres = new URLSearchParams(window.location.search);
+  const retour = parametres.get("paiement");
+  const commandeId = parametres.get("commande");
+
+  if (!retour) return;
+
+  // On nettoie l'adresse pour ne pas refaire la vérification au rechargement
+  window.history.replaceState({}, document.title, window.location.pathname);
+
+  if (retour === "annule") {
+    alert("Paiement annulé. Aucun point n'a été ajouté.");
     return;
   }
 
-  alert("Le paiement réel sera connecté avec PayDunya à une prochaine étape. Aucun point n'a été crédité.");
- }
- /* ========================================== MODALES ========================================== */
+  if (retour !== "ok" || !commandeId || !utilisateurConnecte) return;
+
+  // La confirmation arrive de BKApay en quelques secondes : on la guette pendant 1 minute
+  for (let essai = 0; essai < 12; essai++) {
+    try {
+      const execution = await functions.createExecution({
+        functionId: FUNCTION_ID,
+        body: JSON.stringify({ action: "statutCommande", commandeId: commandeId }),
+        method: "POST"
+      });
+
+      const resultat = JSON.parse(execution.responseBody || "{}");
+
+      if (resultat.ok && resultat.statut === "confirme") {
+        await chargerSoldePoints(utilisateurConnecte.$id);
+        alert("✅ Paiement confirmé ! " + resultat.points + " point(s) ajouté(s).");
+        return;
+      }
+
+      if (resultat.ok && resultat.statut === "echoue") {
+        alert("Le paiement n'a pas abouti. Aucun point n'a été ajouté.");
+        return;
+      }
+    } catch (e) {}
+
+    await new Promise(function (resolve) { setTimeout(resolve, 5000); });
+  }
+
+  alert("Paiement en cours de confirmation. Tes points seront ajoutés dès qu'il sera confirmé.");
+}
+
+
+/* ========================================== MODALES ========================================== */
 
 function fermerModal(id) {
   const modal = document.getElementById(id);
@@ -1916,6 +2017,7 @@ document.addEventListener("DOMContentLoaded", async function () {
   await chargerToutesLesVilles();
   await verifierRetourEmail();
   await chargerEtatConnexion();
+  await verifierRetourPaiement();
 });
 
 </script>
