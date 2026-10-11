@@ -39,6 +39,19 @@ const ADMIN_TEAM_ID = "6aacffe749b1978e61bf";
 // Dossier des photos (profils et messagerie)
 const BUCKET_PHOTOS = "6aad2a754e0e095d6a9a";
 
+/* ---------- Paiement BKApay ---------- */
+// Clé privée : variable secrète de la fonction (jamais écrite dans le code)
+const BKAPAY_PRIVATE_KEY = process.env.BKAPAY_PRIVATE_KEY;
+
+const BKAPAY_SESSIONS_URL = "https://bkapay.com/api/v1/payment-sessions";
+
+// Adresse de la fonction qui reçoit les notifications de paiement
+const BKAPAY_WEBHOOK_URL =
+  "https://bkapay-webhook-6aac203e00209ccb3014.fra.appwrite.run/";
+
+// Adresse du site (retour après paiement)
+const SITE_URL = "https://barbarie95.github.io/Afrilova/";
+
 /* ---------- Configuration Gemini (IA) ---------- */
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 
@@ -771,7 +784,7 @@ async function adminStats(userId) {
   });
 
   return { role, stats };
-  }
+     }
 /* =====================================================
    ESPACE ADMINISTRATEUR : POUVOIRS DU SUPER ADMIN,
    JOURNAL ET DIAGRAMMES
@@ -1239,7 +1252,7 @@ async function adminSupprimer(userId, data) {
   return { supprime: true };
 }
 
-// Appareils actuellement connectés sur les comptes administrateurs (super admin seulement)
+// Appareils actuellement connectés sur les comptes administrateurs (super administrateur seulement)
 async function adminConnexions(userId) {
   await verifierSuper(userId);
 
@@ -1459,6 +1472,209 @@ async function adminRubrique(userId, data) {
 }
 
 /* =====================================================
+   ACHAT DE POINTS (BKApay)
+   Le serveur calcule le prix et crée la commande.
+   Les points ne sont JAMAIS crédités ici : seule la
+   notification signée de BKApay (fonction bkapay-webhook)
+   les crédite, une fois le paiement confirmé.
+   ===================================================== */
+
+// Packs : nombre de points -> prix en FCFA
+const PACKS_POINTS = { 7: 1000, 14: 2000, 28: 4000 };
+
+// Prix d'un point à l'unité (FCFA)
+const PRIX_POINT = 200;
+
+// Plafond de points par achat
+const POINTS_MAX_PAR_ACHAT = 500;
+
+// Commandes en attente autorisées par heure et par utilisateur
+const COMMANDES_EN_ATTENTE_MAX = 5;
+
+// Prix d'un nombre de points (le prix d'un pack prime sur le prix à l'unité)
+function prixDesPoints(points) {
+  return PACKS_POINTS[points] || points * PRIX_POINT;
+}
+
+// Crée une commande de points et renvoie le lien de paiement BKApay
+async function creerCommandePoints(userId, data) {
+  if (!BKAPAY_PRIVATE_KEY) {
+    throw new Error("Paiement indisponible pour le moment.");
+  }
+
+  // La page n'envoie que le nombre de points : le prix est calculé ici
+  const points = Number(data.points);
+
+  if (
+    !Number.isInteger(points) ||
+    points < 1 ||
+    points > POINTS_MAX_PAR_ACHAT
+  ) {
+    throw new Error(
+      "Nombre de points invalide (1 à " + POINTS_MAX_PAR_ACHAT + ")."
+    );
+  }
+
+  const montant = prixDesPoints(points);
+
+  // Limite : pas trop de commandes en attente en même temps
+  let tropDeCommandes = false;
+
+  try {
+    const enAttente = await databases.listDocuments(
+      DATABASE_ID,
+      TABLE_TRANSACTIONS,
+      [
+        Query.equal("userId", userId),
+        Query.equal("statut", "en_attente"),
+        Query.limit(10),
+      ]
+    );
+
+    const uneHeure = 60 * 60 * 1000;
+
+    const recentes = enAttente.documents.filter(
+      (t) =>
+        Date.now() - new Date(t.dateCreation || t.$createdAt).getTime() <
+        uneHeure
+    );
+
+    tropDeCommandes = recentes.length >= COMMANDES_EN_ATTENTE_MAX;
+  } catch (e) {}
+
+  if (tropDeCommandes) {
+    throw new Error("Trop de paiements en attente. Réessaie dans un moment.");
+  }
+
+  // La commande est une ligne de la table transactions
+  const commande = await databases.createDocument(
+    DATABASE_ID,
+    TABLE_TRANSACTIONS,
+    ID.unique(),
+    {
+      userId,
+      passerelle: "bkapay",
+      montant,
+      nombrePoints: points,
+      statut: "en_attente",
+      dateCreation: new Date().toISOString(),
+    }
+  );
+
+  // Marque la commande comme échouée (sans bloquer si ça échoue)
+  const marquerEchec = async () => {
+    try {
+      await databases.updateDocument(
+        DATABASE_ID,
+        TABLE_TRANSACTIONS,
+        commande.$id,
+        { statut: "echoue" }
+      );
+    } catch (e) {}
+  };
+
+  // Demande la session de paiement à BKApay
+  let session = null;
+  let codeHttp = 0;
+
+  try {
+    const reponse = await fetch(BKAPAY_SESSIONS_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + BKAPAY_PRIVATE_KEY,
+      },
+      body: JSON.stringify({
+        amount: montant,
+        currency: "XOF",
+        description: "Achat de " + points + " point(s) Afrilova",
+        success_url:
+          SITE_URL + "profil.html?paiement=ok&commande=" + commande.$id,
+        cancel_url: SITE_URL + "profil.html?paiement=annule",
+        callback_url: BKAPAY_WEBHOOK_URL,
+        order_id: commande.$id,
+        expires_in: 30,
+      }),
+      signal: AbortSignal.timeout(10000),
+    });
+
+    codeHttp = reponse.status;
+    session = await reponse.json();
+
+    if (!reponse.ok || !session.success || !session.payment_url) {
+      throw new Error("Session refusée");
+    }
+  } catch (e) {
+    await marquerEchec();
+
+    throw new Error(
+      "Impossible de démarrer le paiement (code " +
+        codeHttp +
+        "). Réessaie dans un instant."
+    );
+  }
+
+  // Le lien doit pointer vers BKApay, rien d'autre
+  let lien = String(session.payment_url);
+
+  if (lien.startsWith("/")) {
+    lien = "https://bkapay.com" + lien;
+  }
+
+  let hote = "";
+
+  try {
+    hote = new URL(lien).hostname;
+  } catch (e) {}
+
+  if (hote !== "bkapay.com" && !hote.endsWith(".bkapay.com")) {
+    await marquerEchec();
+    throw new Error("Lien de paiement invalide.");
+  }
+
+  // Garde l'identifiant de session pour recouper la notification
+  try {
+    await databases.updateDocument(
+      DATABASE_ID,
+      TABLE_TRANSACTIONS,
+      commande.$id,
+      { referencePaiement: cleanText(session.session_id, 255) }
+    );
+  } catch (e) {}
+
+  return {
+    paymentUrl: lien,
+    commandeId: commande.$id,
+    montant,
+    points,
+  };
+}
+
+// Statut d'une commande (réservé à la personne qui l'a passée)
+async function statutCommande(userId, data) {
+  const commandeId = cleanText(data.commandeId, 40);
+
+  if (!commandeId) {
+    throw new Error("Commande manquante.");
+  }
+
+  const commande = await databases.getDocument(
+    DATABASE_ID,
+    TABLE_TRANSACTIONS,
+    commandeId
+  );
+
+  if (commande.userId !== userId) {
+    throw new Error("Commande introuvable.");
+  }
+
+  return {
+    statut: commande.statut,
+    points: commande.nombrePoints,
+  };
+}
+
+/* =====================================================
    POINT D'ENTRÉE DE LA FONCTION
    ===================================================== */
 
@@ -1578,8 +1794,8 @@ export default async ({ req, res, log, error }) => {
           donnees
         );
         break;
-          
-case "analyserCompatibilite":
+
+      case "analyserCompatibilite":
         if (!userId) {
           throw new Error("Utilisateur non connecté.");
         }
@@ -1688,6 +1904,28 @@ case "analyserCompatibilite":
         );
         break;
 
+      case "creerCommandePoints":
+        if (!userId) {
+          throw new Error("Utilisateur non connecté.");
+        }
+
+        resultat = await creerCommandePoints(
+          userId,
+          donnees
+        );
+        break;
+
+      case "statutCommande":
+        if (!userId) {
+          throw new Error("Utilisateur non connecté.");
+        }
+
+        resultat = await statutCommande(
+          userId,
+          donnees
+        );
+        break;
+
       default:
         return res.json(
           {
@@ -1714,5 +1952,5 @@ case "analyserCompatibilite":
       },
       400
     );
-    }
-};    
+  }
+};
