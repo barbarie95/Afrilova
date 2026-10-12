@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "io.github.barbarie95.twa",
+      "sha256_cert_fingerprints": [
+        "78:38:DE:4D:14:9B:9B:D5:FA:79:84:95:68:02:D3:F0:88:96:3F:DC:A7:C4:42:96:30:4B:8D:FE:43:12:AC:C9"
+      ]
+    }
+  }
+]
