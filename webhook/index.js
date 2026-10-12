@@ -1,8 +1,9 @@
 /* =====================================================
-   AFRILOVA - Fonction de notification de paiement BKApay
+   AFRILOVA - Fonction de notification de paiement
    Fichier : webhook/index.js
-   Ne fait qu'une chose : recevoir la notification signée
-   de BKApay et créditer les points d'une commande payée.
+   Reçoit la notification SIGNÉE d'un service de paiement
+   (SenePay ou BKApay) et crédite les points d'une commande
+   payée. Chaque service a son propre secret de signature.
    ===================================================== */
 
 import { Client, Databases, ID, Query } from "node-appwrite";
@@ -21,8 +22,9 @@ const DATABASE_ID =
 const TABLE_TRANSACTIONS = "transactions";
 const TABLE_POINTS = "points";
 
-// Secret de signature fourni par BKApay (variable secrète de la fonction)
-const WEBHOOK_SECRET = process.env.BKAPAY_WEBHOOK_SECRET;
+// Secrets de signature (variables secrètes de la fonction)
+const SENEPAY_SECRET = process.env.SENEPAY_WEBHOOK_SECRET;
+const BKAPAY_SECRET = process.env.BKAPAY_WEBHOOK_SECRET;
 
 // Devise attendue pour toutes les commandes
 const DEVISE_ATTENDUE = "XOF";
@@ -35,13 +37,13 @@ function cleanText(value, max = 100) {
 }
 
 // Vérifie la signature HMAC-SHA256 calculée sur le corps brut
-function signatureValide(corpsBrut, signature) {
-  if (!WEBHOOK_SECRET || !signature) {
+function signatureValide(corpsBrut, signature, secret) {
+  if (!secret || !signature) {
     return false;
   }
 
   const attendue = crypto
-    .createHmac("sha256", WEBHOOK_SECRET)
+    .createHmac("sha256", secret)
     .update(corpsBrut)
     .digest("hex");
 
@@ -112,8 +114,8 @@ export default async ({ req, res, log, error }) => {
       return res.json({ ok: false, message: "Méthode refusée." }, 405);
     }
 
-    if (!WEBHOOK_SECRET) {
-      throw new Error("Secret du webhook absent.");
+    if (!SENEPAY_SECRET && !BKAPAY_SECRET) {
+      throw new Error("Aucun secret de signature configuré.");
     }
 
     // Clé dynamique fournie par Appwrite pour cette exécution
@@ -127,20 +129,58 @@ export default async ({ req, res, log, error }) => {
 
     // La signature se calcule sur le corps BRUT, avant tout parsing
     const corpsBrut = req.bodyText ?? "";
-    const signature = String(req.headers?.["x-bkapay-signature"] || "");
+    const signatureSenepay = String(req.headers?.["x-senepay-signature"] || "");
+    const signatureBkapay = String(req.headers?.["x-bkapay-signature"] || "");
 
-    if (!signatureValide(corpsBrut, signature)) {
+    // On identifie le service d'après la signature, qui doit être valide
+    let passerelle = null;
+
+    if (signatureValide(corpsBrut, signatureSenepay, SENEPAY_SECRET)) {
+      passerelle = "senepay";
+    } else if (signatureValide(corpsBrut, signatureBkapay, BKAPAY_SECRET)) {
+      passerelle = "bkapay";
+    }
+
+    if (!passerelle) {
       error("Signature invalide.");
       return res.json({ ok: false, message: "Signature invalide." }, 401);
     }
 
     const evenement = JSON.parse(corpsBrut);
-    const type = cleanText(evenement.type, 50);
-    const donnees = evenement.data || {};
-    const commandeId = cleanText(donnees.order_id, 40);
 
-    if (!commandeId) {
-      return res.json({ received: true, ignore: "order_id absent" });
+    // On ramène les deux formats de notification à un même résumé
+    let resume;
+
+    if (passerelle === "senepay") {
+      resume = {
+        reussi: evenement.event === "checkout.session.completed",
+        echec: evenement.event === "checkout.session.failed",
+        commandeId: cleanText(evenement.orderReference, 40),
+        session: cleanText(evenement.sessionToken, 255),
+        montant: Number(evenement.amount),
+        devise: evenement.currency,
+        statutOk: evenement.status === "Complete",
+        moyen: "senepay",
+      };
+    } else {
+      const d = evenement.data || {};
+
+      resume = {
+        reussi: evenement.type === "payment.completed",
+        echec:
+          evenement.type === "payment.failed" ||
+          evenement.type === "payment.expired",
+        commandeId: cleanText(d.order_id, 40),
+        session: cleanText(d.sessionId, 255),
+        montant: Number(d.amount),
+        devise: d.currency,
+        statutOk: d.status === "completed",
+        moyen: cleanText(d.operator, 50) || "bkapay",
+      };
+    }
+
+    if (!resume.commandeId) {
+      return res.json({ received: true, ignore: "référence absente" });
     }
 
     // La commande est une ligne de la table transactions
@@ -150,13 +190,14 @@ export default async ({ req, res, log, error }) => {
       commande = await databases.getDocument(
         DATABASE_ID,
         TABLE_TRANSACTIONS,
-        commandeId
+        resume.commandeId
       );
     } catch (e) {
       return res.json({ received: true, ignore: "commande inconnue" });
     }
 
-    if (commande.passerelle !== "bkapay") {
+    // Une notification ne peut concerner que les commandes de SON service
+    if (commande.passerelle !== passerelle) {
       return res.json({ received: true, ignore: "autre passerelle" });
     }
 
@@ -166,7 +207,7 @@ export default async ({ req, res, log, error }) => {
     }
 
     // Paiement échoué ou session expirée
-    if (type === "payment.failed" || type === "payment.expired") {
+    if (resume.echec) {
       await databases.updateDocument(
         DATABASE_ID,
         TABLE_TRANSACTIONS,
@@ -178,25 +219,22 @@ export default async ({ req, res, log, error }) => {
     }
 
     // Seul un paiement réussi crédite des points
-    if (type !== "payment.completed") {
+    if (!resume.reussi) {
       return res.json({ received: true, ignore: "événement inconnu" });
     }
 
     // Contrôles de cohérence : tout doit correspondre à la commande
-    const montantPaye = Number(donnees.amount);
     const sessionOk =
       !commande.referencePaiement ||
-      donnees.sessionId === commande.referencePaiement;
+      resume.session === commande.referencePaiement;
 
     if (
-      donnees.status !== "completed" ||
-      montantPaye !== Number(commande.montant) ||
-      (donnees.currency && donnees.currency !== DEVISE_ATTENDUE) ||
+      !resume.statutOk ||
+      resume.montant !== Number(commande.montant) ||
+      (resume.devise && resume.devise !== DEVISE_ATTENDUE) ||
       !sessionOk
     ) {
-      error(
-        "Notification incohérente pour la commande " + commande.$id
-      );
+      error("Notification incohérente pour la commande " + commande.$id);
       return res.json({ received: true, ignore: "incohérent" });
     }
 
@@ -207,7 +245,7 @@ export default async ({ req, res, log, error }) => {
       commande.$id,
       {
         statut: "confirme",
-        moyenPaiement: cleanText(donnees.operator, 50),
+        moyenPaiement: resume.moyen,
         dateConfirmation: new Date().toISOString(),
       }
     );
@@ -215,7 +253,7 @@ export default async ({ req, res, log, error }) => {
     try {
       await addPoints(commande.userId, commande.nombrePoints);
     } catch (e) {
-      // Échec du crédit : on remet en attente pour que BKApay réessaie
+      // Échec du crédit : on remet en attente pour que le service réessaie
       await databases.updateDocument(
         DATABASE_ID,
         TABLE_TRANSACTIONS,
@@ -232,7 +270,7 @@ export default async ({ req, res, log, error }) => {
   } catch (e) {
     error(e?.message || e);
 
-    // Une erreur 500 permet à BKApay de renvoyer la notification
+    // Une erreur 500 permet au service de renvoyer la notification
     return res.json(
       { ok: false, message: e?.message || "Erreur." },
       500
