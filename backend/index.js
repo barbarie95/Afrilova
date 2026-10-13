@@ -39,16 +39,14 @@ const ADMIN_TEAM_ID = "6aacffe749b1978e61bf";
 // Dossier des photos (profils et messagerie)
 const BUCKET_PHOTOS = "6aad2a754e0e095d6a9a";
 
-/* ---------- Paiement SenePay ---------- */
-// Clés : variables secrètes de la fonction (jamais écrites dans le code)
-const SENEPAY_API_KEY = process.env.SENEPAY_API_KEY;
-const SENEPAY_API_SECRET = process.env.SENEPAY_API_SECRET;
+/* ---------- Paiement BKApay ---------- */
+// Clé privée : variable secrète de la fonction (jamais écrite dans le code)
+const BKAPAY_PRIVATE_KEY = process.env.BKAPAY_PRIVATE_KEY;
 
-const SENEPAY_SESSIONS_URL =
-  "https://api.sene-pay.com/api/v1/checkout/sessions";
+const BKAPAY_SESSIONS_URL = "https://bkapay.com/api/v1/payment-sessions";
 
 // Adresse de la fonction qui reçoit les notifications de paiement
-const PAIEMENT_WEBHOOK_URL =
+const BKAPAY_WEBHOOK_URL =
   "https://bkapay-webhook-6aac203e00209ccb3014.fra.appwrite.run/";
 
 // Adresse du site (retour après paiement)
@@ -786,7 +784,7 @@ async function adminStats(userId) {
   });
 
   return { role, stats };
-     }
+}
 /* =====================================================
    ESPACE ADMINISTRATEUR : POUVOIRS DU SUPER ADMIN,
    JOURNAL ET DIAGRAMMES
@@ -1474,7 +1472,7 @@ async function adminRubrique(userId, data) {
 }
 
 /* =====================================================
-   ACHAT DE POINTS (SenePay)
+   ACHAT DE POINTS (BKApay)
    Le serveur calcule le prix et crée la commande.
    Les points ne sont JAMAIS crédités ici : seule la
    notification signée du service de paiement (fonction
@@ -1487,6 +1485,9 @@ const PACKS_POINTS = { 7: 1000, 14: 2000, 28: 4000 };
 // Prix d'un point à l'unité (FCFA)
 const PRIX_POINT = 200;
 
+// Minimum de points par achat (BKApay refuse 200 FCFA : 2 points = 400 FCFA)
+const POINTS_MIN_PAR_ACHAT = 2;
+
 // Plafond de points par achat
 const POINTS_MAX_PAR_ACHAT = 500;
 
@@ -1498,9 +1499,9 @@ function prixDesPoints(points) {
   return PACKS_POINTS[points] || points * PRIX_POINT;
 }
 
-// Crée une commande de points et renvoie le lien de paiement SenePay
+// Crée une commande de points et renvoie le lien de paiement BKApay
 async function creerCommandePoints(userId, data) {
-  if (!SENEPAY_API_KEY || !SENEPAY_API_SECRET) {
+  if (!BKAPAY_PRIVATE_KEY) {
     throw new Error("Paiement indisponible pour le moment.");
   }
 
@@ -1509,16 +1510,21 @@ async function creerCommandePoints(userId, data) {
 
   if (
     !Number.isInteger(points) ||
-    points < 1 ||
+    points < POINTS_MIN_PAR_ACHAT ||
     points > POINTS_MAX_PAR_ACHAT
   ) {
     throw new Error(
-      "Nombre de points invalide (1 à " + POINTS_MAX_PAR_ACHAT + ")."
+      "Achat de " +
+        POINTS_MIN_PAR_ACHAT +
+        " à " +
+        POINTS_MAX_PAR_ACHAT +
+        " points."
     );
   }
 
   const montant = prixDesPoints(points);
-   // Limite : pas trop de commandes en attente en même temps
+
+  // Limite : pas trop de commandes en attente en même temps
   let tropDeCommandes = false;
 
   try {
@@ -1554,7 +1560,7 @@ async function creerCommandePoints(userId, data) {
     ID.unique(),
     {
       userId,
-      passerelle: "senepay",
+      passerelle: "bkapay",
       montant,
       nombrePoints: points,
       statut: "en_attente",
@@ -1574,29 +1580,28 @@ async function creerCommandePoints(userId, data) {
     } catch (e) {}
   };
 
-  // Demande la session de paiement à SenePay
+  // Demande la session de paiement à BKApay
   let session = null;
   let codeHttp = 0;
   let detail = "";
 
   try {
-    const reponse = await fetch(SENEPAY_SESSIONS_URL, {
+    const reponse = await fetch(BKAPAY_SESSIONS_URL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "X-Api-Key": SENEPAY_API_KEY,
-        "X-Api-Secret": SENEPAY_API_SECRET,
+        Authorization: "Bearer " + BKAPAY_PRIVATE_KEY,
       },
       body: JSON.stringify({
         amount: montant,
         currency: "XOF",
-        orderReference: commande.$id,
         description: "Achat de " + points + " point(s) Afrilova",
-        returnUrl:
+        success_url:
           SITE_URL + "profil.html?paiement=ok&commande=" + commande.$id,
-        cancelUrl: SITE_URL + "profil.html?paiement=annule",
-        webhookUrl: PAIEMENT_WEBHOOK_URL,
-        expiresInMinutes: 30,
+        cancel_url: SITE_URL + "profil.html?paiement=annule",
+        callback_url: BKAPAY_WEBHOOK_URL,
+        order_id: commande.$id,
+        expires_in: 30,
       }),
       signal: AbortSignal.timeout(10000),
     });
@@ -1604,9 +1609,12 @@ async function creerCommandePoints(userId, data) {
     codeHttp = reponse.status;
     session = await reponse.json();
 
-    if (!reponse.ok || !session.checkoutUrl || !session.sessionToken) {
-      // Le code d'erreur de SenePay aide à comprendre un refus
-      detail = cleanText(session && session.code, 40);
+    if (!reponse.ok || !session.success || !session.payment_url) {
+      // Le message de BKApay aide à comprendre un refus (version courte)
+      detail = cleanText(
+        session && (session.error || session.message),
+        80
+      );
       throw new Error("Session refusée");
     }
   } catch (e) {
@@ -1615,20 +1623,25 @@ async function creerCommandePoints(userId, data) {
     throw new Error(
       "Impossible de démarrer le paiement (code " +
         codeHttp +
-        (detail ? " " + detail : "") +
+        (detail ? " : " + detail : "") +
         "). Réessaie dans un instant."
     );
   }
 
-  // Le lien doit pointer vers SenePay, rien d'autre
-  const lien = String(session.checkoutUrl);
+  // Le lien doit pointer vers BKApay, rien d'autre
+  let lien = String(session.payment_url);
+
+  if (lien.startsWith("/")) {
+    lien = "https://bkapay.com" + lien;
+  }
+
   let hote = "";
 
   try {
     hote = new URL(lien).hostname;
   } catch (e) {}
 
-  if (hote !== "sene-pay.com" && !hote.endsWith(".sene-pay.com")) {
+  if (hote !== "bkapay.com" && !hote.endsWith(".bkapay.com")) {
     await marquerEchec();
     throw new Error("Lien de paiement invalide.");
   }
@@ -1639,7 +1652,7 @@ async function creerCommandePoints(userId, data) {
       DATABASE_ID,
       TABLE_TRANSACTIONS,
       commande.$id,
-      { referencePaiement: cleanText(session.sessionToken, 255) }
+      { referencePaiement: cleanText(session.session_id, 255) }
     );
   } catch (e) {}
 
