@@ -456,8 +456,8 @@ h1{color:#087557;font-size:25px;margin-bottom:7px;animation:in .5s ease both}
 
   </div>
 
-         </section>
-         <!-- ======== PROFIL (utilisateur connecté) ======== -->
+       </section>
+       <!-- ======== PROFIL (utilisateur connecté) ======== -->
 
 <div id="profilConnecte" style="display:none">
 
@@ -569,7 +569,8 @@ et d'utiliser l'Aide à la discussion.
 <h2>💎 Acheter des points</h2>
 <p class="section-description">
 Choisissez un pack avantageux, ou achetez exactement le nombre
-de points dont vous avez besoin (1 point = 200 FCFA à l'unité).
+de points dont vous avez besoin (1 point = 200 FCFA à l'unité,
+achat minimum : 2 points, soit 400 FCFA).
 </p>
 
 <div class="packs">
@@ -598,12 +599,12 @@ de points dont vous avez besoin (1 point = 200 FCFA à l'unité).
 <input
   type="number"
   id="customPointsInput"
-  min="1"
+  min="2"
   max="500"
-  value="1"
+  value="2"
   oninput="mettreAJourPrixPersonnalise()"
   onchange="corrigerChampPersonnalise()">
-<span class="custom-amount-price" id="customPointsPrice">200 FCFA</span>
+<span class="custom-amount-price" id="customPointsPrice">400 FCFA</span>
 </div>
 
 <button type="button" class="custom-amount-button" onclick="ouvrirPaiementPersonnalise()">
@@ -804,8 +805,8 @@ sur votre visage. Réglez sa taille avec le curseur.
 
 <p class="section-description">
 Le paiement se fait en Mobile Money (Orange Money, Wave, MTN, Moov...)
-sur la page sécurisée de BKApay. Le solde sera crédité uniquement après
-confirmation réelle du paiement.
+sur une page de paiement sécurisée. Le solde sera crédité uniquement
+après confirmation réelle du paiement.
 </p>
 
 <div class="auth-error" id="paymentError"></div>
@@ -845,6 +846,12 @@ const TABLE_VILLES = "villes";
 const TABLE_POINTS = "points";
 
 const PRIX_PAR_POINT = 200;
+
+// Limites d'un achat de points (même règle que sur le serveur)
+// Pour autoriser l'achat d'un seul point un jour : changer POINTS_MIN_ACHAT en 1
+// ici ET dans backend/index.js (POINTS_MIN_PAR_ACHAT), et dans le champ HTML (min et value).
+const POINTS_MIN_ACHAT = 2;
+const POINTS_MAX_ACHAT = 500;
 
 // Prix des packs : même règle que sur le serveur
 const PACKS = { 7: 1000, 14: 2000, 28: 4000 };
@@ -1840,19 +1847,18 @@ async function chargerEtatConnexion() {
   }
 }
 
-
-/* ========================================== ACHAT DE POINTS (packs + montant personnalisé) ========================================== */
+ /* ========================================== ACHAT DE POINTS (packs + montant personnalisé) ========================================== */
 
 function mettreAJourPrixPersonnalise() {
 
   const input = document.getElementById("customPointsInput");
   let nombre = parseInt(input.value, 10);
 
-  if (!nombre || nombre < 1) nombre = 1;
-  if (nombre > 500) nombre = 500;
+  if (!nombre || nombre < POINTS_MIN_ACHAT) nombre = POINTS_MIN_ACHAT;
+  if (nombre > POINTS_MAX_ACHAT) nombre = POINTS_MAX_ACHAT;
 
   // Le champ n'est plus réécrit pendant la saisie,
-  // sinon on ne peut pas effacer le "1" pour taper 2, 3, 4...
+  // sinon on ne peut pas effacer le "2" pour taper 3, 4, 5...
   const prix = prixPourPoints(nombre);
 
   document.getElementById("customPointsPrice").textContent =
@@ -1866,8 +1872,8 @@ function corrigerChampPersonnalise() {
   const input = document.getElementById("customPointsInput");
   let nombre = parseInt(input.value, 10);
 
-  if (!nombre || nombre < 1) nombre = 1;
-  if (nombre > 500) nombre = 500;
+  if (!nombre || nombre < POINTS_MIN_ACHAT) nombre = POINTS_MIN_ACHAT;
+  if (nombre > POINTS_MAX_ACHAT) nombre = POINTS_MAX_ACHAT;
 
   input.value = nombre;
   mettreAJourPrixPersonnalise();
@@ -1876,9 +1882,9 @@ function corrigerChampPersonnalise() {
 
 function ouvrirPaiementPersonnalise() {
 
-  corrigerChampPersonnalise(); // valeur toujours entre 1 et 500
+  corrigerChampPersonnalise(); // valeur toujours entre le minimum et le maximum
 
-  const nombre = parseInt(document.getElementById("customPointsInput").value, 10) || 1;
+  const nombre = parseInt(document.getElementById("customPointsInput").value, 10) || POINTS_MIN_ACHAT;
   const prix = prixPourPoints(nombre);
 
   ouvrirPaiement(nombre, prix);
@@ -1936,7 +1942,7 @@ async function continuerPaiement() {
       throw new Error(resultat.message || "Impossible de démarrer le paiement.");
     }
 
-    // Redirection vers la page de paiement sécurisée BKApay
+    // Redirection vers la page de paiement sécurisée
     window.location.href = resultat.paymentUrl;
 
   } catch (e) {
@@ -1947,7 +1953,7 @@ async function continuerPaiement() {
   }
 }
 
-// Au retour de BKApay : on attend la confirmation du serveur avant d'annoncer les points
+// Au retour du paiement : on attend la confirmation du serveur avant d'annoncer les points
 async function verifierRetourPaiement() {
   const parametres = new URLSearchParams(window.location.search);
   const retour = parametres.get("paiement");
@@ -1965,7 +1971,7 @@ async function verifierRetourPaiement() {
 
   if (retour !== "ok" || !commandeId || !utilisateurConnecte) return;
 
-  // La confirmation arrive de BKApay en quelques secondes : on la guette pendant 1 minute
+  // La confirmation arrive en quelques secondes : on la guette pendant 1 minute
   for (let essai = 0; essai < 12; essai++) {
     try {
       const execution = await functions.createExecution({
