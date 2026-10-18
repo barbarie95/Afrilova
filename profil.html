@@ -176,6 +176,7 @@ h1{color:#087557;font-size:25px;margin-bottom:7px;animation:in .5s ease both}
  padding:10px 12px;outline:none;font-size:16px;background:#fff;color:var(--t);
  transition:border-color .2s,box-shadow .2s
 }
+.form-group select:disabled{background:var(--f);color:var(--g);cursor:not-allowed}
 .form-group textarea{min-height:100px;resize:vertical}
 .form-group input:focus,.form-group textarea:focus,.form-group select:focus{
  border-color:var(--v);box-shadow:0 0 0 3px #159b7220
@@ -456,8 +457,8 @@ h1{color:#087557;font-size:25px;margin-bottom:7px;animation:in .5s ease both}
 
   </div>
 
-       </section>
-       <!-- ======== PROFIL (utilisateur connecté) ======== -->
+ </section>
+ <!-- ======== PROFIL (utilisateur connecté) ======== -->
 
 <div id="profilConnecte" style="display:none">
 
@@ -532,6 +533,7 @@ Profil pas encore créé
 </div>
 
 <div id="profileEmptyNote">
+<div class="auth-error" id="paysIndisponible"></div>
 <p class="section-description">
 Vous n'avez pas encore créé votre profil de rencontre.
 Cliquez ci-dessous pour commencer.
@@ -693,9 +695,13 @@ que par la personne avec qui vous commencerez une discussion.
 
 <div class="form-group">
 <label for="editCountry">Pays</label>
-<select id="editCountry" onchange="chargerVilles(this.value)">
-<option value="">Sélectionner un pays</option>
+<select id="editCountry" disabled>
+<option value="">Détection du pays...</option>
 </select>
+<div class="choice-note">
+🔒 Votre pays est détecté automatiquement d'après votre connexion
+et ne peut pas être modifié.
+</div>
 </div>
 
 <div class="form-group">
@@ -869,10 +875,34 @@ const storage = new Appwrite.Storage(client);
 const functions = new Appwrite.Functions(client);
 const FUNCTION_ID = "6aaf8d3fdb99e41f0aaf";
 
+// Appelle le serveur (afrilova-backend) et renvoie sa réponse, ou lève une erreur lisible
+async function appelerFonction(donnees) {
+  const execution = await functions.createExecution({
+    functionId: FUNCTION_ID,
+    body: JSON.stringify(donnees),
+    method: "POST"
+  });
+
+  let resultat;
+
+  try {
+    resultat = JSON.parse(execution.responseBody || "{}");
+  } catch (e) {
+    throw new Error("Réponse invalide du serveur.");
+  }
+
+  if (!resultat.ok) {
+    throw new Error(resultat.message || "Une erreur est survenue.");
+  }
+
+  return resultat;
+}
+
 let utilisateurConnecte = null;
 let profilActuel = null;
 let paysDisponibles = [];
 let villesDisponibles = [];
+let paysUtilisateur = null; // pays détecté par le serveur d'après l'adresse IP
 let photoFichierSelectionne = null;
 let nombrePointsSelectionne = 0;
 let prixSelectionne = 0;
@@ -1095,8 +1125,6 @@ async function verifierRetourEmail() {
 
   return false;
 }
-
-
 /* ========================================== DÉCONNEXION ========================================== */
 
 async function deconnexion() {
@@ -1111,6 +1139,7 @@ async function deconnexion() {
 
 /* ========================================== PAYS / VILLES ========================================== */
 
+// Liste des pays (sert à afficher le nom du pays d'un profil)
 async function chargerPays() {
   try {
     const reponse = await tablesDB.listRows({
@@ -1120,31 +1149,54 @@ async function chargerPays() {
     });
 
     paysDisponibles = reponse.rows;
-
-    const select = document.getElementById("editCountry");
-    let optionsHTML = `<option value="">Sélectionner un pays</option>`;
-
-    paysDisponibles.forEach(p => {
-      optionsHTML += `<option value="${p.$id}">${p.nom}</option>`;
-    });
-
-    select.innerHTML = optionsHTML;
   } catch (erreur) {
     console.error("Erreur chargement pays :", erreur);
   }
 }
 
-async function chargerToutesLesVilles() {
+// Demande au serveur le pays détecté d'après l'adresse IP, puis charge les villes de ce pays
+async function chargerMonPays() {
+  paysUtilisateur = null;
+
+  try {
+    paysUtilisateur = await appelerFonction({ action: "monPays" });
+
+    if (paysUtilisateur.paysId) {
+      await chargerVillesDuPays(paysUtilisateur.paysId);
+    }
+  } catch (erreur) {
+    console.error("Erreur détection du pays :", erreur);
+  }
+}
+
+// Charge uniquement les villes du pays de la personne
+async function chargerVillesDuPays(paysId) {
   try {
     const reponse = await tablesDB.listRows({
       databaseId: APPWRITE_DATABASE_ID,
       tableId: TABLE_VILLES,
-      queries: [Appwrite.Query.limit(200)]
+      queries: [
+        Appwrite.Query.equal("paysId", paysId),
+        Appwrite.Query.limit(500)
+      ]
     });
 
     villesDisponibles = reponse.rows;
   } catch (erreur) {
     console.error("Erreur chargement villes :", erreur);
+  }
+}
+
+// Affiche le pays détecté dans le formulaire (champ grisé, non modifiable)
+function afficherPaysVerrouille() {
+  const select = document.getElementById("editCountry");
+
+  if (paysUtilisateur && paysUtilisateur.paysId) {
+    select.innerHTML =
+      `<option value="${paysUtilisateur.paysId}">${paysUtilisateur.nom}</option>`;
+    select.value = paysUtilisateur.paysId;
+  } else {
+    select.innerHTML = `<option value="">Pays non disponible</option>`;
   }
 }
 
@@ -1170,8 +1222,8 @@ function nomPays(paysId) {
 function nomVille(villeId) {
   const trouve = villesDisponibles.find(v => v.$id === villeId);
   return trouve ? trouve.nom : "";
-}
- /* ========================================== PHOTO (avec compression automatique) ========================================== */
+ }
+/* ========================================== PHOTO (avec compression automatique) ========================================== */
 
 async function gererPhotoSelectionnee(event) {
   const fichier = event.target.files[0];
@@ -1523,6 +1575,20 @@ function retirerMasque() {
 /* ========================================== MODALE PROFIL ========================================== */
 
 function ouvrirModificationProfil() {
+
+  // Création d'un profil : il faut un pays détecté et disponible
+  if (!profilActuel && (!paysUtilisateur || !paysUtilisateur.disponible)) {
+    alert(
+      paysUtilisateur
+        ? "Afrilova n'est pas encore disponible dans votre pays."
+        : "Impossible de détecter votre pays pour le moment. Réessayez dans un instant."
+    );
+    return;
+  }
+
+  // Le pays est affiché grisé : il ne se choisit pas
+  afficherPaysVerrouille();
+
   if (profilActuel) {
     document.getElementById("editName").value = profilActuel.nom || "";
     document.getElementById("editAge").value = profilActuel.age || "";
@@ -1530,12 +1596,13 @@ function ouvrirModificationProfil() {
     document.getElementById("editEnfants").value = profilActuel.aDesEnfants === true ? "oui" : (profilActuel.aDesEnfants === false ? "non" : "");
     document.getElementById("editPolygamie").value = profilActuel.polygamie || "";
     document.getElementById("editTypeRelation").value = profilActuel.typeRelation || "";
-    document.getElementById("editCountry").value = profilActuel.paysId || "";
     chargerVilles(profilActuel.paysId, profilActuel.villeId);
 
     if (profilActuel.photoPrincipale) {
       document.getElementById("photoPreview").src = urlPhoto(profilActuel.photoPrincipale);
     }
+  } else {
+    chargerVilles(paysUtilisateur.paysId);
   }
 
   document.getElementById("editProfileModal").classList.add("show");
@@ -1549,7 +1616,6 @@ async function enregistrerProfil(event) {
 
   const nom = document.getElementById("editName").value.trim();
   const age = Number(document.getElementById("editAge").value);
-  const paysId = document.getElementById("editCountry").value;
   const villeId = document.getElementById("editCity").value;
   const description = document.getElementById("editDescription").value.trim();
   const enfants = document.getElementById("editEnfants").value;
@@ -1558,7 +1624,7 @@ async function enregistrerProfil(event) {
 
   if (!nom) { alert("Veuillez renseigner votre nom ou pseudonyme."); return; }
   if (!age || age < 18 || age > 100) { alert("L'âge minimum requis est de 18 ans."); return; }
-  if (!paysId) { alert("Veuillez sélectionner votre pays."); return; }
+  if (!paysUtilisateur || !paysUtilisateur.paysId) { alert("Votre pays n'a pas pu être détecté. Réessayez dans un instant."); return; }
   if (!villeId) { alert("Veuillez sélectionner votre ville."); return; }
   if (!description) { alert("Veuillez ajouter une description."); return; }
   if (!enfants) { alert("Veuillez répondre concernant les enfants."); return; }
@@ -1569,6 +1635,9 @@ async function enregistrerProfil(event) {
   const bouton = document.getElementById("btnEnregistrerProfil");
   bouton.disabled = true;
   bouton.textContent = "Enregistrement...";
+
+  // Photos envoyées pendant cet enregistrement (supprimées si le serveur refuse le profil)
+  const idsEnvoyes = [];
 
   try {
 
@@ -1590,50 +1659,34 @@ async function enregistrerProfil(event) {
       if (masqueUtilise) {
 
         // Deux fichiers : l'original PRIVÉ d'abord, puis la photo masquée PUBLIQUE
-        let fichierOriginalUploade = null;
+        const fichierOriginalUploade = await storage.createFile({
+          bucketId: APPWRITE_BUCKET_PHOTOS,
+          fileId: Appwrite.ID.unique(),
+          file: photoOriginaleFichier,
+          permissions: [
+            permLireUtilisateur(idUtilisateur),
+            permModifierUtilisateur(idUtilisateur),
+            permSupprimerUtilisateur(idUtilisateur)
+          ]
+        });
 
-        try {
+        idsEnvoyes.push(fichierOriginalUploade.$id);
 
-          fichierOriginalUploade = await storage.createFile({
-            bucketId: APPWRITE_BUCKET_PHOTOS,
-            fileId: Appwrite.ID.unique(),
-            file: photoOriginaleFichier,
-            permissions: [
-              permLireUtilisateur(idUtilisateur),
-              permModifierUtilisateur(idUtilisateur),
-              permSupprimerUtilisateur(idUtilisateur)
-            ]
-          });
+        const fichierMasqueUploade = await storage.createFile({
+          bucketId: APPWRITE_BUCKET_PHOTOS,
+          fileId: Appwrite.ID.unique(),
+          file: photoMasqueeFichier,
+          permissions: [
+            permLirePublic(),
+            permModifierUtilisateur(idUtilisateur),
+            permSupprimerUtilisateur(idUtilisateur)
+          ]
+        });
 
-          const fichierMasqueUploade = await storage.createFile({
-            bucketId: APPWRITE_BUCKET_PHOTOS,
-            fileId: Appwrite.ID.unique(),
-            file: photoMasqueeFichier,
-            permissions: [
-              permLirePublic(),
-              permModifierUtilisateur(idUtilisateur),
-              permSupprimerUtilisateur(idUtilisateur)
-            ]
-          });
+        idsEnvoyes.push(fichierMasqueUploade.$id);
 
-          photoId = fichierMasqueUploade.$id;
-          photoOriginaleId = fichierOriginalUploade.$id;
-
-        } catch (erreurUpload) {
-
-          // Si la photo masquée n'a pas pu être envoyée, on supprime l'original déjà envoyé
-          if (fichierOriginalUploade) {
-            try {
-              await storage.deleteFile({
-                bucketId: APPWRITE_BUCKET_PHOTOS,
-                fileId: fichierOriginalUploade.$id
-              });
-            } catch (e) {}
-          }
-
-          throw erreurUpload;
-
-        }
+        photoId = fichierMasqueUploade.$id;
+        photoOriginaleId = fichierOriginalUploade.$id;
 
       } else {
 
@@ -1649,21 +1702,28 @@ async function enregistrerProfil(event) {
           ]
         });
 
+        idsEnvoyes.push(fichierUploade.$id);
+
         photoId = fichierUploade.$id;
 
       }
 
     }
 
+    // Le serveur enregistre le profil : le pays est imposé par lui (détecté d'après l'adresse IP)
     const donnees = {
-      nom, age, paysId, villeId, description,
+      action: "enregistrerProfil",
+      nom,
+      age,
+      villeId,
+      description,
       aDesEnfants: enfants === "oui",
       polygamie,
       typeRelation,
       photoPrincipale: photoId
     };
 
-    // La colonne photoOriginaleId n'est envoyée que si nécessaire
+    // La photo originale n'est envoyée que si nécessaire
     if (masqueUtilise) {
       donnees.photoOriginaleId = photoOriginaleId;
     } else if (photoFichierSelectionne && profilActuel && profilActuel.photoOriginaleId) {
@@ -1671,39 +1731,7 @@ async function enregistrerProfil(event) {
       donnees.photoOriginaleId = null;
     }
 
-    if (profilActuel) {
-
-      await tablesDB.updateRow({
-        databaseId: APPWRITE_DATABASE_ID,
-        tableId: TABLE_PROFILS,
-        rowId: profilActuel.$id,
-        data: donnees
-      });
-
-    } else {
-
-      donnees.userId = utilisateurConnecte.$id;
-      donnees.statut = "approuve";
-      donnees.dateCreation = new Date().toISOString();
-
-      await tablesDB.createRow({
-        databaseId: APPWRITE_DATABASE_ID,
-        tableId: TABLE_PROFILS,
-        rowId: Appwrite.ID.unique(),
-        data: donnees
-      });
-
-      try {
-        await functions.createExecution({
-          functionId: FUNCTION_ID,
-          body: JSON.stringify({ action: "creditPointInscription" }),
-          method: "POST"
-        });
-      } catch (erreurPoint) {
-        console.error("Erreur crédit point :", erreurPoint);
-      }
-
-    }
+    await appelerFonction(donnees);
 
     photoFichierSelectionne = null;
 
@@ -1717,8 +1745,21 @@ async function enregistrerProfil(event) {
     alert("Votre profil a été enregistré. Il sera visible après validation.");
 
   } catch (erreur) {
+
     console.error("Erreur enregistrement profil :", erreur);
+
+    // Le profil n'a pas été enregistré : on supprime les photos envoyées pour rien
+    for (const fichierId of idsEnvoyes) {
+      try {
+        await storage.deleteFile({
+          bucketId: APPWRITE_BUCKET_PHOTOS,
+          fileId: fichierId
+        });
+      } catch (e) {}
+    }
+
     alert("Une erreur est survenue lors de l'enregistrement : " + erreur.message);
+
   } finally {
     bouton.disabled = false;
     bouton.textContent = "💾 Enregistrer";
@@ -1757,6 +1798,20 @@ function afficherProfil() {
     document.getElementById("profileDetailsBlock").style.display = "none";
     document.getElementById("profileEmptyNote").style.display = "block";
     badge.innerHTML = "";
+
+    // Message si le pays n'est pas disponible (ou n'a pas pu être détecté)
+    const blocPays = document.getElementById("paysIndisponible");
+
+    if (!paysUtilisateur) {
+      blocPays.textContent = "Détection du pays impossible pour le moment. Rechargez la page.";
+      blocPays.classList.add("show");
+    } else if (!paysUtilisateur.disponible) {
+      blocPays.textContent = "Afrilova n'est pas encore disponible dans votre pays.";
+      blocPays.classList.add("show");
+    } else {
+      blocPays.classList.remove("show");
+    }
+
     return;
   }
 
@@ -1834,6 +1889,9 @@ async function chargerEtatConnexion() {
     document.getElementById("profilConnecte").style.display = "block";
 
     await chargerSoldePoints(utilisateurConnecte.$id);
+// Le pays est détecté par le serveur ; les villes de ce pays sont chargées ensuite
+    await chargerMonPays();
+
     await chargerProfilUtilisateur();
 
   } catch (erreur) {
@@ -1847,7 +1905,8 @@ async function chargerEtatConnexion() {
   }
 }
 
- /* ========================================== ACHAT DE POINTS (packs + montant personnalisé) ========================================== */
+
+/* ========================================== ACHAT DE POINTS (packs + montant personnalisé) ========================================== */
 
 function mettreAJourPrixPersonnalise() {
 
@@ -1921,25 +1980,13 @@ async function continuerPaiement() {
 
   try {
     // Le serveur calcule le prix et crée la commande : la page n'envoie que le nombre de points
-    const execution = await functions.createExecution({
-      functionId: FUNCTION_ID,
-      body: JSON.stringify({
-        action: "creerCommandePoints",
-        points: nombrePointsSelectionne
-      }),
-      method: "POST"
+    const resultat = await appelerFonction({
+      action: "creerCommandePoints",
+      points: nombrePointsSelectionne
     });
 
-    let resultat;
-
-    try {
-      resultat = JSON.parse(execution.responseBody || "{}");
-    } catch (e) {
-      throw new Error("Réponse invalide du serveur.");
-    }
-
-    if (!resultat.ok || !resultat.paymentUrl) {
-      throw new Error(resultat.message || "Impossible de démarrer le paiement.");
+    if (!resultat.paymentUrl) {
+      throw new Error("Impossible de démarrer le paiement.");
     }
 
     // Redirection vers la page de paiement sécurisée
@@ -1974,21 +2021,18 @@ async function verifierRetourPaiement() {
   // La confirmation arrive en quelques secondes : on la guette pendant 1 minute
   for (let essai = 0; essai < 12; essai++) {
     try {
-      const execution = await functions.createExecution({
-        functionId: FUNCTION_ID,
-        body: JSON.stringify({ action: "statutCommande", commandeId: commandeId }),
-        method: "POST"
+      const resultat = await appelerFonction({
+        action: "statutCommande",
+        commandeId: commandeId
       });
 
-      const resultat = JSON.parse(execution.responseBody || "{}");
-
-      if (resultat.ok && resultat.statut === "confirme") {
+      if (resultat.statut === "confirme") {
         await chargerSoldePoints(utilisateurConnecte.$id);
         alert("✅ Paiement confirmé ! " + resultat.points + " point(s) ajouté(s).");
         return;
       }
 
-      if (resultat.ok && resultat.statut === "echoue") {
+      if (resultat.statut === "echoue") {
         alert("Le paiement n'a pas abouti. Aucun point n'a été ajouté.");
         return;
       }
@@ -1997,7 +2041,7 @@ async function verifierRetourPaiement() {
     await new Promise(function (resolve) { setTimeout(resolve, 5000); });
   }
 
-  alert("Paiement en cours de confirmation. Tes points seront ajoutés dès qu'il sera confirmé.");
+  alert("Paiement en cours de confirmation. Vos points seront ajoutés dès qu'il sera confirmé.");
 }
 
 
@@ -2020,7 +2064,6 @@ document.addEventListener("click", function (event) {
 document.addEventListener("DOMContentLoaded", async function () {
   initialiserEditeurMasque(); // active le déplacement de l'emoji au doigt
   await chargerPays();
-  await chargerToutesLesVilles();
   await verifierRetourEmail();
   await chargerEtatConnexion();
   await verifierRetourPaiement();
