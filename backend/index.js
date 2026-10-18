@@ -784,7 +784,7 @@ async function adminStats(userId) {
   });
 
   return { role, stats };
-}
+   }
 /* =====================================================
    ESPACE ADMINISTRATEUR : POUVOIRS DU SUPER ADMIN,
    JOURNAL ET DIAGRAMMES
@@ -1472,6 +1472,253 @@ async function adminRubrique(userId, data) {
 }
 
 /* =====================================================
+   PROFIL : PAYS VERROUILLÉ D'APRÈS L'ADRESSE IP
+   Le pays n'est jamais choisi par la personne : il est
+   déduit par Appwrite de l'adresse IP de sa connexion.
+   ===================================================== */
+
+const AGE_MINIMUM = 18;
+const POLYGAMIE_VALEURS = ["oui", "non", "indifferent"];
+const RELATION_VALEURS = ["mariage", "amoureuse", "projet"];
+
+// Pays détecté pour l'utilisateur (d'après sa connexion la plus récente)
+// Renvoie le code pays et la ligne correspondante de la table "pays" (ou null)
+async function detecterPaysUtilisateur(userId) {
+  let code = "";
+
+  try {
+    const resultat = await users.listSessions(userId);
+
+    const sessions = (resultat.sessions || [])
+      .slice()
+      .sort((a, b) => new Date(b.$createdAt) - new Date(a.$createdAt));
+
+    code = sessions.length
+      ? String(sessions[0].countryCode || "").toUpperCase()
+      : "";
+  } catch (e) {}
+
+  let pays = null;
+
+  if (code) {
+    const liste = await databases.listDocuments(
+      DATABASE_ID,
+      TABLE_PAYS,
+      [Query.limit(50)]
+    );
+
+    pays =
+      liste.documents.find(
+        (p) => String(p.code || "").toUpperCase() === code
+      ) || null;
+  }
+
+  return { code, pays };
+}
+
+// Pays à afficher sur la page : celui du profil s'il existe, sinon le pays détecté
+async function monPays(userId) {
+  const profil = await getProfilParUserId(userId);
+
+  if (profil) {
+    let nom = "";
+
+    try {
+      const p = await databases.getDocument(
+        DATABASE_ID,
+        TABLE_PAYS,
+        profil.paysId
+      );
+      nom = p.nom;
+    } catch (e) {}
+
+    return {
+      profilExiste: true,
+      paysId: profil.paysId,
+      nom,
+      disponible: true,
+    };
+  }
+
+  const { code, pays } = await detecterPaysUtilisateur(userId);
+
+  return {
+    profilExiste: false,
+    code,
+    paysId: pays ? pays.$id : null,
+    nom: pays ? pays.nom : "",
+    disponible: Boolean(pays),
+  };
+}
+
+// Vérifie qu'un fichier photo appartient bien à l'utilisateur
+async function verifierFichierPhoto(userId, fichierId) {
+  let fichier;
+
+  try {
+    fichier = await storage.getFile(BUCKET_PHOTOS, fichierId);
+  } catch (e) {
+    throw new Error("Photo introuvable.");
+  }
+
+  const permissions = fichier.$permissions || [];
+
+  if (!permissions.some((p) => String(p).includes(userId))) {
+    throw new Error("Photo invalide.");
+  }
+}
+
+// Crée ou modifie le profil de l'utilisateur connecté
+// Le pays est imposé par le serveur et ne peut plus changer après la création
+async function enregistrerProfil(userId, data) {
+  // 1. Champs saisis par la personne
+  const nom = cleanText(data.nom, 60);
+  const age = Number(data.age);
+  const villeId = cleanText(data.villeId, 255);
+  const description = cleanText(data.description, 1000);
+  const polygamie = cleanText(data.polygamie, 20);
+  const typeRelation = cleanText(data.typeRelation, 100);
+  const aDesEnfants = data.aDesEnfants === true;
+
+  if (!nom) {
+    throw new Error("Veuillez renseigner votre nom ou pseudonyme.");
+  }
+
+  if (!Number.isInteger(age) || age < AGE_MINIMUM || age > 100) {
+    throw new Error("L'âge minimum requis est de " + AGE_MINIMUM + " ans.");
+  }
+
+  if (!villeId) {
+    throw new Error("Veuillez sélectionner votre ville.");
+  }
+
+  if (!description) {
+    throw new Error("Veuillez ajouter une description.");
+  }
+
+  if (!POLYGAMIE_VALEURS.includes(polygamie)) {
+    throw new Error("Réponse invalide concernant la polygamie.");
+  }
+
+  if (!RELATION_VALEURS.includes(typeRelation)) {
+    throw new Error("Type de relation invalide.");
+  }
+
+  const profilExistant = await getProfilParUserId(userId);
+
+  // 2. Le pays : celui du profil existant, sinon celui détecté par l'IP
+  let paysId;
+
+  if (profilExistant) {
+    paysId = profilExistant.paysId;
+  } else {
+    const { pays } = await detecterPaysUtilisateur(userId);
+
+    if (!pays) {
+      throw new Error(
+        "Afrilova n'est pas encore disponible dans ton pays."
+      );
+    }
+
+    paysId = pays.$id;
+  }
+
+  // 3. La ville doit appartenir à ce pays
+  let ville;
+
+  try {
+    ville = await databases.getDocument(
+      DATABASE_ID,
+      TABLE_VILLES,
+      villeId
+    );
+  } catch (e) {
+    throw new Error("Ville invalide.");
+  }
+
+  if (ville.paysId !== paysId) {
+    throw new Error("Cette ville n'appartient pas à ton pays.");
+  }
+
+  // 4. Photos : elles doivent exister et appartenir à la personne
+  const photoPrincipale = cleanText(data.photoPrincipale, 255);
+
+  if (!profilExistant && !photoPrincipale) {
+    throw new Error("Veuillez ajouter une photo pour créer votre profil.");
+  }
+
+  if (
+    photoPrincipale &&
+    (!profilExistant || photoPrincipale !== profilExistant.photoPrincipale)
+  ) {
+    await verifierFichierPhoto(userId, photoPrincipale);
+  }
+
+  const champs = {
+    nom,
+    age,
+    villeId,
+    description,
+    aDesEnfants,
+    polygamie,
+    typeRelation,
+  };
+
+  if (photoPrincipale) {
+    champs.photoPrincipale = photoPrincipale;
+  }
+
+  // La photo originale (privée, utilisée avec le masque) n'est modifiée que si la page l'envoie
+  if (Object.prototype.hasOwnProperty.call(data, "photoOriginaleId")) {
+    const originaleId = data.photoOriginaleId
+      ? cleanText(data.photoOriginaleId, 50)
+      : null;
+
+    if (
+      originaleId &&
+      (!profilExistant || originaleId !== profilExistant.photoOriginaleId)
+    ) {
+      await verifierFichierPhoto(userId, originaleId);
+    }
+
+    champs.photoOriginaleId = originaleId;
+  }
+
+  // 5. Modification d'un profil existant : le pays, le statut et le propriétaire ne changent pas
+  if (profilExistant) {
+    const profil = await databases.updateDocument(
+      DATABASE_ID,
+      TABLE_PROFILS,
+      profilExistant.$id,
+      champs
+    );
+
+    return { cree: false, profilId: profil.$id };
+  }
+
+  // 6. Création du profil, avec le pays détecté
+  const profil = await databases.createDocument(
+    DATABASE_ID,
+    TABLE_PROFILS,
+    ID.unique(),
+    {
+      ...champs,
+      userId,
+      paysId,
+      statut: "approuve",
+      dateCreation: new Date().toISOString(),
+    }
+  );
+
+  // Point offert à la création du profil (sans bloquer si ça échoue)
+  try {
+    await creditPointInscription(userId);
+  } catch (e) {}
+
+  return { cree: true, profilId: profil.$id };
+}
+
+/* =====================================================
    ACHAT DE POINTS (BKApay)
    Le serveur calcule le prix et crée la commande.
    Les points ne sont JAMAIS crédités ici : seule la
@@ -1503,6 +1750,13 @@ function prixDesPoints(points) {
 async function creerCommandePoints(userId, data) {
   if (!BKAPAY_PRIVATE_KEY) {
     throw new Error("Paiement indisponible pour le moment.");
+  }
+
+  // Il faut un profil pour acheter des points
+  const profilAcheteur = await getProfilParUserId(userId);
+
+  if (!profilAcheteur) {
+    throw new Error("Crée d'abord ton profil pour acheter des points.");
   }
 
   // La page n'envoie que le nombre de points : le prix est calculé ici
@@ -1913,6 +2167,25 @@ export default async ({ req, res, log, error }) => {
         }
 
         resultat = await adminRubrique(
+          userId,
+          donnees
+        );
+        break;
+
+      case "monPays":
+        if (!userId) {
+          throw new Error("Utilisateur non connecté.");
+        }
+
+        resultat = await monPays(userId);
+        break;
+
+      case "enregistrerProfil":
+        if (!userId) {
+          throw new Error("Utilisateur non connecté.");
+        }
+
+        resultat = await enregistrerProfil(
           userId,
           donnees
         );
