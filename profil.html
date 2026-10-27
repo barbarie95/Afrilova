@@ -457,8 +457,8 @@ h1{color:#087557;font-size:25px;margin-bottom:7px;animation:in .5s ease both}
 
   </div>
 
- </section>
- <!-- ======== PROFIL (utilisateur connecté) ======== -->
+       </section>
+       <!-- ======== PROFIL (utilisateur connecté) ======== -->
 
 <div id="profilConnecte" style="display:none">
 
@@ -600,12 +600,12 @@ de points dont vous avez besoin (1 point = 200 FCFA à l'unité).
 <input
   type="number"
   id="customPointsInput"
-  min="2"
+  min="1"
   max="500"
-  value="2"
+  value="1"
   oninput="mettreAJourPrixPersonnalise()"
   onchange="corrigerChampPersonnalise()">
-<span class="custom-amount-price" id="customPointsPrice">400 FCFA</span>
+<span class="custom-amount-price" id="customPointsPrice">200 FCFA</span>
 </div>
 
 <button type="button" class="custom-amount-button" onclick="ouvrirPaiementPersonnalise()">
@@ -853,9 +853,9 @@ const TABLE_POINTS = "points";
 const PRIX_PAR_POINT = 200;
 
 // Limites d'un achat de points (même règle que sur le serveur)
-// Pour autoriser l'achat d'un seul point un jour : changer POINTS_MIN_ACHAT en 1
-// ici ET dans backend/index.js (POINTS_MIN_PAR_ACHAT), et dans le champ HTML (min et value).
-const POINTS_MIN_ACHAT = 2;
+// Pour changer le minimum : modifier POINTS_MIN_ACHAT ici ET POINTS_MIN_PAR_ACHAT
+// dans backend/index.js, et dans le champ HTML (min et value).
+const POINTS_MIN_ACHAT = 1;
 const POINTS_MAX_ACHAT = 500;
 
 // Prix des packs : même règle que sur le serveur
@@ -1124,6 +1124,8 @@ async function verifierRetourEmail() {
 
   return false;
 }
+
+
 /* ========================================== DÉCONNEXION ========================================== */
 
 async function deconnexion() {
@@ -1221,8 +1223,8 @@ function nomPays(paysId) {
 function nomVille(villeId) {
   const trouve = villesDisponibles.find(v => v.$id === villeId);
   return trouve ? trouve.nom : "";
- }
-/* ========================================== PHOTO (avec compression automatique) ========================================== */
+                                           }
+ /* ========================================== PHOTO (avec compression automatique) ========================================== */
 
 async function gererPhotoSelectionnee(event) {
   const fichier = event.target.files[0];
@@ -1876,7 +1878,6 @@ function afficherSolde(points) {
 
 }
 
-
 /* ========================================== ÉTAT DE CONNEXION ========================================== */
 
 async function chargerEtatConnexion() {
@@ -1888,7 +1889,8 @@ async function chargerEtatConnexion() {
     document.getElementById("profilConnecte").style.display = "block";
 
     await chargerSoldePoints(utilisateurConnecte.$id);
-// Le pays est détecté par le serveur ; les villes de ce pays sont chargées ensuite
+
+    // Le pays est détecté par le serveur ; les villes de ce pays sont chargées ensuite
     await chargerMonPays();
 
     await chargerProfilUtilisateur();
@@ -1916,7 +1918,7 @@ function mettreAJourPrixPersonnalise() {
   if (nombre > POINTS_MAX_ACHAT) nombre = POINTS_MAX_ACHAT;
 
   // Le champ n'est plus réécrit pendant la saisie,
-  // sinon on ne peut pas effacer le "2" pour taper 3, 4, 5...
+  // sinon on ne peut pas effacer le chiffre pour en taper un autre.
   const prix = prixPourPoints(nombre);
 
   document.getElementById("customPointsPrice").textContent =
