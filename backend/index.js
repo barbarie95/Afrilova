@@ -1732,8 +1732,8 @@ const PACKS_POINTS = { 7: 1000, 14: 2000, 28: 4000 };
 // Prix d'un point à l'unité (FCFA)
 const PRIX_POINT = 200;
 
-// Minimum de points par achat (BKApay refuse 200 FCFA : 2 points = 400 FCFA)
-const POINTS_MIN_PAR_ACHAT = 2;
+// Minimum de points par achat (BKApay accepte 100 FCFA minimum par clé API : 1 point = 200 FCFA)
+const POINTS_MIN_PAR_ACHAT = 1;
 
 // Plafond de points par achat
 const POINTS_MAX_PAR_ACHAT = 500;
